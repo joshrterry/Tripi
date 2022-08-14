@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Tripi uses your location to automatically route your drives and provide real time trip tracking</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Tripi uses your location to automatically route your drives and provide real time trip tracking</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>gilroyextrabold.otf</string>
+	</array>
+</dict>
+</plist>
