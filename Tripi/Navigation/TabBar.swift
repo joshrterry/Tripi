@@ -10,7 +10,8 @@ import SwiftUI
 struct TabBar: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("selectedTab") var selectedTab: Tab = .home
-
+    @EnvironmentObject var tripManager: TripManager
+    
     var body: some View {
         VStack {
             Spacer()
@@ -36,7 +37,11 @@ struct TabBar: View {
                                 .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
                                 
                             Button {
-                                selectedTab = .route
+                                if selectedTab == .route {
+                                    tripManager.trackingState = .active
+                                } else {
+                                    selectedTab = .route
+                                }
                             } label: {
                                 Image(selectedTab == .route ? "go_icon" : "tripimono")
                                     .resizable()
@@ -67,6 +72,6 @@ struct TabBar: View {
 
 struct TabBar_Previews: PreviewProvider {
     static var previews: some View {
-        TabBar()
+        TabBar().environmentObject(TripManager())
     }
 }

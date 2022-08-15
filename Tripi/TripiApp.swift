@@ -15,7 +15,7 @@ struct TripiApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(Model())
+                .environmentObject(Model()).environmentObject(TripManager())
         }
     }
 }

@@ -12,6 +12,7 @@ import Combine
 struct RouteView: View {
     @ObservedObject private var locationManager = LocationManager() 
     @EnvironmentObject var model: Model
+    @EnvironmentObject var tripManager: TripManager
 
     var body: some View {
         ZStack {
@@ -38,7 +39,7 @@ struct RouteView: View {
 
 struct RouteView_Previews: PreviewProvider {
     static var previews: some View {
-        RouteView().environmentObject(Model())
+        RouteView().environmentObject(Model()).environmentObject(TripManager())
     }
 }
 

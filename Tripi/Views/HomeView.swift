@@ -10,6 +10,7 @@ import CoreData
 import MapKit
 
 struct HomeView: View {
+    @EnvironmentObject var tripManager: TripManager
     @State var hasScrolled = false
     
     var body: some View {
@@ -52,6 +53,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView().environmentObject(TripManager())
     }
 }
