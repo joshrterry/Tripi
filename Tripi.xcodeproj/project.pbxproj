@@ -29,7 +29,7 @@
 		F56426D02856B9B6005FD118 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F56426CF2856B9B6005FD118 /* Assets.xcassets */; };
 		F56426D32856B9B6005FD118 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F56426D22856B9B6005FD118 /* Preview Assets.xcassets */; };
 		F56426D52856B9B6005FD118 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426D42856B9B6005FD118 /* Persistence.swift */; };
-		F56426D82856B9B6005FD118 /* Tripi.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F56426D62856B9B6005FD118 /* Tripi.xcdatamodeld */; };
+		F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F56426D62856B9B6005FD118 /* LocationTracker.xcdatamodeld */; };
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
@@ -219,7 +219,7 @@
 				F56024EA286FA46B0002403D /* Fonts */,
 				F56426CF2856B9B6005FD118 /* Assets.xcassets */,
 				F56426D42856B9B6005FD118 /* Persistence.swift */,
-				F56426D62856B9B6005FD118 /* Tripi.xcdatamodeld */,
+				F56426D62856B9B6005FD118 /* LocationTracker.xcdatamodeld */,
 				F56426D12856B9B6005FD118 /* Preview Content */,
 			);
 			path = Tripi;
@@ -395,7 +395,7 @@
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
-				F56426D82856B9B6005FD118 /* Tripi.xcdatamodeld in Sources */,
+				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,
 				F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */,
 				F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */,
@@ -564,6 +564,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses your location to automatically route your drives and provide real time trip tracking";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses your location to automatically route your drives and provide real time trip tracking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -596,6 +598,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses your location to automatically route your drives and provide real time trip tracking";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses your location to automatically route your drives and provide real time trip tracking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -733,13 +737,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		F56426D62856B9B6005FD118 /* Tripi.xcdatamodeld */ = {
+		F56426D62856B9B6005FD118 /* LocationTracker.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				F56426D72856B9B6005FD118 /* Tripi.xcdatamodel */,
 			);
 			currentVersion = F56426D72856B9B6005FD118 /* Tripi.xcdatamodel */;
-			path = Tripi.xcdatamodeld;
+			path = LocationTracker.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -2,13 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Tripi uses your location to automatically route your drives and provide real time trip tracking</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Tripi uses your location to automatically route your drives and provide real time trip tracking</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>gilroyextrabold.otf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location information is required for tracking</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location information is required for tracking</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Location information is required for tracking</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location information is required for tracking</string>
 </dict>
 </plist>
