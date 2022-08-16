@@ -11,6 +11,7 @@
 		F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F5286FD3F0000E07AF /* RecentTrips.swift */; };
 		F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F7286FEB1C000E07AF /* RouteView.swift */; };
 		F517F2FA286FF59E000E07AF /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F9286FF59E000E07AF /* TabBar.swift */; };
+		F51D3B5528AB338E00C6B116 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51D3B5428AB338E00C6B116 /* LocationManager.swift */; };
 		F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D1286FB95C0026FAEE /* Metrics.swift */; };
 		F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */; };
 		F52EC445286FA42800420410 /* gilroyextrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F52EC444286FA42800420410 /* gilroyextrabold.otf */; };
@@ -56,6 +57,7 @@
 		F517F2F5286FD3F0000E07AF /* RecentTrips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrips.swift; sourceTree = "<group>"; };
 		F517F2F7286FEB1C000E07AF /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		F517F2F9286FF59E000E07AF /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
+		F51D3B5428AB338E00C6B116 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F52C30D1286FB95C0026FAEE /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryStats.swift; sourceTree = "<group>"; };
 		F52EC444286FA42800420410 /* gilroyextrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gilroyextrabold.otf; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		F5334127287107CA00E7E5C1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				F51D3B5428AB338E00C6B116 /* LocationManager.swift */,
 				F554A80E28AA641000E4F8D6 /* TripManager.swift */,
 			);
 			path = Managers;
@@ -390,6 +393,7 @@
 				F56426CE2856B9B4005FD118 /* HomeView.swift in Sources */,
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
+				F51D3B5528AB338E00C6B116 /* LocationManager.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,
