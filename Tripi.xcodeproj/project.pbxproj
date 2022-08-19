@@ -11,7 +11,7 @@
 		F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F5286FD3F0000E07AF /* RecentTrips.swift */; };
 		F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F7286FEB1C000E07AF /* RouteView.swift */; };
 		F517F2FA286FF59E000E07AF /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F9286FF59E000E07AF /* TabBar.swift */; };
-		F51D3B5528AB338E00C6B116 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51D3B5428AB338E00C6B116 /* LocationManager.swift */; };
+		F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51D3B5428AB338E00C6B116 /* RouteManager.swift */; };
 		F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D1286FB95C0026FAEE /* Metrics.swift */; };
 		F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */; };
 		F52EC445286FA42800420410 /* gilroyextrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F52EC444286FA42800420410 /* gilroyextrabold.otf */; };
@@ -19,7 +19,6 @@
 		F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341232870E9CA00E7E5C1 /* Tab.swift */; };
 		F53341262870FCD300E7E5C1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341252870FCD300E7E5C1 /* Model.swift */; };
 		F554A80D28AA62CB00E4F8D6 /* TrackingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */; };
-		F554A80F28AA641000E4F8D6 /* TripManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F554A80E28AA641000E4F8D6 /* TripManager.swift */; };
 		F56024ED286FA6C90002403D /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56024EC286FA6C90002403D /* NavigationBar.swift */; };
 		F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56024EE286FAB450002403D /* PreferenceKeys.swift */; };
 		F56024F4286FAC2E0002403D /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56024F3286FABD80002403D /* Styles.swift */; };
@@ -57,7 +56,7 @@
 		F517F2F5286FD3F0000E07AF /* RecentTrips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrips.swift; sourceTree = "<group>"; };
 		F517F2F7286FEB1C000E07AF /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		F517F2F9286FF59E000E07AF /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
-		F51D3B5428AB338E00C6B116 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		F51D3B5428AB338E00C6B116 /* RouteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteManager.swift; sourceTree = "<group>"; };
 		F52C30D1286FB95C0026FAEE /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryStats.swift; sourceTree = "<group>"; };
 		F52EC444286FA42800420410 /* gilroyextrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gilroyextrabold.otf; sourceTree = "<group>"; };
@@ -65,7 +64,6 @@
 		F53341232870E9CA00E7E5C1 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		F53341252870FCD300E7E5C1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingState.swift; sourceTree = "<group>"; };
-		F554A80E28AA641000E4F8D6 /* TripManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripManager.swift; sourceTree = "<group>"; };
 		F56024EB286FA4A40002403D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F56024EC286FA6C90002403D /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		F56024EE286FAB450002403D /* PreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceKeys.swift; sourceTree = "<group>"; };
@@ -150,8 +148,7 @@
 		F5334127287107CA00E7E5C1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				F51D3B5428AB338E00C6B116 /* LocationManager.swift */,
-				F554A80E28AA641000E4F8D6 /* TripManager.swift */,
+				F51D3B5428AB338E00C6B116 /* RouteManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -387,13 +384,12 @@
 				F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */,
 				F56426D52856B9B6005FD118 /* Persistence.swift in Sources */,
 				F56024F5286FAC300002403D /* AnimatableFontModifier.swift in Sources */,
-				F554A80F28AA641000E4F8D6 /* TripManager.swift in Sources */,
 				F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */,
 				F554A80D28AA62CB00E4F8D6 /* TrackingState.swift in Sources */,
 				F56426CE2856B9B4005FD118 /* HomeView.swift in Sources */,
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
-				F51D3B5528AB338E00C6B116 /* LocationManager.swift in Sources */,
+				F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
-    @EnvironmentObject var model: Model
-    @EnvironmentObject var tripManager: TripManager
+    @StateObject var model: Model = Model()
+    @StateObject var routeManager: RouteManager = RouteManager()
 
 
     var body: some View {
@@ -19,13 +19,14 @@ struct ContentView: View {
             case .home:
                 HomeView()
             case .route:
-                RouteView()
+                RouteView(model: model)
             case .trips:
                 HomeView()
             }
             TabBar()
                 .offset(y: model.fullScreen ? 200 : 0)
         }
+        .environmentObject(routeManager)
     }
 }
 
@@ -36,6 +37,6 @@ struct ContentView_Previews: PreviewProvider {
             ContentView()
                 .preferredColorScheme(.dark)
         }
-        .environmentObject(Model()).environmentObject(TripManager())
+        .environmentObject(RouteManager())
     }
 }

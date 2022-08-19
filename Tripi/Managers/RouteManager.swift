@@ -1,5 +1,5 @@
 //
-//  LocationManager.swift
+//  RouteManager.swift
 //  Tripi
 //
 //  Created by Joshua Terry on 2022-07-02.
@@ -8,14 +8,15 @@
 import Combine
 import CoreLocation
 import Foundation
+import SwiftUI
 
-class LocationManager: NSObject {
-    
+
+class RouteManager: NSObject, ObservableObject {
+    @Published var trackingState: TrackingState = .inactive
+
     typealias Output = (longitude: Double, latitude: Double)
     typealias Failure = Never
-    
     private let wrapped = PassthroughSubject<(Output), Failure>()
-    
     private let locationManager = CLLocationManager()
     
     override init() {
@@ -30,19 +31,20 @@ class LocationManager: NSObject {
     }
 }
 
-extension LocationManager: CLLocationManagerDelegate {
+extension RouteManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // FIX THIS
+        if self.trackingState != .active { return }
         guard let location = locations.last else { return }
         wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude))
     }
 }
 
-extension LocationManager: Publisher {
+extension RouteManager: Publisher {
     func receive<Downstream: Subscriber>(subscriber: Downstream) where Failure == Downstream.Failure, Output == Downstream.Input {
         wrapped.subscribe(subscriber)
     }
 }
-
 
 //
 //enum MapDetails {

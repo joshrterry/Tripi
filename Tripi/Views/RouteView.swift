@@ -10,9 +10,9 @@ import MapKit
 import CoreData
 
 struct RouteView: View {
-//    @ObservedObject private var locationManager = LocationManager()
-    @EnvironmentObject var model: Model
-    @EnvironmentObject var tripManager: TripManager
+    @ObservedObject var model: Model
+    @EnvironmentObject var routeManager: RouteManager
+
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Location.timestamp, ascending: true)], animation: .default)
     private var locations: FetchedResults<Location>
@@ -29,7 +29,7 @@ struct RouteView: View {
                         .frame(height: 150)
                 }
         
-                Map(coordinateRegion: $region, interactionModes: [.all], showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: locations) { location in
+                Map(coordinateRegion: $region, interactionModes: [.zoom], showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: locations) { location in
                     MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
                         Circle().fill(Color.blue).frame(width: 10, height: 10)
                     }
@@ -40,6 +40,7 @@ struct RouteView: View {
             }
         }
         .overlay(!model.fullScreen ? NavigationBar(title: "New Trip", hasScrolled: .constant(false)) : nil)
+        
 //        .onAppear {
 //            locationManager.checkLocationServices()
 //        }
@@ -49,7 +50,7 @@ struct RouteView: View {
 
 struct RouteView_Previews: PreviewProvider {
     static var previews: some View {
-        RouteView().environmentObject(Model()).environmentObject(TripManager())
+        RouteView(model: Model()).environmentObject(RouteManager())
     }
 }
 

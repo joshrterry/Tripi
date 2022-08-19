@@ -10,18 +10,17 @@ import SwiftUI
 
 @main
 struct TripiApp: App {
-    let locationManager = LocationManager()
+    let routeManager = RouteManager()
     var cancellables = [AnyCancellable]()
-    
+     
     init() {
-        locationManager.sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
+        routeManager.sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
-                .environmentObject(Model()).environmentObject(TripManager())
         }
     }
 }

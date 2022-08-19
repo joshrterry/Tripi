@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NavigationBar: View {
+    
     var title = ""
     @Binding var hasScrolled: Bool
     
