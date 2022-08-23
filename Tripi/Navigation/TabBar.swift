@@ -37,11 +37,7 @@ struct TabBar: View {
                                 .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
                                 
                             Button {
-                                if selectedTab == .route {
-                                    routeManager.trackingState = .active
-                                } else {
-                                    selectedTab = .route
-                                }
+                                selectedTab = .route
                                 print(routeManager.trackingState)
 
                             } label: {

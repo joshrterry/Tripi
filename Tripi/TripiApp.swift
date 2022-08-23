@@ -14,7 +14,9 @@ struct TripiApp: App {
     var cancellables = [AnyCancellable]()
      
     init() {
-        routeManager.sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
+        if routeManager.trackingState == .active {
+            routeManager.sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
+        }
     }
 
     var body: some Scene {

@@ -29,6 +29,10 @@ class RouteManager: NSObject, ObservableObject {
         //self.locationManager.pausesLocationUpdatesAutomatically = false // throws "Non-UI clients cannot be autopaused"
         self.locationManager.startUpdatingLocation()
     }
+    
+    func startTrip() {
+        trackingState = .active
+    }
 }
 
 extension RouteManager: CLLocationManagerDelegate {
