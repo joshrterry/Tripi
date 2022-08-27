@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @StateObject var model: Model = Model()
-    @StateObject var routeManager: RouteManager = RouteManager()
+    @EnvironmentObject var routeManager: RouteManager
 
 
     var body: some View {

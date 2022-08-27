@@ -16,6 +16,7 @@ struct TabBar: View {
         VStack {
             Spacer()
             ZStack(alignment: .top) {
+                
                 Rectangle()
                     .frame(maxWidth: .infinity, maxHeight: 90)
                     .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
@@ -37,7 +38,12 @@ struct TabBar: View {
                                 .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
                                 
                             Button {
-                                selectedTab = .route
+                                if selectedTab == .route {
+                                    routeManager.toggleTrip()
+                                } else {
+                                    selectedTab = .route
+
+                                }
                                 print(routeManager.trackingState)
 
                             } label: {

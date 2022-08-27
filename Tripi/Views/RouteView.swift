@@ -38,30 +38,8 @@ struct RouteView: View {
                     .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
                     .edgesIgnoringSafeArea(.all)
             }
-            
-            Button {
-                routeManager.startTrip()
-                
-            } label: {
-                ZStack {
-                    Rectangle()
-                        .frame(width: 100, height: 50)
-                        .cornerRadius(10)
-                        .foregroundColor(.green)
-                    Text("GO")
-                        .foregroundColor(.white)
-                }
-      
-            }
-
-
-            
         }
         .overlay(!model.fullScreen ? NavigationBar(title: "New Trip", hasScrolled: .constant(false)) : nil)
-        
-//        .onAppear {
-//            locationManager.checkLocationServices()
-//        }
 
     }
 }

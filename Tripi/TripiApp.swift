@@ -10,19 +10,23 @@ import SwiftUI
 
 @main
 struct TripiApp: App {
-    let routeManager = RouteManager()
+    @StateObject private var routeManager: RouteManager
     var cancellables = [AnyCancellable]()
-     
-    init() {
-        if routeManager.trackingState == .active {
-            routeManager.sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
-        }
-    }
 
+    init() {
+       // Creates a new instance of RouterManager (the one and only)
+       let routeManager = RouteManager()
+       // Stores the newly created instance in the StateObject property
+       _routeManager = .init(wrappedValue: routeManager)
+       // Subscribes to the events of RouteManager
+       routeManager
+           .sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
-        }
-    }
+           ContentView()
+               .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+               .environmentObject(routeManager)
+       }
+   }
 }
