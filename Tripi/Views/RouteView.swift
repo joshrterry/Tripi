@@ -25,8 +25,8 @@ struct RouteView: View {
             Color("Background").ignoresSafeArea()
             VStack {
                 if !model.fullScreen {
-                    Spacer()
-                        .frame(height: 150)
+//                    Spacer()
+//                        .frame(height: )
                 }
         
                 Map(coordinateRegion: $region, interactionModes: [.zoom], showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: locations) { location in
@@ -34,9 +34,11 @@ struct RouteView: View {
                         Circle().fill(Color.blue).frame(width: 10, height: 10)
                     }
                 }
-                    .cornerRadius(50, corners: [.topLeft, .topRight])
-                    .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                    .edgesIgnoringSafeArea(.all)
+                .frame(height: 460)
+                .cornerRadius(50, corners: [.topLeft, .topRight])
+                .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
+                .edgesIgnoringSafeArea(.all)
+  
             }
         }
         .overlay(!model.fullScreen ? NavigationBar(title: "New Trip", hasScrolled: .constant(false)) : nil)

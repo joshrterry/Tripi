@@ -14,6 +14,9 @@ import SwiftUI
 
 class RouteManager: NSObject, ObservableObject {
     @Published var trackingState: TrackingState = .active
+    @Published var distanceTotal = 0.0
+    private var lastLocation: CLLocation!
+    
     private var locationManager: CLLocationManager!
     
     typealias Output = (longitude: Double, latitude: Double)
@@ -23,9 +26,6 @@ class RouteManager: NSObject, ObservableObject {
     override init() {
         super.init()
         locationManagerConfig()
-//        DispatchQueue.main.asyncAfter(deadline: .now()+10) {
-//            self.trackingState = .inactive
-//        }
     }
     
     private func locationManagerConfig() {
@@ -46,6 +46,7 @@ class RouteManager: NSObject, ObservableObject {
     public func stopRoute() {
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
+        lastLocation = nil
     }
     
     public func toggleTrip() {
@@ -68,7 +69,11 @@ extension RouteManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if trackingState != .active { return }
         guard let location = locations.last else { return }
+        if lastLocation != nil {
+            distanceTotal += location.distance(from: lastLocation) / 1000
+        }
         wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude))
+        lastLocation = location
     }
 }
 
