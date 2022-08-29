@@ -15,6 +15,7 @@ import SwiftUI
 class RouteManager: NSObject, ObservableObject {
     @Published var trackingState: TrackingState = .active
     @Published var distanceTotal = 0.0
+    @Published var routeWaypoints: [CLLocationCoordinate2D] = []
     private var lastLocation: CLLocation!
     
     private var locationManager: CLLocationManager!
@@ -71,6 +72,7 @@ extension RouteManager: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         if lastLocation != nil {
             distanceTotal += location.distance(from: lastLocation) / 1000
+            routeWaypoints.append(lastLocation.coordinate)
         }
         wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude))
         lastLocation = location

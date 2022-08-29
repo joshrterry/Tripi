@@ -29,11 +29,14 @@ struct RouteView: View {
 //                        .frame(height: )
                 }
         
-                Map(coordinateRegion: $region, interactionModes: [.zoom], showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: locations) { location in
-                    MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
-                        Circle().fill(Color.blue).frame(width: 10, height: 10)
-                    }
-                }
+                PolylineMap(region: $region, routeCoordinates: $routeManager.routeWaypoints)
+//                Map(coordinateRegion: $region, interactionModes: [.zoom], showsUserLocation: true, userTrackingMode: .constant(.follow),
+//                    annotationItems: locations) { location in
+//                    // Publishing changes from within view updates is not allowed, this will cause undefined behavior.
+//                    MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)) {
+//                        Circle().fill(Color.blue).frame(width: 10, height: 10)
+//                    }
+//                }
                 .frame(height: 460)
                 .cornerRadius(50, corners: [.topLeft, .topRight])
                 .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)

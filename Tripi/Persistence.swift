@@ -38,7 +38,7 @@ struct PersistenceController {
         if context.hasChanges {
             do {
                 try context.save()
-                print("Data saved")
+//                print("Data saved")
             } catch {
                 fatalError("Unable to save location.")
             }
