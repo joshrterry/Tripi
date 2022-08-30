@@ -42,6 +42,12 @@ class RouteManager: NSObject, ObservableObject {
         timer.invalidate()
     }
     
+    func resetTimer() {
+        timer.invalidate()
+        secondsElapsed = 0
+        time = "00:00"
+    }
+    
     func secondstoMinutesSeconds(seconds: Double) {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -76,12 +82,14 @@ class RouteManager: NSObject, ObservableObject {
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.trackingState = .active
+        startTimer()
     }
     
     public func stopRoute() {
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
         lastLocation = nil
+        pauseTimer()
     }
     
     public func toggleTrip() {

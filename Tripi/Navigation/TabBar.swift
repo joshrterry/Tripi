@@ -55,7 +55,6 @@ struct TabBar: View {
                                 Button {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
-                                        routeManager.startTimer()
                                     } else {
                                         selectedTab = .route
 
