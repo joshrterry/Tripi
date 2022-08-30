@@ -22,6 +22,7 @@ struct PolylineMap: UIViewRepresentable {
         mapView.showsCompass = false
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
+        mapView.isScrollEnabled = false
         
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.addOverlay(polyline)

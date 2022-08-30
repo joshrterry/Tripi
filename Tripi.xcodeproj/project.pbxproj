@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F5099B9128BBF37A00A6B97A /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5099B9028BBF37A00A6B97A /* Stopwatch.swift */; };
+		F5099B9128BBF37A00A6B97A /* StopwatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5099B9028BBF37A00A6B97A /* StopwatchManager.swift */; };
 		F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F3286FC1D9000E07AF /* Preview.swift */; };
 		F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F5286FD3F0000E07AF /* RecentTrips.swift */; };
 		F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F7286FEB1C000E07AF /* RouteView.swift */; };
@@ -54,7 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F5099B9028BBF37A00A6B97A /* Stopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
+		F5099B9028BBF37A00A6B97A /* StopwatchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopwatchManager.swift; sourceTree = "<group>"; };
 		F517F2F3286FC1D9000E07AF /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		F517F2F5286FD3F0000E07AF /* RecentTrips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrips.swift; sourceTree = "<group>"; };
 		F517F2F7286FEB1C000E07AF /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				F51D3B5428AB338E00C6B116 /* RouteManager.swift */,
-				F5099B9028BBF37A00A6B97A /* Stopwatch.swift */,
+				F5099B9028BBF37A00A6B97A /* StopwatchManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -396,7 +396,7 @@
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,
 				F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
-				F5099B9128BBF37A00A6B97A /* Stopwatch.swift in Sources */,
+				F5099B9128BBF37A00A6B97A /* StopwatchManager.swift in Sources */,
 				F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,

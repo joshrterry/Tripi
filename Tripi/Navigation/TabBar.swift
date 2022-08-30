@@ -24,8 +24,8 @@ struct TabBar: View {
                     .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     HStack(spacing: 20) {
                         Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .black)
-                        Metric(data: "3:12", descriptor: "Time Elapsed", color: .black)
-                        Metric(data: "54", descriptor: "Average KM/H", color: .black)
+                        Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .black)
+                        Metric(data: String(format:"%.0f", routeManager.averageSpeed), descriptor: "Average KM/H", color: .black)
                     }
                     .padding(.top, 22)
                 }
@@ -55,6 +55,7 @@ struct TabBar: View {
                                 Button {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
+                                        routeManager.startTimer()
                                     } else {
                                         selectedTab = .route
 

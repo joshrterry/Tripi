@@ -13,9 +13,43 @@ import SwiftUI
 
 
 class RouteManager: NSObject, ObservableObject {
-    @Published var trackingState: TrackingState = .active
+    @Published var trackingState: TrackingState = .inactive
     @Published var distanceTotal = 0.0
+    @Published var time = "00:00"
+    @Published var averageSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
+    
+    @Published var secondsElapsed = 0.0
+    
+    var startTime: Date = Date()
+    
+    var timer = Timer()
+    
+    func startTimer() {
+        startTime = Date()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            let current = Date()
+            let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.startTime, to: current)
+            let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
+            self.secondsElapsed += seconds
+            secondstoMinutesSeconds(seconds: secondsElapsed.self)
+            getSpeed()
+            self.startTime = current
+        }
+    }
+    
+    func pauseTimer() {
+        timer.invalidate()
+    }
+    
+    func secondstoMinutesSeconds(seconds: Double) {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior  = .pad
+        
+        self.time = formatter.string(from: TimeInterval(seconds))!
+    }
     private var lastLocation: CLLocation!
     
     private var locationManager: CLLocationManager!
@@ -58,11 +92,10 @@ class RouteManager: NSObject, ObservableObject {
         }
     }
     
-//    public func generateMultiPolyline() -> MKMultiPolyline {
-//        var polylines: [MKPolyline] = []
-//        
-//        polylines.append(MKPolyline(coordinates: CLLocationCoordinate2D(latitude: CLLocation.coordinate.latitude, longitude: CLLocation.coordinate.longitude), count: locations.count))
-//    }
+    private func getSpeed() {
+        averageSpeed = distanceTotal/(secondsElapsed/3600)
+    }
+    
         
 }
     
