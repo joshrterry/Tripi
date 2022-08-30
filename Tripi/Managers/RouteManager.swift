@@ -17,7 +17,9 @@ class RouteManager: NSObject, ObservableObject {
     @Published var distanceTotal = 0.0
     @Published var time = "00:00"
     @Published var averageSpeed = 0.0
+    @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
+    var lastTwoLocations: [CLLocation] = []
     
     @Published var secondsElapsed = 0.0
     
@@ -33,7 +35,8 @@ class RouteManager: NSObject, ObservableObject {
             let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
             self.secondsElapsed += seconds
             secondstoMinutesSeconds(seconds: secondsElapsed.self)
-            getSpeed()
+            getAvgSpeed()
+            getCurrentSpeed()
             self.startTime = current
         }
     }
@@ -100,8 +103,15 @@ class RouteManager: NSObject, ObservableObject {
         }
     }
     
-    private func getSpeed() {
-        averageSpeed = distanceTotal/(secondsElapsed/3600)
+    private func getAvgSpeed() {
+        averageSpeed = (distanceTotal)/(secondsElapsed/3600)
+    }
+    
+    private func getCurrentSpeed() {
+        if lastTwoLocations.count == 2 {
+            currentSpeed = (lastTwoLocations[1].distance(from: lastTwoLocations[0])/1000)/(lastTwoLocations[1].timestamp.timeIntervalSince(lastTwoLocations[0].timestamp)/3600)
+
+        }
     }
     
         
@@ -114,6 +124,9 @@ extension RouteManager: CLLocationManagerDelegate {
         if lastLocation != nil {
             distanceTotal += location.distance(from: lastLocation) / 1000
             routeWaypoints.append(lastLocation.coordinate)
+            lastTwoLocations = []
+            lastTwoLocations.append(lastLocation)
+            lastTwoLocations.append(location)
         }
         wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude))
         lastLocation = location

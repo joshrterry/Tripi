@@ -22,10 +22,13 @@ struct TabBar: View {
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
                         .cornerRadius(30)
                     .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
-                    HStack(spacing: 20) {
+                    HStack() {
                         Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .black)
+                            .frame(width: 100)
                         Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .black)
-                        Metric(data: String(format:"%.0f", routeManager.averageSpeed), descriptor: "Average KM/H", color: .black)
+                            .frame(width: 120)
+                        Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .black)
+                            .frame(width: 100)
                     }
                     .padding(.top, 22)
                 }
