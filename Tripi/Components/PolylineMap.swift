@@ -23,7 +23,7 @@ struct PolylineMap: UIViewRepresentable {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
         mapView.isScrollEnabled = false
-        
+        mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0)
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.addOverlay(polyline)
         
@@ -31,6 +31,7 @@ struct PolylineMap: UIViewRepresentable {
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
+        view.tintColor = routeManager.trackingState == .active ? UIColor.systemBlue : UIColor.systemGray
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         view.addOverlay(polyline)
         
