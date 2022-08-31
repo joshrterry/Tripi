@@ -4,6 +4,7 @@
 //
 //  Created by Joshua Terry on 2022-07-01.
 //
+// withAnimation causing "Missing MeshRenderables for ground mesh..."
 
 import SwiftUI
 
@@ -11,17 +12,19 @@ struct TabBar: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @EnvironmentObject var routeManager: RouteManager
+    @State var showLiveMetrics = false
     
     var body: some View {
         VStack {
             Spacer()
             ZStack(alignment: .bottom) {
+                
                 ZStack(alignment: .top) {
                     Rectangle()
                         .frame(maxWidth: .infinity, maxHeight: 210)
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
                         .cornerRadius(30)
-                    .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
+                        .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     HStack() {
                         Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .black)
                             .frame(width: 100)
@@ -32,6 +35,9 @@ struct TabBar: View {
                     }
                     .padding(.top, 22)
                 }
+                .offset(y: showLiveMetrics ? 0 : 120)
+            
+
 
                 
                 ZStack(alignment: .top) {
@@ -44,9 +50,12 @@ struct TabBar: View {
                         Group {
                             Button {
                                 selectedTab = .home
+                                withAnimation {
+                                    showLiveMetrics = false
+                                }
                             } label: {
                                 Image(systemName: "house.fill")
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(selectedTab == .home ? .primary : .secondary)
                             }
                             ZStack {
                                 Circle()
@@ -61,6 +70,9 @@ struct TabBar: View {
                                     } else {
                                         selectedTab = .route
 
+                                    }
+                                    withAnimation {
+                                        showLiveMetrics = true
                                     }
                                     print(routeManager.trackingState)
 
@@ -77,9 +89,12 @@ struct TabBar: View {
 
                             Button {
                                 selectedTab = .trips
+                                withAnimation {
+                                    showLiveMetrics = false
+                                }
                             } label: {
                                 Image(systemName: "line.3.horizontal")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(selectedTab == .trips ? .primary : .secondary)
                             }
                         }
                         .font(.system(size: 24, weight: .bold))
