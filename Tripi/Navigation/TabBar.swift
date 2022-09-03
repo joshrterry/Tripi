@@ -4,7 +4,7 @@
 //
 //  Created by Joshua Terry on 2022-07-01.
 //
-// withAnimation causing "Missing MeshRenderables for ground mesh..."
+// CONSOLE: withAnimation causing "Missing MeshRenderables for ground mesh..."
 
 import SwiftUI
 
