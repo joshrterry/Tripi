@@ -17,44 +17,53 @@ struct Preview: View {
     var color = Color.primary
     
     var body: some View {
-        ZStack(alignment: .top) {
-            Rectangle()
-                .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
-                .frame(width: 154, height: 256)
-                .cornerRadius(25)
-                .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
-                .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
-            
-            VStack(alignment: .center) {
-//                Rectangle()
-//                    .foregroundColor(.gray)
-                Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))), interactionModes: [])
-                    .frame(width: 134, height: 161)
-                    .cornerRadius(15)
-                    .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
-                    .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                    .padding(.top, 10)
+        
+            NavigationLink(destination: TripDetailView()) {
 
-                VStack(alignment: .leading) {
-                    HStack(spacing: 40) {
-                        Text("\(distance) km")
-                            .font(.custom("Gilroy", size: 22))
-                        Image(systemName: "chevron.right")
-                            .font(Font.system(size: 15, weight: .black))
+            ZStack(alignment: .top) {
+                Rectangle()
+                    .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
+                    .frame(width: 154, height: 256)
+                    .cornerRadius(25)
+                    .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
+                    .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
+                
+                VStack(alignment: .center) {
+    //                Rectangle()
+    //                    .foregroundColor(.gray)
+                    Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))), interactionModes: [])
+                        .frame(width: 134, height: 161)
+                        .cornerRadius(15)
+                        .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
+                        .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                        .padding(.top, 10)
+
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 40) {
+                            Text("\(distance) km")
+                                .font(.custom("Gilroy", size: 22))
+                            Image(systemName: "chevron.right")
+                                .font(Font.system(size: 15, weight: .black))
+                        }
+                        .foregroundColor(.black)
+
+                        
+                        Text(date)
+                            .font(.custom("Gilroy", size: 12))
+                            .foregroundColor(.black)
+
+                        Text(category.uppercased())
+                            .font(.custom("Gilroy", size: 15))
+                            .foregroundColor(color)
+                        
                     }
-                    
-                    Text(date)
-                        .font(.custom("Gilroy", size: 12))
-                    Text(category.uppercased())
-                        .font(.custom("Gilroy", size: 15))
-                        .foregroundColor(color)
-                    
-                }
-                .padding(.horizontal, 5)
+                    .padding(.horizontal, 5)
 
+                }
+               
             }
-           
         }
+
     }
 }
 

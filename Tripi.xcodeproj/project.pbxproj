@@ -32,6 +32,7 @@
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
+		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
 		F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +83,7 @@
 		F56426E72856B9B6005FD118 /* TripiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56426EB2856B9B6005FD118 /* TripiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITests.swift; sourceTree = "<group>"; };
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +127,7 @@
 			children = (
 				F56426CD2856B9B4005FD118 /* HomeView.swift */,
 				F517F2F7286FEB1C000E07AF /* RouteView.swift */,
+				F59870E628BFD70B00F9CC89 /* TripDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
 				F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
+				F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,
 				F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */,
