@@ -20,7 +20,7 @@ class RouteManager: NSObject, ObservableObject {
     @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
     var lastTwoLocations: [CLLocation] = []
-    
+
     @Published var secondsElapsed = 0.0
     
     var startTime: Date = Date()
@@ -89,10 +89,14 @@ class RouteManager: NSObject, ObservableObject {
     }
     
     public func stopRoute() {
+        PersistenceController.shared.addTrip(distance: distanceTotal, seconds: secondsElapsed)
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
         lastLocation = nil
-        pauseTimer()
+        distanceTotal = 0
+        currentSpeed = 0
+        averageSpeed = 0
+        resetTimer()
     }
     
     public func toggleTrip() {

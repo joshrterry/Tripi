@@ -23,9 +23,33 @@ struct TripDetailView: View {
                         .cornerRadius(50, corners: [.topLeft, .topRight])
                         .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
                         .edgesIgnoringSafeArea(.all)
-                    Text("Trip Summary")
-                        .font(.custom("Gilroy", size: 32))
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Trip Summary")
+                            .font(.custom("Gilroy", size: 32))
+                            .padding(.leading, 30)
+                            .padding(.top, 40)
+                        Text("10:23 AM - 10:55 AM | Sept 3, 2022")
+                            .font(.custom("Gilroy", size: 15))
+                            .foregroundColor(.gray)
+                            .padding(.leading, 30)
+                        
+                        HStack(spacing: 32) {
+                            Metric(data: "54.3", descriptor: "TOTAL KM")
+                            Metric(data: "23:10", descriptor: "MINUTES")
+                            Metric(data: "93", descriptor: "AVG KM/H")
+                        }
                         .padding(30)
+                        HStack {
+                            Spacer()
+                            Rectangle()
+                                .foregroundColor(Color(.systemGray5))
+                                .frame(width: 330, height: 250)
+                                .cornerRadius(25)
+                            Spacer()
+                        }
+
+                    }
+
                 }
             }
         }

@@ -25,7 +25,7 @@ struct TripiApp: App {
     var body: some Scene {
         WindowGroup {
            ContentView()
-               .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+               .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext) 
                .environmentObject(routeManager)
        }
    }

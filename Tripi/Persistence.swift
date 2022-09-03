@@ -8,9 +8,11 @@
 import CoreData
 
 struct PersistenceController {
-    static let shared = PersistenceController()
+    static var shared = PersistenceController()
 
     let container: NSPersistentCloudKitContainer
+    var newTrip: Trip? = nil
+
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "LocationTracker")
@@ -22,6 +24,14 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+//        newTrip = Trip(context: container.viewContext)
+    }
+    
+    mutating func addTrip(distance: Double, seconds: Double) {
+        newTrip = Trip(context: container.viewContext)
+        newTrip!.distance = distance
+        newTrip!.timestamp = Date()
+        save()
     }
     
     func add(location: (longitude: Double, latitude: Double)) {
@@ -29,6 +39,9 @@ struct PersistenceController {
         newLocation.timestamp = Date()
         newLocation.longitude = location.longitude
         newLocation.latitude = location.latitude
+        if newTrip != nil {
+            newLocation.trip = newTrip
+        }
         save()
     }
     
