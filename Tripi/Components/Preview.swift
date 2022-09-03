@@ -45,12 +45,12 @@ struct Preview: View {
                             Image(systemName: "chevron.right")
                                 .font(Font.system(size: 15, weight: .black))
                         }
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
 
                         
                         Text(date)
                             .font(.custom("Gilroy", size: 12))
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
 
                         Text(category.uppercased())
                             .font(.custom("Gilroy", size: 15))

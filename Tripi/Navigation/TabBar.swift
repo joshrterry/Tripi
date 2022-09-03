@@ -26,11 +26,11 @@ struct TabBar: View {
                         .cornerRadius(30)
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     HStack() {
-                        Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .black)
+                        Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .primary)
                             .frame(width: 100)
-                        Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .black)
+                        Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
                             .frame(width: 120)
-                        Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .black)
+                        Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .primary)
                             .frame(width: 100)
                     }
                     .padding(.top, 22)
