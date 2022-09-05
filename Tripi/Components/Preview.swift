@@ -10,15 +10,21 @@ import MapKit
 
 struct Preview: View {
     @Environment(\.colorScheme) var colorScheme
-
-    var distance = ""
+    @EnvironmentObject var routeManager: RouteManager
+    
+    var distance = 0.0
     var date = ""
     var category = ""
     var color = Color.primary
     
+    var time = ""
+    var avgSpeed = 0.0
+    var starTime: Date
+    var endTime: Date
+    
     var body: some View {
         
-            NavigationLink(destination: TripDetailView()) {
+        NavigationLink(destination: TripDetailView(distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime)) {
 
             ZStack(alignment: .top) {
                 Rectangle()
@@ -40,7 +46,7 @@ struct Preview: View {
 
                     VStack(alignment: .leading) {
                         HStack(spacing: 40) {
-                            Text("\(distance) km")
+                            Text(String(format:"%.1f", distance)+" km")
                                 .font(.custom("Gilroy", size: 22))
                             Image(systemName: "chevron.right")
                                 .font(Font.system(size: 15, weight: .black))
@@ -69,6 +75,6 @@ struct Preview: View {
 
 struct Preview_Previews: PreviewProvider {
     static var previews: some View {
-        Preview(distance: "36.7", date: "June 24 | 8:32 AM", category: "business · $12.76")
+        Preview(distance: 22.3, date: "June 24 | 8:32 AM", category: "business · $12.76", starTime: Date(), endTime: Date())
     }
 }

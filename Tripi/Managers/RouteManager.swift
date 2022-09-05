@@ -19,25 +19,26 @@ class RouteManager: NSObject, ObservableObject {
     @Published var averageSpeed = 0.0
     @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
+    @Published var startTime = Date()
     var lastTwoLocations: [CLLocation] = []
 
     @Published var secondsElapsed = 0.0
     
-    var startTime: Date = Date()
+    var timerStartTime: Date = Date()
     
     var timer = Timer()
     
     func startTimer() {
-        startTime = Date()
+        timerStartTime = Date()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             let current = Date()
-            let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.startTime, to: current)
+            let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.timerStartTime, to: current)
             let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
             self.secondsElapsed += seconds
             secondstoMinutesSeconds(seconds: secondsElapsed.self)
             getAvgSpeed()
             getCurrentSpeed()
-            self.startTime = current
+            self.timerStartTime = current
         }
     }
     
@@ -86,10 +87,11 @@ class RouteManager: NSObject, ObservableObject {
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.trackingState = .active
         startTimer()
+        startTime = Date()
     }
     
     public func stopRoute() {
-        PersistenceController.shared.addTrip(distance: distanceTotal, seconds: secondsElapsed)
+        PersistenceController.shared.addTrip(distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date())
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
         lastLocation = nil
