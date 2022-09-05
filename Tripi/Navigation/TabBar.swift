@@ -77,12 +77,32 @@ struct TabBar: View {
                                     print(routeManager.trackingState)
 
                                 } label: {
-                                    Image(selectedTab == .route ? "go_icon" : "tripimono")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 45, height: 45)
-                                        .foregroundColor(.black)
-                                        .font(.system(size: 50))
+                                    if selectedTab == .route {
+                                        if routeManager.trackingState == .inactive {
+                                            Image("go_icon")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 45, height: 45)
+                                                .foregroundColor(.black)
+                                                .font(.system(size: 50))
+                                        }
+                                        if routeManager.trackingState == .active {
+                                            Image("stop_icon")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 45, height: 45)
+                                                .foregroundColor(.black)
+                                                .font(.system(size: 50))
+                                        }
+                                    } else {
+                                        Image("tripimono")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 45, height: 45)
+                                            .foregroundColor(.black)
+                                            .font(.system(size: 50))
+                                    }
+
                                 }
                             }
                             .offset(y: -10)

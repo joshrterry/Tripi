@@ -33,6 +33,7 @@
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
+		F5BCB34128C65A820063082E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BCB34028C65A820063082E /* SettingsView.swift */; };
 		F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,7 @@
 		F56426EB2856B9B6005FD118 /* TripiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITests.swift; sourceTree = "<group>"; };
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
+		F5BCB34028C65A820063082E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +130,7 @@
 				F56426CD2856B9B4005FD118 /* HomeView.swift */,
 				F517F2F7286FEB1C000E07AF /* RouteView.swift */,
 				F59870E628BFD70B00F9CC89 /* TripDetailView.swift */,
+				F5BCB34028C65A820063082E /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */,
 				F56426CC2856B9B4005FD118 /* TripiApp.swift in Sources */,
 				F517F2FA286FF59E000E07AF /* TabBar.swift in Sources */,
+				F5BCB34128C65A820063082E /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

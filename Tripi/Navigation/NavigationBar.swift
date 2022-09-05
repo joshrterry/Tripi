@@ -28,7 +28,7 @@ struct NavigationBar: View {
                 .offset(y: hasScrolled ? -4 : 0)
             
             HStack(spacing: 16) {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemName: "square.and.arrow.up.circle")
                     .font(.body.weight(.bold))
                     .frame(width: 36, height: 36)
                     .foregroundColor(.secondary)

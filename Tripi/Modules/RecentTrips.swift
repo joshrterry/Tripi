@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecentTrips: View {
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: true)], animation: .default)
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
     private var trips: FetchedResults<Trip>
     
     func formatTimestamp(date: Date) -> String {
@@ -27,9 +27,7 @@ struct RecentTrips: View {
                     ForEach(trips, id: \.self) { trip in
                         Preview(distance: trip.distance, date: formatTimestamp(date: trip.startTimestamp ?? Date()), category: "Business · $12.76", color: .green, time: trip.time ?? "", avgSpeed: trip.averageSpeed, starTime: trip.startTimestamp ?? Date(), endTime: trip.endTimestamp ?? Date())
                     }
-//                    Preview(distance: "36.7", date: "Today", category: "Business · $12.76", color: .green)
-//                    Preview(distance: "12.1", date: "Yesterday", category: "Personal", color: .blue)
-//                    Preview(distance: "50.3", date: "June 20", category: "Business · $43.76", color: .green)
+
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical, 22)
