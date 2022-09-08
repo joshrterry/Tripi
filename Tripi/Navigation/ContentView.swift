@@ -21,7 +21,7 @@ struct ContentView: View {
             case .route:
                 RouteView(model: model)
             case .trips:
-                HomeView()
+                TripBrowserView()
             }
             TabBar()
                 .offset(y: model.fullScreen ? 200 : 0)

@@ -27,12 +27,15 @@ struct PersistenceController {
 //        newTrip = Trip(context: container.viewContext)
     }
     
-    mutating func addTrip(distance: Double, time: String, speed: Double, startTime: Date, endTime: Date) {
+    mutating func addTrip(distance: Double, time: String, speed: Double, startTime: Date, endTime: Date, seconds: Double) {
         newTrip = Trip(context: container.viewContext)
+        newTrip!.expenseTag = "business"
         newTrip!.distance = distance
         newTrip!.startTimestamp = startTime
+//        newTrip!.startTimestamp = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())
         newTrip!.endTimestamp = endTime
         newTrip!.time = time
+        newTrip!.seconds = seconds
         newTrip!.averageSpeed = speed
         newTrip!.id = UUID()
         save()

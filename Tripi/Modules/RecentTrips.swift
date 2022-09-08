@@ -13,7 +13,7 @@ struct RecentTrips: View {
     
     func formatTimestamp(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, MMMM d"
+        dateFormatter.dateFormat = "EEEE, MMM d"
         return dateFormatter.string(from: date)
     }
     

@@ -13,6 +13,19 @@ struct HomeView: View {
     @EnvironmentObject var routeManager: RouteManager
 
     @State var hasScrolled = false
+    @State var currentDate = Date()
+
+    var startDateOfMonth: Date {
+        let components = Calendar.current.dateComponents([.year, .month], from: currentDate)
+        let startOfMonth = Calendar.current.date(from: components)!
+        return startOfMonth
+    }
+
+    var startDateOfWeek: Date {
+        let components = Calendar.current.dateComponents([.yearForWeekOfYear,  .weekOfYear], from: currentDate)
+        let startOfWeek = Calendar.current.date(from: components)!
+        return startOfWeek
+    }
     
     var body: some View {
         NavigationView {
@@ -21,7 +34,7 @@ struct HomeView: View {
                 ScrollView {
                     scrollDetection
                     VStack {
-                        SummaryStats()
+                        SummaryStats(filters: [startDateOfMonth, startDateOfWeek])
                         RecentTrips()
                     }
                 }

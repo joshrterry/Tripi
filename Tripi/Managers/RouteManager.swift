@@ -35,7 +35,7 @@ class RouteManager: NSObject, ObservableObject {
             let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.timerStartTime, to: current)
             let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
             self.secondsElapsed += seconds
-            secondstoMinutesSeconds(seconds: secondsElapsed.self)
+            self.time = secondstoMinutesSeconds(seconds: secondsElapsed.self)
             getAvgSpeed()
             getCurrentSpeed()
             self.timerStartTime = current
@@ -52,14 +52,24 @@ class RouteManager: NSObject, ObservableObject {
         time = "00:00"
     }
     
-    func secondstoMinutesSeconds(seconds: Double) {
+    public func secondstoMinutesSeconds(seconds: Double) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior  = .pad
         
-        self.time = formatter.string(from: TimeInterval(seconds))!
+        return formatter.string(from: TimeInterval(seconds))!
     }
+    
+    public func secondstoHours(seconds: Double) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .short
+        formatter.zeroFormattingBehavior = .pad
+        
+        return formatter.string(from: TimeInterval(seconds))!
+    }
+    
     private var lastLocation: CLLocation!
     
     private var locationManager: CLLocationManager!
@@ -91,7 +101,7 @@ class RouteManager: NSObject, ObservableObject {
     }
     
     public func stopRoute() {
-        PersistenceController.shared.addTrip(distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date())
+        PersistenceController.shared.addTrip(distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
         lastLocation = nil
