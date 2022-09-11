@@ -32,7 +32,7 @@ struct SummaryStats: View {
         if showingWeekly {
             for trip in weeklyTrips {
                 selectedDistance += trip.distance
-                selectedHours += trip.seconds
+                selectedHours += trip.secondsElapsed
                 if trip.expenseTag == "business" {
                     selectedBusinessKM += trip.distance
                 }
@@ -40,7 +40,7 @@ struct SummaryStats: View {
         } else {
             for trip in monthlyTrips {
                 selectedDistance += trip.distance
-                selectedHours += trip.seconds
+                selectedHours += trip.secondsElapsed
                 if trip.expenseTag == "business" {
                     selectedBusinessKM += trip.distance
                 }

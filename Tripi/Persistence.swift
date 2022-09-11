@@ -35,7 +35,8 @@ struct PersistenceController {
 //        newTrip!.startTimestamp = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())
         newTrip!.endTimestamp = endTime
         newTrip!.time = time
-        newTrip!.seconds = seconds
+        newTrip!.secondsElapsed = seconds
+        print(newTrip!.secondsElapsed)
         newTrip!.averageSpeed = speed
         newTrip!.id = UUID()
         save()

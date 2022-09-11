@@ -61,13 +61,8 @@ class RouteManager: NSObject, ObservableObject {
         return formatter.string(from: TimeInterval(seconds))!
     }
     
-    public func secondstoHours(seconds: Double) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .short
-        formatter.zeroFormattingBehavior = .pad
-        
-        return formatter.string(from: TimeInterval(seconds))!
+    public func secondstoHours(seconds: Double) -> Double {
+        return seconds/3600
     }
     
     private var lastLocation: CLLocation!

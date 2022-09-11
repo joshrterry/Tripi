@@ -10,17 +10,24 @@ import SwiftUI
 struct SettingsView: View {
     
     @State var hasScrolled = false
-
+    @State var reimbursement_amount = 1.00
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
-            ScrollView {
-                scrollDetection
-            }
+                Text("Settings")
+                List {
+                    ZStack {
+                        scrollDetection
+                        Stepper("Reimbursement amount: $\(String(format: "%.2f", reimbursement_amount)) / km", value: $reimbursement_amount, in: 0...10.00, step: 0.1)
+                    }
+
+                }
             .coordinateSpace(name: "scroll")
             .safeAreaInset(edge: .top, content: {
                 Color.clear.frame(height: 50)
             })
+
             .overlay(NavigationBar(title: "Settings", hasScrolled: $hasScrolled))
             .navigationBarHidden(true)
         }
