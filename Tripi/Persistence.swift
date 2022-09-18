@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import CoreLocation
 
 struct PersistenceController {
     static var shared = PersistenceController()
@@ -36,7 +37,6 @@ struct PersistenceController {
         newTrip!.endTimestamp = endTime
         newTrip!.time = time
         newTrip!.secondsElapsed = seconds
-        print(newTrip!.secondsElapsed)
         newTrip!.averageSpeed = speed
         newTrip!.id = UUID()
         save()

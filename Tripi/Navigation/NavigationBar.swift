@@ -11,6 +11,7 @@ struct NavigationBar: View {
     
     var title = ""
     @Binding var hasScrolled: Bool
+    @State private var showingSettings = false
     
     var body: some View {
         ZStack {
@@ -34,12 +35,19 @@ struct NavigationBar: View {
                     .foregroundColor(.secondary)
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     .strokeStyle(cornerRadius: 14)
-                Image(systemName: "gear")
-                    .font(.body.weight(.bold))
-                    .frame(width: 36, height: 36)
-                    .foregroundColor(.secondary)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    .strokeStyle(cornerRadius: 14)
+                Button {
+                    showingSettings.toggle()
+                } label: {
+                    Image(systemName: "gear")
+                        .font(.body.weight(.bold))
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.secondary)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .strokeStyle(cornerRadius: 14)
+                }
+                .sheet(isPresented: $showingSettings) {
+                    SettingsView()
+                }
             }
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.trailing, 20)

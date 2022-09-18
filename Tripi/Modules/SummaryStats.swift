@@ -12,12 +12,14 @@ struct SummaryStats: View {
     @State var selectedBusinessKM = 0.0
     @State var selectedHours = 0.0
     @State var showingWeekly = false
+    @State var selectedReimbursable = 0.0
 
     @EnvironmentObject var routeManager: RouteManager
         
     @FetchRequest var weeklyTrips: FetchedResults<Trip>
     @FetchRequest var monthlyTrips: FetchedResults<Trip>
 
+    @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     
     init(filters: [Date]) {
         _weeklyTrips = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "startTimestamp >= %@", filters[1] as CVarArg))
@@ -46,6 +48,7 @@ struct SummaryStats: View {
                 }
             }
         }
+        selectedReimbursable = selectedDistance*reimbursementAmount
     }
     
     var body: some View {
@@ -83,7 +86,7 @@ struct SummaryStats: View {
             HStack() {
                 Metric(data: String(format:"%.1f", routeManager.secondstoHours(seconds: selectedHours)), descriptor: "hours driven")
                     .frame(width: 150, alignment: .leading)
-                Metric(data: "$94.32", descriptor: "reimbursable", color: Color.green)
+                Metric(data: "$"+String(format:"%.2f", selectedReimbursable), descriptor: "reimbursable", color: Color.green)
                     .frame(width: 150, alignment: .leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -93,6 +96,9 @@ struct SummaryStats: View {
         .onAppear {
             loadData()
         }
+        .onChange(of: reimbursementAmount, perform: { _ in
+            loadData()
+        })
     }
 }
 
