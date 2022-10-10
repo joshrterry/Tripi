@@ -14,6 +14,9 @@ struct TripDetailView: View {
     @State var avgSpeed: Double
     @State var startTime: Date
     @State var endTime: Date
+    @State var notes: String
+    @State var region: MKCoordinateRegion
+    @State var routeCoords: [CLLocationCoordinate2D]
     
     func formatTime(date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -29,7 +32,7 @@ struct TripDetailView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))), interactionModes: [])
+            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
                 .edgesIgnoringSafeArea(.all)
                 .frame(height: 300)
             VStack {
@@ -57,13 +60,50 @@ struct TripDetailView: View {
                             Metric(data: String(format:"%.0f", avgSpeed), descriptor: "AVG KM/H")
                         }
                         .padding(30)
-                        HStack {
-                            Spacer()
+                        Text("Tags")
+                            .font(.custom("Gilroy", size: 24))
+                            .padding(.leading, 30)
+//                            Rectangle()
+//                                .foregroundColor(Color(.systemGray5))
+//                                .frame(width: 330, height: 250)
+//                                .cornerRadius(25)
+                        Button {
+                            
+                        } label: {
+                            ZStack(alignment: .center) {
+                                Rectangle()
+                                    .frame(width: 80, height: 30)
+                                    .cornerRadius(15)
+                                    .foregroundColor(Color(.systemGray5))
+
+                                HStack {
+                                    Image(systemName: "plus")
+                                    Text("New")
+                                }
+                                    .foregroundColor(Color.primary)
+                                    .font(.custom("Gilroy", size: 16))
+                            }
+                            .padding(.top, 15)
+                            .padding(.leading, 30)
+                        }
+                        
+                        Text("Notes")
+                            .font(.custom("Gilroy", size: 24))
+                            .padding(.vertical, 15)
+                            .padding(.leading, 30)
+                        
+                        ZStack(alignment: .top) {
                             Rectangle()
+                                .cornerRadius(20)
                                 .foregroundColor(Color(.systemGray5))
-                                .frame(width: 330, height: 250)
-                                .cornerRadius(25)
-                            Spacer()
+                                .padding(.horizontal, 30)
+                                .frame(height: 150)
+                            TextEditor(text: $notes)
+                                .scrollContentBackground(.hidden)
+                                .scrollDisabled(true)
+                                .padding(.horizontal, 40)
+                                .padding(.top, 15)
+                                .frame(height: 150)
                         }
 
                     }
@@ -76,6 +116,6 @@ struct TripDetailView: View {
 
 struct TripDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TripDetailView(distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date())
+        TripDetailView(distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [])
     }
 }

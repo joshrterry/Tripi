@@ -13,6 +13,7 @@ struct PolylineMap: UIViewRepresentable {
     
     @Binding var region: MKCoordinateRegion
     @Binding var routeCoordinates: [CLLocationCoordinate2D]
+    @State var isTracking: Bool
 
     // Create the MKMapView using UIKit.
     func makeUIView(context: Context) -> MKMapView {
@@ -20,8 +21,10 @@ struct PolylineMap: UIViewRepresentable {
         mapView.delegate = context.coordinator
         mapView.region = region
         mapView.showsCompass = false
-        mapView.showsUserLocation = true
-        mapView.userTrackingMode = .follow
+        if isTracking {
+            mapView.showsUserLocation = true
+            mapView.userTrackingMode = .follow
+        }
         mapView.isScrollEnabled = false
 
         mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0)

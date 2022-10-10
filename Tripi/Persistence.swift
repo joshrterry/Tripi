@@ -28,34 +28,51 @@ struct PersistenceController {
 //        newTrip = Trip(context: container.viewContext)
     }
     
-    mutating func addTrip(distance: Double, time: String, speed: Double, startTime: Date, endTime: Date, seconds: Double) {
+    mutating func addTrip(startTime: Date) -> Trip {
+        print("Trip Created")
         newTrip = Trip(context: container.viewContext)
-        newTrip!.expenseTag = "business"
-        newTrip!.distance = distance
+//        newTrip!.expenseTag = "business"
+//        newTrip!.distance = distance
         newTrip!.startTimestamp = startTime
-//        newTrip!.startTimestamp = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())
-        newTrip!.endTimestamp = endTime
-        newTrip!.time = time
-        newTrip!.secondsElapsed = seconds
-        newTrip!.averageSpeed = speed
+//        newTrip!.endTimestamp = endTime
+//        newTrip!.time = time
+//        newTrip!.secondsElapsed = seconds
+//        newTrip!.averageSpeed = speed
         newTrip!.id = UUID()
         save()
+        return newTrip ?? Trip(context: container.viewContext)
     }
     
-    func add(location: (longitude: Double, latitude: Double)) {
+    // Create trip when press go, then modify at end !!!!!
+    
+    mutating func editTrip(trip: Trip, distance: Double, time: String, speed: Double, startTime: Date, endTime: Date, seconds: Double) {
+        trip.expenseTag = "business"
+        trip.distance = distance
+        trip.startTimestamp = startTime
+        trip.endTimestamp = endTime
+        trip.time = time
+        trip.secondsElapsed = seconds
+        trip.averageSpeed = speed
+        save()
+
+    }
+    
+    func add(location: (longitude: Double, latitude: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)
         newLocation.timestamp = Date()
         newLocation.longitude = location.longitude
         newLocation.latitude = location.latitude
-        if newTrip != nil {
-            newLocation.trip = newTrip
-        }
+        newLocation.trip = location.trip
+//        if newTrip != nil {
+//            newLocation.trip = newTrip
+//        }
+        print(newLocation.trip ?? "no trip")
+
         save()
     }
     
     func save() {
         let context = container.viewContext
-
         if context.hasChanges {
             do {
                 try context.save()

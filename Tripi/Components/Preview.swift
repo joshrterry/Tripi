@@ -25,13 +25,13 @@ struct Preview: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
     
-    @State private var region: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 53.5461, longitude: -113.4937), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    @State var region: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 53.5461, longitude: -113.4937), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     
-    @State private var routeCoords: [CLLocationCoordinate2D] = []
+    @State var routeCoords: [CLLocationCoordinate2D] = []
     
     var body: some View {
         
-        NavigationLink(destination: TripDetailView(distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime)) {
+        NavigationLink(destination: TripDetailView(distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: "", region: region, routeCoords: routeCoords)) {
 
             ZStack(alignment: .top) {
                 Rectangle()
@@ -44,7 +44,7 @@ struct Preview: View {
                 VStack(alignment: .center) {
     //                Rectangle()
     //                    .foregroundColor(.gray)
-                   PolylineMap(region: $region, routeCoordinates: $routeCoords)
+                    PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
                         .frame(width: 134, height: 161)
                         .cornerRadius(15)
                         .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
@@ -75,8 +75,6 @@ struct Preview: View {
                 }
                
             }
-        }.onAppear {
-            routeCoords = routeManager.routeWaypoints
         }
     }
 }

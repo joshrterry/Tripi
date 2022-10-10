@@ -19,6 +19,10 @@
 		F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341232870E9CA00E7E5C1 /* Tab.swift */; };
 		F53341262870FCD300E7E5C1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341252870FCD300E7E5C1 /* Model.swift */; };
 		F554A80D28AA62CB00E4F8D6 /* TrackingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */; };
+		F558FFD728EA5B8500FA00B0 /* Trip+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD328EA5B8500FA00B0 /* Trip+CoreDataClass.swift */; };
+		F558FFD828EA5B8500FA00B0 /* Trip+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD428EA5B8500FA00B0 /* Trip+CoreDataProperties.swift */; };
+		F558FFD928EA5B8500FA00B0 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD528EA5B8500FA00B0 /* Location+CoreDataClass.swift */; };
+		F558FFDA28EA5B8500FA00B0 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD628EA5B8500FA00B0 /* Location+CoreDataProperties.swift */; };
 		F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FA73928C8E513000C0740 /* TripBrowserView.swift */; };
 		F56024ED286FA6C90002403D /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56024EC286FA6C90002403D /* NavigationBar.swift */; };
 		F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56024EE286FAB450002403D /* PreferenceKeys.swift */; };
@@ -68,6 +72,10 @@
 		F53341232870E9CA00E7E5C1 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		F53341252870FCD300E7E5C1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingState.swift; sourceTree = "<group>"; };
+		F558FFD328EA5B8500FA00B0 /* Trip+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataClass.swift"; path = "Tripi/Model/Trip+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F558FFD428EA5B8500FA00B0 /* Trip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataProperties.swift"; path = "Tripi/Model/Trip+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F558FFD528EA5B8500FA00B0 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Location+CoreDataClass.swift"; path = "Tripi/Model/Location+CoreDataClass.swift"; sourceTree = "<group>"; };
+		F558FFD628EA5B8500FA00B0 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Location+CoreDataProperties.swift"; path = "Tripi/Model/Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F55FA73928C8E513000C0740 /* TripBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBrowserView.swift; sourceTree = "<group>"; };
 		F56024EB286FA4A40002403D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F56024EC286FA6C90002403D /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
@@ -196,6 +204,10 @@
 		F56426BF2856B9B4005FD118 = {
 			isa = PBXGroup;
 			children = (
+				F558FFD328EA5B8500FA00B0 /* Trip+CoreDataClass.swift */,
+				F558FFD428EA5B8500FA00B0 /* Trip+CoreDataProperties.swift */,
+				F558FFD528EA5B8500FA00B0 /* Location+CoreDataClass.swift */,
+				F558FFD628EA5B8500FA00B0 /* Location+CoreDataProperties.swift */,
 				F56426CA2856B9B4005FD118 /* Tripi */,
 				F56426E02856B9B6005FD118 /* TripiTests */,
 				F56426EA2856B9B6005FD118 /* TripiUITests */,
@@ -390,10 +402,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F558FFD928EA5B8500FA00B0 /* Location+CoreDataClass.swift in Sources */,
 				F56024ED286FA6C90002403D /* NavigationBar.swift in Sources */,
 				F56024F4286FAC2E0002403D /* Styles.swift in Sources */,
 				F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */,
 				F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */,
+				F558FFDA28EA5B8500FA00B0 /* Location+CoreDataProperties.swift in Sources */,
 				F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */,
 				F56426D52856B9B6005FD118 /* Persistence.swift in Sources */,
 				F56024F5286FAC300002403D /* AnimatableFontModifier.swift in Sources */,
@@ -403,6 +417,7 @@
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,
 				F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
+				F558FFD828EA5B8500FA00B0 /* Trip+CoreDataProperties.swift in Sources */,
 				F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */,
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */,
@@ -412,6 +427,7 @@
 				F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */,
 				F56426CC2856B9B4005FD118 /* TripiApp.swift in Sources */,
 				F517F2FA286FF59E000E07AF /* TabBar.swift in Sources */,
+				F558FFD728EA5B8500FA00B0 /* Trip+CoreDataClass.swift in Sources */,
 				F5BCB34128C65A820063082E /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -499,7 +515,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -553,7 +569,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

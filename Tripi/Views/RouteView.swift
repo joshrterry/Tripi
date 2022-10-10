@@ -29,7 +29,7 @@ struct RouteView: View {
 //                        .frame(height: )
                 }
         
-                PolylineMap(region: $region, routeCoordinates: $routeManager.routeWaypoints)
+                PolylineMap(region: $region, routeCoordinates: $routeManager.routeWaypoints, isTracking: true)
 
                 .frame(height: 460)
                 .cornerRadius(50, corners: [.topLeft, .topRight])

@@ -22,6 +22,9 @@ class RouteManager: NSObject, ObservableObject {
     @Published var startTime = Date()
     var lastTwoLocations: [CLLocation] = []
 
+    
+    var newTrip: Trip = Trip()
+    
     @Published var secondsElapsed = 0.0
     
     var timerStartTime: Date = Date()
@@ -69,7 +72,7 @@ class RouteManager: NSObject, ObservableObject {
     
     private var locationManager: CLLocationManager!
     
-    typealias Output = (longitude: Double, latitude: Double)
+    typealias Output = (longitude: Double, latitude: Double, trip: Trip)
     typealias Failure = Never
     private let wrapped = PassthroughSubject<(Output), Failure>()
     
@@ -93,10 +96,12 @@ class RouteManager: NSObject, ObservableObject {
         self.trackingState = .active
         startTimer()
         startTime = Date()
+        newTrip = PersistenceController.shared.addTrip(startTime: startTime)
+        
     }
     
     public func stopRoute() {
-        PersistenceController.shared.addTrip(distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
+        PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
         lastLocation = nil
@@ -139,7 +144,7 @@ extension RouteManager: CLLocationManagerDelegate {
             lastTwoLocations.append(lastLocation)
             lastTwoLocations.append(location)
         }
-        wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude))
+        wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, trip: newTrip))
         lastLocation = location
     }
 }
