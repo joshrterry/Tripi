@@ -54,9 +54,32 @@ struct PersistenceController {
         trip.secondsElapsed = seconds
         trip.averageSpeed = speed
         
+        var minLat = 90.0
+        var minLon = 180.0
+        var maxLat = -90.0
+        var maxLon = -180.0
+        
         for location in trip.locationsArray {
             trip.routeWaypoints.append([location.latitude, location.longitude])
+            if location.latitude < minLat {
+                minLat = location.latitude
+            }
+            if location.longitude < minLon {
+                minLon = location.longitude
+            }
+            if location.latitude > maxLat {
+                maxLat = location.latitude
+            }
+            if location.longitude > maxLon {
+                maxLon = location.longitude
+            }
         }
+        trip.region = [0.0, 0.0, 0.0, 0.0]
+        trip.region[0] = (minLat + maxLat) / 2
+        trip.region[1] = (minLon + maxLon) / 2
+        trip.region[2] = (maxLat - minLat) * 1.5
+        trip.region[3] = (maxLon - minLon) * 1.5
+    
         
         save()
 
@@ -69,11 +92,6 @@ struct PersistenceController {
         newLocation.longitude = location.longitude
         newLocation.latitude = location.latitude
         newLocation.trip = location.trip
-//        if newTrip != nil {
-//            newLocation.trip = newTrip
-//        }
-        print(newLocation.trip ?? "no trip")
-
         save()
     }
     

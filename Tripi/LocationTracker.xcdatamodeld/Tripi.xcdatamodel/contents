@@ -12,7 +12,8 @@
         <attribute name="endTimestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="expenseTag" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="routeWaypoints" optional="YES" attributeType="Transformable" customClassName="[[Double]]"/>
+        <attribute name="region" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Double]"/>
+        <attribute name="routeWaypoints" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[[Double]]"/>
         <attribute name="secondsElapsed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="startTimestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="time" optional="YES" attributeType="String"/>

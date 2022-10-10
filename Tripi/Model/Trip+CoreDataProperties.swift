@@ -27,7 +27,8 @@ extension Trip {
     @NSManaged public var time: String?
     @NSManaged public var locations: NSSet?
     @NSManaged public var routeWaypoints: [[Double]]
-        
+    @NSManaged public var region: [Double]
+    
     public var locationsArray: [Location] {
         let locations = locations as? Set<Location> ?? []
         return locations.sorted {

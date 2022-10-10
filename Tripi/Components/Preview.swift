@@ -11,16 +11,18 @@ import MapKit
 struct Preview: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var routeManager: RouteManager
+    @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     
     var distance = 0.0
     var date = ""
-    var category = ""
     var color = Color.primary
     
     var time = ""
     var avgSpeed = 0.0
     var starTime: Date
     var endTime: Date
+    
+    var expenseTag = ""
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
@@ -65,7 +67,7 @@ struct Preview: View {
                             .font(.custom("Gilroy", size: 12))
                             .foregroundColor(.primary)
 
-                        Text(category.uppercased())
+                        Text("\(expenseTag.uppercased()) · $\(String(format: "%.2f", reimbursementAmount * distance))")
                             .font(.custom("Gilroy", size: 15))
                             .foregroundColor(color)
                         
@@ -81,6 +83,6 @@ struct Preview: View {
 
 struct Preview_Previews: PreviewProvider {
     static var previews: some View {
-        Preview(distance: 22.3, date: "June 24 | 8:32 AM", category: "business · $12.76", starTime: Date(), endTime: Date())
+        Preview(distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date())
     }
 }
