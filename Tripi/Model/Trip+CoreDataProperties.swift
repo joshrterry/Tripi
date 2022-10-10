@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CoreLocation
 
 
 extension Trip {
@@ -25,7 +26,8 @@ extension Trip {
     @NSManaged public var startTimestamp: Date?
     @NSManaged public var time: String?
     @NSManaged public var locations: NSSet?
-
+    @NSManaged public var routeWaypoints: [[Double]]
+        
     public var locationsArray: [Location] {
         let locations = locations as? Set<Location> ?? []
         return locations.sorted {

@@ -23,9 +23,7 @@ struct RecentTrips: View {
         center: CLLocationCoordinate2D(latitude: 37.33166, longitude: -122.03014),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
     
-    @State var routeCoords: [CLLocationCoordinate2D] = []
         
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("Recent Trips")
@@ -34,12 +32,7 @@ struct RecentTrips: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 18) {
                     ForEach(trips, id: \.self) { trip in
-                        Preview(distance: trip.distance, date: formatTimestamp(date: trip.startTimestamp ?? Date()), category: "Business · $12.76", color: .green, time: trip.time ?? "", avgSpeed: trip.averageSpeed, starTime: trip.startTimestamp ?? Date(), endTime: trip.endTimestamp ?? Date(), region: region, routeCoords: routeCoords)
-                            .onAppear {
-                                for location in trip.locationsArray {
-                                    routeCoords.append(CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude))
-                                }
-                            }
+                        Preview(distance: trip.distance, date: formatTimestamp(date: trip.startTimestamp ?? Date()), category: "Business · $12.76", color: .green, time: trip.time ?? "", avgSpeed: trip.averageSpeed, starTime: trip.startTimestamp ?? Date(), endTime: trip.endTimestamp ?? Date(), region: region, routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) })
                         
                         
 //                        ForEach(trip.locationsArray, id: \.self) { location in

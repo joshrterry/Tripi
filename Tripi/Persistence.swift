@@ -53,9 +53,15 @@ struct PersistenceController {
         trip.time = time
         trip.secondsElapsed = seconds
         trip.averageSpeed = speed
+        
+        for location in trip.locationsArray {
+            trip.routeWaypoints.append([location.latitude, location.longitude])
+        }
+        
         save()
 
     }
+    
     
     func add(location: (longitude: Double, latitude: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)
