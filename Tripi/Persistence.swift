@@ -77,15 +77,14 @@ struct PersistenceController {
         trip.region = [0.0, 0.0, 0.0, 0.0]
         trip.region[0] = (minLat + maxLat) / 2
         trip.region[1] = (minLon + maxLon) / 2
-        trip.region[2] = (maxLat - minLat) * 1.5
-        trip.region[3] = (maxLon - minLon) * 1.5
+        trip.region[2] = (maxLat - minLat) * 1.4
+        trip.region[3] = (maxLon - minLon) * 1.4
     
         
         save()
 
     }
-    
-    
+        
     func add(location: (longitude: Double, latitude: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)
         newLocation.timestamp = Date()
@@ -93,6 +92,11 @@ struct PersistenceController {
         newLocation.latitude = location.latitude
         newLocation.trip = location.trip
         save()
+    }
+    
+    func delete(trip: Trip) {
+        let context = container.viewContext
+        context.delete(trip)
     }
     
     func save() {

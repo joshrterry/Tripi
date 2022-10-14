@@ -13,6 +13,7 @@ struct Preview: View {
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     
+    var trip: Trip
     var distance = 0.0
     var date = ""
     var color = Color.primary
@@ -33,7 +34,7 @@ struct Preview: View {
     
     var body: some View {
         
-        NavigationLink(destination: TripDetailView(distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: "", region: region, routeCoords: routeCoords)) {
+        NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: "", region: region, routeCoords: routeCoords)) {
 
             ZStack(alignment: .top) {
                 Rectangle()
@@ -83,6 +84,6 @@ struct Preview: View {
 
 struct Preview_Previews: PreviewProvider {
     static var previews: some View {
-        Preview(distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date())
+        Preview(trip: Trip(), distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date())
     }
 }

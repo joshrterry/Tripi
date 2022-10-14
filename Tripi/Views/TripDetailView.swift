@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct TripDetailView: View {
+    @State var trip: Trip
     @State var distance: Double
     @State var time: String
     @State var avgSpeed: Double
@@ -45,14 +46,28 @@ struct TripDetailView: View {
                         .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
                         .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .leading, spacing: 0) {
-                        Text("Trip Summary")
-                            .font(.custom("Gilroy", size: 32))
-                            .padding(.leading, 30)
-                            .padding(.top, 40)
+                        HStack {
+                            Text("Trip Summary")
+                                .font(.custom("Gilroy", size: 32))
+                            Spacer()
+                                
+                            Button {
+                                PersistenceController.shared.delete(trip: trip)
+                            } label: {
+                                Image(systemName: "ellipsis.circle.fill")
+                                    .font(.system(size: 32))
+                            }
+                        }
+                        .padding(.horizontal, 30)
+                        .padding(.top, 40)
+
+                        
                         Text(formatTime(date: startTime)+" - "+formatTime(date: endTime)+" | "+formatDay(date: startTime))
                             .font(.custom("Gilroy", size: 15))
                             .foregroundColor(.gray)
                             .padding(.leading, 30)
+
+                        
                         
                         HStack(spacing: 32) {
                             Metric(data: String(format:"%.1f", distance), descriptor: "TOTAL KM")
@@ -116,6 +131,6 @@ struct TripDetailView: View {
 
 struct TripDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TripDetailView(distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [])
+        TripDetailView(trip: Trip(), distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [])
     }
 }
