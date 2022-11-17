@@ -46,7 +46,7 @@ struct PersistenceController {
     // Create trip when press go, then modify at end !!!!!
     
     mutating func editTrip(trip: Trip, distance: Double, time: String, speed: Double, startTime: Date, endTime: Date, seconds: Double) {
-        trip.expenseTag = "business"
+        trip.tags.append("business")
         trip.distance = distance
         trip.startTimestamp = startTime
         trip.endTimestamp = endTime
@@ -85,7 +85,7 @@ struct PersistenceController {
 
     }
         
-    func add(location: (longitude: Double, latitude: Double, trip: Trip)) {
+    func addLocation(location: (longitude: Double, latitude: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)
         newLocation.timestamp = Date()
         newLocation.longitude = location.longitude
@@ -97,6 +97,7 @@ struct PersistenceController {
     func delete(trip: Trip) {
         let context = container.viewContext
         context.delete(trip)
+        save()
     }
     
     func save() {

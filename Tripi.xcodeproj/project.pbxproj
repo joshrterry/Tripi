@@ -37,9 +37,11 @@
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
+		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
 		F5BCB34128C65A820063082E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BCB34028C65A820063082E /* SettingsView.swift */; };
 		F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */; };
+		F5EC7C7B2925EF6E00DAB7EE /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,9 +96,11 @@
 		F56426E72856B9B6005FD118 /* TripiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56426EB2856B9B6005FD118 /* TripiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITests.swift; sourceTree = "<group>"; };
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F57A3F7C2926C15000315971 /* LayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutStyle.swift; sourceTree = "<group>"; };
 		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		F5BCB34028C65A820063082E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineMap.swift; sourceTree = "<group>"; };
+		F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				F52C30D1286FB95C0026FAEE /* Metrics.swift */,
+				F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */,
 				F517F2F3286FC1D9000E07AF /* Preview.swift */,
 				F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */,
 			);
@@ -188,6 +193,7 @@
 				F53341232870E9CA00E7E5C1 /* Tab.swift */,
 				F56024EE286FAB450002403D /* PreferenceKeys.swift */,
 				F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */,
+				F57A3F7C2926C15000315971 /* LayoutStyle.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -426,6 +432,8 @@
 				F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */,
 				F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */,
 				F56426CC2856B9B4005FD118 /* TripiApp.swift in Sources */,
+				F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */,
+				F5EC7C7B2925EF6E00DAB7EE /* Tag.swift in Sources */,
 				F517F2FA286FF59E000E07AF /* TabBar.swift in Sources */,
 				F558FFD728EA5B8500FA00B0 /* Trip+CoreDataClass.swift in Sources */,
 				F5BCB34128C65A820063082E /* SettingsView.swift in Sources */,
@@ -607,9 +615,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joshuaterry.Tripi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -641,9 +652,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joshuaterry.Tripi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

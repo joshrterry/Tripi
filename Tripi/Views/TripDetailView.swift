@@ -18,6 +18,17 @@ struct TripDetailView: View {
     @State var notes: String
     @State var region: MKCoordinateRegion
     @State var routeCoords: [CLLocationCoordinate2D]
+    @State var tags: [String]
+    @State var presentNewTag = false
+    @State var descriptor = ""
+    
+    var tagColours = [
+        0: Color(red: 47/255, green: 72/255, blue: 88/255),
+        1: Color(red: 51/255, green: 101/255, blue: 138/255),
+        2: Color(red: 134/255, green: 187/255, blue: 216/255),
+        4: Color(red: 246/255, green: 174/255, blue: 45/255),
+        5: Color(red: 242/255, green: 100/255, blue: 25/255),
+    ]
     
     func formatTime(date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -36,101 +47,160 @@ struct TripDetailView: View {
             PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
                 .edgesIgnoringSafeArea(.all)
                 .frame(height: 300)
-            VStack {
-                Spacer()
-                    .frame(height: 150)
-                ZStack(alignment: .topLeading) {
-                    Rectangle()
-                        .foregroundColor(Color("Background"))
-                        .cornerRadius(50, corners: [.topLeft, .topRight])
-                        .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                        .edgesIgnoringSafeArea(.all)
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack {
-                            Text("Trip Summary")
-                                .font(.custom("Gilroy", size: 32))
-                            Spacer()
-                                
-                            Button {
-                                PersistenceController.shared.delete(trip: trip)
-                            } label: {
-                                Image(systemName: "ellipsis.circle.fill")
-                                    .font(.system(size: 32))
-                            }
-                        }
-                        .padding(.horizontal, 30)
-                        .padding(.top, 40)
+            ScrollView {
+                VStack {
+                    Spacer()
+                        .frame(height: 250)
+                    ZStack(alignment: .topLeading) {
+                        Rectangle()
+                            .foregroundColor(Color("Background"))
+                            .cornerRadius(50, corners: [.topLeft, .topRight])
+                            .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
+                            .frame(height: 800)
+                            .edgesIgnoringSafeArea(.all)
 
-                        
-                        Text(formatTime(date: startTime)+" - "+formatTime(date: endTime)+" | "+formatDay(date: startTime))
-                            .font(.custom("Gilroy", size: 15))
-                            .foregroundColor(.gray)
-                            .padding(.leading, 30)
-
-                        
-                        
-                        HStack(spacing: 32) {
-                            Metric(data: String(format:"%.1f", distance), descriptor: "TOTAL KM")
-                            Metric(data: time, descriptor: "MINUTES")
-                            Metric(data: String(format:"%.0f", avgSpeed), descriptor: "AVG KM/H")
-                        }
-                        .padding(30)
-                        Text("Tags")
-                            .font(.custom("Gilroy", size: 24))
-                            .padding(.leading, 30)
-//                            Rectangle()
-//                                .foregroundColor(Color(.systemGray5))
-//                                .frame(width: 330, height: 250)
-//                                .cornerRadius(25)
-                        Button {
-                            
-                        } label: {
-                            ZStack(alignment: .center) {
-                                Rectangle()
-                                    .frame(width: 80, height: 30)
-                                    .cornerRadius(15)
-                                    .foregroundColor(Color(.systemGray5))
-
+                        VStack(alignment: .leading, spacing: 0) {
+                            Group {
                                 HStack {
-                                    Image(systemName: "plus")
-                                    Text("New")
+                                    Text("Trip Summary")
+                                        .font(.custom("Gilroy", size: 32))
+                                    Spacer()
+                            
+                      
+                                    Menu {
+                                        Button {
+                                            PersistenceController.shared.delete(trip: trip)
+                                        } label: {
+                                            Label("Delete Trip", systemImage: "trash")
+                                        }
+                                    } label: {
+                                        Image(systemName: "ellipsis.circle.fill")
+                                            .font(.system(size: 32))
+                                    }
                                 }
-                                    .foregroundColor(Color.primary)
-                                    .font(.custom("Gilroy", size: 16))
-                            }
-                            .padding(.top, 15)
-                            .padding(.leading, 30)
-                        }
-                        
-                        Text("Notes")
-                            .font(.custom("Gilroy", size: 24))
-                            .padding(.vertical, 15)
-                            .padding(.leading, 30)
-                        
-                        ZStack(alignment: .top) {
-                            Rectangle()
-                                .cornerRadius(20)
-                                .foregroundColor(Color(.systemGray5))
                                 .padding(.horizontal, 30)
-                                .frame(height: 150)
-                            TextEditor(text: $notes)
-                                .scrollContentBackground(.hidden)
-                                .scrollDisabled(true)
-                                .padding(.horizontal, 40)
-                                .padding(.top, 15)
-                                .frame(height: 150)
+                                .padding(.top, 40)
+
+                                
+                                Text(formatTime(date: startTime)+" - "+formatTime(date: endTime)+" | "+formatDay(date: startTime))
+                                    .font(.custom("Gilroy", size: 15))
+                                    .foregroundColor(.gray)
+                                    .padding(.leading, 30)
+
+                                
+                                
+                                HStack(spacing: 32) {
+                                    Metric(data: String(format:"%.1f", distance), descriptor: "TOTAL KM")
+                                    Metric(data: time, descriptor: "MINUTES")
+                                    Metric(data: String(format:"%.0f", avgSpeed), descriptor: "AVG KM/H")
+                                }
+                                .padding(30)
+                                Text("Tags")
+                                    .font(.custom("Gilroy", size: 24))
+                                    .padding(.leading, 30)
+        //                            Rectangle()
+        //                                .foregroundColor(Color(.systemGray5))
+        //                                .frame(width: 330, height: 250)
+        //                                .cornerRadius(25)
+                            }
+                            
+                            Group {
+                                HStack(alignment: .top) {
+                                    Button {
+                                        presentNewTag = true
+                                    }
+                                label: {
+                                        ZStack(alignment: .center) {
+                                            Rectangle()
+                                                .frame(width: 80, height: 30)
+                                                .cornerRadius(15)
+                                                .foregroundColor(Color(.systemGray5))
+
+                                            HStack {
+                                                Image(systemName: "plus")
+                                                Text("New")
+                                            }
+                                                .foregroundColor(Color.primary)
+                                                .font(.custom("Gilroy", size: 16))
+                                        }
+                                        .padding(.leading, 30)
+                                }
+                                    ForEach(tags, id: \.self) { tag in
+                                        Tag(name: tag.capitalized, colour: tagColours.values.randomElement()!)
+                                            .contextMenu {
+                                                if tags.count > 1 {
+                                                Button {
+                                                    if let index = tags.firstIndex(of: tag) {
+                                                        tags.remove(at: index)
+                                                    }
+                                                } label: {
+                                                    Label("Delete Tag", systemImage: "trash")
+                                                }
+                                            }
+                                        }
+                                        
+
+                                    }
+                                    
+                                }
+                            }
+                            
+                            .alert("New Tag", isPresented: $presentNewTag, actions: {
+                                
+                                TextField("Descriptor", text: $descriptor)
+
+                                
+                                Button("Add", action: {
+                                    tags.append(descriptor)
+                                    descriptor = ""
+                                })
+                                Button("Cancel", role: .cancel, action: {})
+                            }, message: {
+                                Text("Please give this tag a name.")
+                            })
+                        
+                            .padding(.top, 15)
+
+                            
+                            Text("Notes")
+                                .font(.custom("Gilroy", size: 24))
+                                .padding(.vertical, 15)
+                                .padding(.leading, 30)
+                            
+                            ZStack(alignment: .top) {
+                                Rectangle()
+                                    .cornerRadius(20)
+                                    .foregroundColor(Color(.systemGray5))
+                                    .padding(.horizontal, 30)
+                                    .frame(height: 150)
+                                TextEditor(text: $notes)
+                                    .scrollContentBackground(.hidden)
+                                    .scrollDisabled(true)
+                                    .padding(.horizontal, 40)
+                                    .padding(.top, 15)
+                                    .frame(height: 150)
+                            }
+
                         }
 
                     }
-
                 }
-            }
+            }.toolbarBackground(.hidden, for: .navigationBar)
+            .edgesIgnoringSafeArea(.all)
+        }.onDisappear {
+            uploadChanges()
         }
+    }
+    
+    func uploadChanges() {
+        trip.tags = tags
+        trip.notes = notes
+        PersistenceController.shared.save()
     }
 }
 
 struct TripDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TripDetailView(trip: Trip(), distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [])
+        TripDetailView(trip: Trip(), distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [], tags: [])
     }
 }

@@ -108,6 +108,7 @@ class RouteManager: NSObject, ObservableObject {
         distanceTotal = 0
         currentSpeed = 0
         averageSpeed = 0
+        routeWaypoints = []
         resetTimer()
     }
     

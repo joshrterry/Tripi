@@ -20,7 +20,7 @@ struct TripiApp: App {
        _routeManager = .init(wrappedValue: routeManager)
        // Subscribes to the events of RouteManager
        routeManager
-           .sink(receiveValue: PersistenceController.shared.add).store(in: &cancellables)
+           .sink(receiveValue: PersistenceController.shared.addLocation).store(in: &cancellables)
     }
     var body: some Scene {
         WindowGroup {

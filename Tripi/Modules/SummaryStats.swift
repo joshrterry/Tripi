@@ -35,7 +35,7 @@ struct SummaryStats: View {
             for trip in weeklyTrips {
                 selectedDistance += trip.distance
                 selectedHours += trip.secondsElapsed
-                if trip.expenseTag == "business" {
+                if trip.tags.contains("business") {
                     selectedBusinessKM += trip.distance
                 }
             }
@@ -43,7 +43,7 @@ struct SummaryStats: View {
             for trip in monthlyTrips {
                 selectedDistance += trip.distance
                 selectedHours += trip.secondsElapsed
-                if trip.expenseTag == "business" {
+                if trip.tags.contains("business") {
                     selectedBusinessKM += trip.distance
                 }
             }

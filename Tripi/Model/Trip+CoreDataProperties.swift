@@ -20,7 +20,7 @@ extension Trip {
     @NSManaged public var averageSpeed: Double
     @NSManaged public var distance: Double
     @NSManaged public var endTimestamp: Date?
-    @NSManaged public var expenseTag: String?
+    @NSManaged public var tags: [String]
     @NSManaged public var id: UUID?
     @NSManaged public var secondsElapsed: Double
     @NSManaged public var startTimestamp: Date?
@@ -28,6 +28,8 @@ extension Trip {
     @NSManaged public var locations: NSSet?
     @NSManaged public var routeWaypoints: [[Double]]
     @NSManaged public var region: [Double]
+    @NSManaged public var notes: String?
+
     
     public var locationsArray: [Location] {
         let locations = locations as? Set<Location> ?? []
