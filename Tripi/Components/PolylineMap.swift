@@ -14,6 +14,7 @@ struct PolylineMap: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var routeCoordinates: [CLLocationCoordinate2D]
     @State var isTracking: Bool
+    @State var edgeInsets: UIEdgeInsets
 
     // Create the MKMapView using UIKit.
     func makeUIView(context: Context) -> MKMapView {
@@ -27,7 +28,7 @@ struct PolylineMap: UIViewRepresentable {
         }
         mapView.isScrollEnabled = false
 
-        mapView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 25, right: 0)
+        mapView.layoutMargins = edgeInsets
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.addOverlay(polyline)
         

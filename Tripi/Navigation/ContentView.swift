@@ -11,6 +11,7 @@ struct ContentView: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @StateObject var model: Model = Model()
     @EnvironmentObject var routeManager: RouteManager
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
 
 
     var body: some View {
@@ -23,8 +24,13 @@ struct ContentView: View {
             case .trips:
                 TripBrowserView()
             }
-            TabBar()
-                .offset(y: model.fullScreen ? 200 : 0)
+//            if showingTabBar {
+//                withAnimation {
+                    TabBar()
+                        .offset(y: model.fullScreen ? 200 : 0)
+//                }
+//            }
+
         }
         .environmentObject(routeManager)
     }

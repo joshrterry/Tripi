@@ -29,16 +29,16 @@ struct RouteView: View {
 //                        .frame(height: )
                 }
         
-                PolylineMap(region: $region, routeCoordinates: $routeManager.routeWaypoints, isTracking: true)
+                PolylineMap(region: $region, routeCoordinates: $routeManager.routeWaypoints, isTracking: true, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0))
 
-                .frame(height: 460)
+                .frame(height: 500)
                 .cornerRadius(50, corners: [.topLeft, .topRight])
                 .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
                 .edgesIgnoringSafeArea(.all)
   
             }
         }
-        .overlay(!model.fullScreen ? NavigationBar(title: "New Trip", hasScrolled: .constant(false)) : nil)
+        .overlay(!model.fullScreen ? NavigationBar(showingButttons: false,  title: "New Trip", hasScrolled: .constant(false)) : nil)
 
     }
 }

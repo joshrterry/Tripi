@@ -21,6 +21,9 @@ struct TripDetailView: View {
     @State var tags: [String]
     @State var presentNewTag = false
     @State var descriptor = ""
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
+
     
     var tagColours = [
         0: Color(red: 47/255, green: 72/255, blue: 88/255),
@@ -44,7 +47,7 @@ struct TripDetailView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
+            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0))
                 .edgesIgnoringSafeArea(.all)
                 .frame(height: 300)
             ScrollView {
@@ -186,9 +189,15 @@ struct TripDetailView: View {
                     }
                 }
             }.toolbarBackground(.hidden, for: .navigationBar)
+                .navigationBarBackButtonHidden(true)
+                .navigationBarItems(leading: BackButton(dismiss: self.dismiss))
             .edgesIgnoringSafeArea(.all)
         }.onDisappear {
             uploadChanges()
+            showingTabBar = true
+        }
+        .onAppear {
+            showingTabBar = false
         }
     }
     

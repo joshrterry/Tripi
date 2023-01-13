@@ -18,6 +18,8 @@
 		F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341212870E8B700E7E5C1 /* ContentView.swift */; };
 		F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341232870E9CA00E7E5C1 /* Tab.swift */; };
 		F53341262870FCD300E7E5C1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341252870FCD300E7E5C1 /* Model.swift */; };
+		F53ADA4F296DFF330079F91D /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F53ADA4D296DFF330079F91D /* CHCSVParser.m */; };
+		F53AEE582966237A0026EEA9 /* ExportWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AEE572966237A0026EEA9 /* ExportWindow.swift */; };
 		F554A80D28AA62CB00E4F8D6 /* TrackingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */; };
 		F558FFD728EA5B8500FA00B0 /* Trip+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD328EA5B8500FA00B0 /* Trip+CoreDataClass.swift */; };
 		F558FFD828EA5B8500FA00B0 /* Trip+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F558FFD428EA5B8500FA00B0 /* Trip+CoreDataProperties.swift */; };
@@ -38,7 +40,10 @@
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
 		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
+		F57A3F7F2926CD3900315971 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7E2926CD3900315971 /* ActivityManager.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
+		F5A12D5029711B2A0055E239 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A12D4F29711B2A0055E239 /* BackButton.swift */; };
+		F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A86BD1292F1389004CF3EA /* FileManager.swift */; };
 		F5BCB34128C65A820063082E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BCB34028C65A820063082E /* SettingsView.swift */; };
 		F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */; };
 		F5EC7C7B2925EF6E00DAB7EE /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */; };
@@ -73,6 +78,10 @@
 		F53341212870E8B700E7E5C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F53341232870E9CA00E7E5C1 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		F53341252870FCD300E7E5C1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		F53ADA4C296DFF320079F91D /* Tripi-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tripi-Bridging-Header.h"; sourceTree = "<group>"; };
+		F53ADA4D296DFF330079F91D /* CHCSVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVParser.m; sourceTree = "<group>"; };
+		F53ADA4E296DFF330079F91D /* CHCSVParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCSVParser.h; sourceTree = "<group>"; };
+		F53AEE572966237A0026EEA9 /* ExportWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportWindow.swift; sourceTree = "<group>"; };
 		F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingState.swift; sourceTree = "<group>"; };
 		F558FFD328EA5B8500FA00B0 /* Trip+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataClass.swift"; path = "Tripi/Model/Trip+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F558FFD428EA5B8500FA00B0 /* Trip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataProperties.swift"; path = "Tripi/Model/Trip+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -97,7 +106,10 @@
 		F56426EB2856B9B6005FD118 /* TripiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITests.swift; sourceTree = "<group>"; };
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F57A3F7C2926C15000315971 /* LayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutStyle.swift; sourceTree = "<group>"; };
+		F57A3F7E2926CD3900315971 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
 		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
+		F5A12D4F29711B2A0055E239 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		F5A86BD1292F1389004CF3EA /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		F5BCB34028C65A820063082E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineMap.swift; sourceTree = "<group>"; };
 		F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -146,6 +158,7 @@
 				F517F2F7286FEB1C000E07AF /* RouteView.swift */,
 				F59870E628BFD70B00F9CC89 /* TripDetailView.swift */,
 				F5BCB34028C65A820063082E /* SettingsView.swift */,
+				F53AEE572966237A0026EEA9 /* ExportWindow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -157,6 +170,7 @@
 				F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */,
 				F517F2F3286FC1D9000E07AF /* Preview.swift */,
 				F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */,
+				F5A12D4F29711B2A0055E239 /* BackButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -174,8 +188,20 @@
 			isa = PBXGroup;
 			children = (
 				F51D3B5428AB338E00C6B116 /* RouteManager.swift */,
+				F57A3F7E2926CD3900315971 /* ActivityManager.swift */,
+				F5A86BD1292F1389004CF3EA /* FileManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		F53ADA4B296DFEE40079F91D /* CSVParser */ = {
+			isa = PBXGroup;
+			children = (
+				F53ADA4E296DFF330079F91D /* CHCSVParser.h */,
+				F53ADA4D296DFF330079F91D /* CHCSVParser.m */,
+				F53ADA4C296DFF320079F91D /* Tripi-Bridging-Header.h */,
+			);
+			path = CSVParser;
 			sourceTree = "<group>";
 		};
 		F56024EA286FA46B0002403D /* Fonts */ = {
@@ -243,6 +269,7 @@
 				F56024F0286FABAE0002403D /* Model */,
 				F56024F1286FABBD0002403D /* Styles */,
 				F5334127287107CA00E7E5C1 /* Managers */,
+				F53ADA4B296DFEE40079F91D /* CSVParser */,
 				F56024EA286FA46B0002403D /* Fonts */,
 				F56426CF2856B9B6005FD118 /* Assets.xcassets */,
 				F56426D42856B9B6005FD118 /* Persistence.swift */,
@@ -293,6 +320,8 @@
 			dependencies = (
 			);
 			name = Tripi;
+			packageProductDependencies = (
+			);
 			productName = Tripi;
 			productReference = F56426C82856B9B4005FD118 /* Tripi.app */;
 			productType = "com.apple.product-type.application";
@@ -345,6 +374,7 @@
 				TargetAttributes = {
 					F56426C72856B9B4005FD118 = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1420;
 					};
 					F56426DC2856B9B6005FD118 = {
 						CreatedOnToolsVersion = 13.4.1;
@@ -365,6 +395,8 @@
 				Base,
 			);
 			mainGroup = F56426BF2856B9B4005FD118;
+			packageReferences = (
+			);
 			productRefGroup = F56426C92856B9B4005FD118 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -411,9 +443,12 @@
 				F558FFD928EA5B8500FA00B0 /* Location+CoreDataClass.swift in Sources */,
 				F56024ED286FA6C90002403D /* NavigationBar.swift in Sources */,
 				F56024F4286FAC2E0002403D /* Styles.swift in Sources */,
+				F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */,
 				F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */,
 				F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */,
+				F5A12D5029711B2A0055E239 /* BackButton.swift in Sources */,
 				F558FFDA28EA5B8500FA00B0 /* Location+CoreDataProperties.swift in Sources */,
+				F53AEE582966237A0026EEA9 /* ExportWindow.swift in Sources */,
 				F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */,
 				F56426D52856B9B6005FD118 /* Persistence.swift in Sources */,
 				F56024F5286FAC300002403D /* AnimatableFontModifier.swift in Sources */,
@@ -428,6 +463,8 @@
 				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
+				F57A3F7F2926CD3900315971 /* ActivityManager.swift in Sources */,
+				F53ADA4F296DFF330079F91D /* CHCSVParser.m in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,
 				F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */,
 				F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */,
@@ -593,6 +630,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = TripiMonoLogo;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tripi/Preview Content\"";
@@ -619,6 +657,8 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Tripi/CSVParser/Tripi-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -630,6 +670,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = TripiMonoLogo;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tripi/Preview Content\"";
@@ -656,6 +697,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Tripi/CSVParser/Tripi-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

@@ -37,7 +37,7 @@ struct SettingsView: View {
                 Color.clear.frame(height: 50)
             })
 
-            .overlay(NavigationBar(title: "Settings", hasScrolled: $hasScrolled))
+            .overlay(NavigationBar(showingButttons: false, title: "Settings", hasScrolled: $hasScrolled))
             .offset(y: 40)
             .navigationBarHidden(true)
         }

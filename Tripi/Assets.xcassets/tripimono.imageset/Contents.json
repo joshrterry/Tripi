@@ -3,6 +3,16 @@
     {
       "filename" : "tripimono.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "tripimonodark.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

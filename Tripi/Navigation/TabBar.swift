@@ -15,118 +15,118 @@ struct TabBar: View {
     @State var showLiveMetrics = false
     
     var body: some View {
-        VStack {
-            Spacer()
-            ZStack(alignment: .bottom) {
-                
-                ZStack(alignment: .top) {
-                    Rectangle()
-                        .frame(maxWidth: .infinity, maxHeight: 210)
-                        .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
-                        .cornerRadius(30)
-                        .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
-                    HStack() {
-                        Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .primary)
-                            .frame(width: 100)
-                        Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
-                            .frame(width: 120)
-                        Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .primary)
-                            .frame(width: 100)
-                    }
-                    .padding(.top, 22)
-                }
-                .offset(y: showLiveMetrics ? 0 : 120)
-            
-
-
-                
-                ZStack(alignment: .top) {
-                    Rectangle()
-                        .frame(maxWidth: .infinity, maxHeight: 90)
-                        .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
-                        .cornerRadius(30)
-                        .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
-                    HStack(spacing: 45) {
-                        Group {
-                            Button {
-                                selectedTab = .home
-                                withAnimation {
-                                    showLiveMetrics = false
-                                }
-                            } label: {
-                                Image(systemName: "house.fill")
-                                    .foregroundColor(selectedTab == .home ? .primary : .secondary)
-                            }
-                            ZStack {
-                                Circle()
-                                    .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
-                                    .frame(width: 62, height: 62)
-                                    .shadow(color: .primary.opacity(0.1), radius: 20, x: 10, y: 10)
-                                    .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
-                                    
-                                Button {
-                                    if selectedTab == .route {
-                                        routeManager.toggleTrip()
-                                    } else {
-                                        selectedTab = .route
-
-                                    }
-                                    withAnimation {
-                                        showLiveMetrics = true
-                                    }
-                                    print(routeManager.trackingState)
-
-                                } label: {
-                                    if selectedTab == .route {
-                                        if routeManager.trackingState == .inactive {
-                                            Image("go_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                        if routeManager.trackingState == .active {
-                                            Image("stop_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                    } else {
-                                        Image("tripimono")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 45, height: 45)
-                                            .foregroundColor(.black)
-                                            .font(.system(size: 50))
-                                    }
-
-                                }
-                            }
-                            .offset(y: -10)
-
-                            Button {
-                                selectedTab = .trips
-                                withAnimation {
-                                    showLiveMetrics = false
-                                }
-                            } label: {
-                                Image(systemName: "line.3.horizontal")
-                                    .foregroundColor(selectedTab == .trips ? .primary : .secondary)
-                            }
+            VStack {
+                Spacer()
+                ZStack(alignment: .bottom) {
+                    
+                    ZStack(alignment: .top) {
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 210)
+                            .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
+                            .cornerRadius(30)
+                            .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
+                        HStack() {
+                            Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .primary)
+                                .frame(width: 100)
+                            Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
+                                .frame(width: 120)
+                            Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .primary)
+                                .frame(width: 100)
                         }
-                        .font(.system(size: 24, weight: .bold))
+                        .padding(.top, 22)
                     }
+                    .offset(y: showLiveMetrics ? 0 : 120)
+                
 
+
+                    
+                    ZStack(alignment: .top) {
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 90)
+                            .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
+                            .cornerRadius(30)
+                            .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
+                        HStack(spacing: 45) {
+                            Group {
+                                Button {
+                                    selectedTab = .home
+                                    withAnimation {
+                                        showLiveMetrics = false
+                                    }
+                                } label: {
+                                    Image(systemName: "house.fill")
+                                        .foregroundColor(selectedTab == .home ? .primary : .secondary)
+                                }
+                                ZStack {
+                                    Circle()
+                                        .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
+                                        .frame(width: 62, height: 62)
+                                        .shadow(color: .primary.opacity(0.1), radius: 20, x: 10, y: 10)
+                                        .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
+                                        
+                                    Button {
+                                        if selectedTab == .route {
+                                            routeManager.toggleTrip()
+                                        } else {
+                                            selectedTab = .route
+
+                                        }
+                                        withAnimation {
+                                            showLiveMetrics = true
+                                        }
+                                        print(routeManager.trackingState)
+
+                                    } label: {
+                                        if selectedTab == .route {
+                                            if routeManager.trackingState == .inactive {
+                                                Image("go_icon")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 45, height: 45)
+                                                    .foregroundColor(.black)
+                                                    .font(.system(size: 50))
+                                            }
+                                            if routeManager.trackingState == .active {
+                                                Image("stop_icon")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 45, height: 45)
+                                                    .foregroundColor(.black)
+                                                    .font(.system(size: 50))
+                                            }
+                                        } else {
+                                            Image("tripimono")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 45, height: 45)
+                                                .foregroundColor(.black)
+                                                .font(.system(size: 50))
+                                        }
+
+                                    }
+                                }
+                                .offset(y: -10)
+
+                                Button {
+                                    selectedTab = .trips
+                                    withAnimation {
+                                        showLiveMetrics = false
+                                    }
+                                } label: {
+                                    Image(systemName: "line.3.horizontal")
+                                        .foregroundColor(selectedTab == .trips ? .primary : .secondary)
+                                }
+                            }
+                            .font(.system(size: 24, weight: .bold))
+                        }
+
+                    }
                 }
             }
+            .edgesIgnoringSafeArea(.all)
+            }
         }
-        .edgesIgnoringSafeArea(.all)
 
-    }
-}
 
 struct TabBar_Previews: PreviewProvider {
     static var previews: some View {

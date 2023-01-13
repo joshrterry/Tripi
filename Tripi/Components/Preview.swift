@@ -69,7 +69,7 @@ struct Preview: View {
                 
                 if previewStyle == .expanded {
                     HStack(alignment: .center) {
-                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
+                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                             .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                             .cornerRadius(15)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
@@ -112,12 +112,12 @@ struct Preview: View {
                     }
                 } else {
                         VStack(alignment: .center) {
-                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false)
+                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                                 .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                                 .cornerRadius(15)
                                 .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
                                 .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                                .padding(.top, 10)
+                                .padding(.top, 5)
 
                             VStack(alignment: .leading) {
                                 HStack(spacing: 40) {

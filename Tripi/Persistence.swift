@@ -31,14 +31,11 @@ struct PersistenceController {
     mutating func addTrip(startTime: Date) -> Trip {
         print("Trip Created")
         newTrip = Trip(context: container.viewContext)
-//        newTrip!.expenseTag = "business"
-//        newTrip!.distance = distance
         newTrip!.startTimestamp = startTime
-//        newTrip!.endTimestamp = endTime
-//        newTrip!.time = time
-//        newTrip!.secondsElapsed = seconds
-//        newTrip!.averageSpeed = speed
         newTrip!.id = UUID()
+        newTrip!.tags.append("business")
+        newTrip!.region = [0.0, 0.0, 0.0, 0.0]
+
         save()
         return newTrip ?? Trip(context: container.viewContext)
     }
@@ -46,7 +43,7 @@ struct PersistenceController {
     // Create trip when press go, then modify at end !!!!!
     
     mutating func editTrip(trip: Trip, distance: Double, time: String, speed: Double, startTime: Date, endTime: Date, seconds: Double) {
-        trip.tags.append("business")
+//        trip.tags.append("business")
         trip.distance = distance
         trip.startTimestamp = startTime
         trip.endTimestamp = endTime
