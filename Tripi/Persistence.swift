@@ -26,10 +26,9 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-//        newTrip = Trip(context: container.viewContext)
     }
     
-    mutating func addTag(name: String, colour: [Double], reimbursementAmount: Double) {
+    func addTag(name: String, colour: [Double], reimbursementAmount: Double) {
         let newTag = UserTag(context: container.viewContext)
         newTag.dateCreated = Date()
         newTag.name = name
@@ -47,7 +46,7 @@ struct PersistenceController {
         newTrip = Trip(context: container.viewContext)
         newTrip!.startTimestamp = startTime
         newTrip!.id = UUID()
-        newTrip!.tags.append("business")
+//        newTrip!.tags.append("business")
         newTrip!.region = [0.0, 0.0, 0.0, 0.0]
 
         save()
@@ -122,9 +121,8 @@ struct PersistenceController {
         if context.hasChanges {
             do {
                 try context.save()
-//                print("Data saved")
             } catch {
-                fatalError("Unable to save location.")
+                fatalError("Unable to save data.")
             }
         }
     }

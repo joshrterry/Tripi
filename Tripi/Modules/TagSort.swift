@@ -47,12 +47,13 @@ struct TagSort: View {
                             TextField("Name", text: $tagName)
                             TextField("$0.00", value: $tagAmount, formatter: numberFormatter)
                                 .keyboardType(.decimalPad)
-
-
                         }
+                        
                     }.onChange(of: showingAlert) { newValue in
                         if showingAlert == false {
                             PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
+                            tagName = ""
+                            tagAmount = 0.0
 
                         }
                     }

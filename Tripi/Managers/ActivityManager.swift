@@ -3,7 +3,7 @@
 //  Tripi
 //
 //  Created by Joshua Terry on 2022-11-17.
-//
+//  Billugha was here ;)
 
 // http://www.wepstech.com/coremotion-in-ios-swift-5/
 

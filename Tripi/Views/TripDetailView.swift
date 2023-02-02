@@ -18,21 +18,13 @@ struct TripDetailView: View {
     @State var notes: String
     @State var region: MKCoordinateRegion
     @State var routeCoords: [CLLocationCoordinate2D]
-    @State var tags: [String]
+    @State var tags: NSOrderedSet
     @State var descriptor = ""
     @Environment(\.dismiss) private var dismiss
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \UserTag.dateCreated, ascending: true)], animation: .default)
     private var globalTags: FetchedResults<UserTag>
-    
-    var tagColours = [
-        0: Color(red: 47/255, green: 72/255, blue: 88/255),
-        1: Color(red: 51/255, green: 101/255, blue: 138/255),
-        2: Color(red: 134/255, green: 187/255, blue: 216/255),
-        4: Color(red: 246/255, green: 174/255, blue: 45/255),
-        5: Color(red: 242/255, green: 100/255, blue: 25/255),
-    ]
     
     func formatTime(date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -113,12 +105,14 @@ struct TripDetailView: View {
                                     Menu {
                                         ForEach(globalTags, id: \.self) { tag in
                                             Button {
-//                                                tags.append(Tag())
+                                                let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
+                                                mutableTags.add(tag)
+                                                tags = mutableTags.copy() as! NSOrderedSet
+                                                uploadChanges()
                                             } label: {
                                                 HStack {
                                                     Image(systemName: "plus")
                                                     Text(tag.name!)
-  
                                                 }
                                             }
 
@@ -139,19 +133,19 @@ struct TripDetailView: View {
                                     }
                                     .padding(.leading, 30)
                                 }
-                                    ForEach(tags, id: \.self) { tag in
-                                        Tag(name: tag.capitalized, colour: tagColours.values.randomElement()!)
-                                            .contextMenu {
-                                                if tags.count > 1 {
-                                                    Button {
-                                                        if let index = tags.firstIndex(of: tag) {
-                                                            tags.remove(at: index)
-                                                        }
-                                                    } label: {
-                                                        Label("Delete Tag", systemImage: "trash")
-                                                    }
-                                                }
-                                            }
+                                    ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
+                                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+//                                            .contextMenu {
+//                                                if tags.count > 1 {
+//                                                    Button {
+//                                                        if let index = tags.firstIndex(of: tag) {
+//                                                            tags.remove(at: index)
+//                                                        }
+//                                                    } label: {
+//                                                        Label("Delete Tag", systemImage: "trash")
+//                                                    }
+//                                                }
+//                                            }
                                     }
                                     
                                 }

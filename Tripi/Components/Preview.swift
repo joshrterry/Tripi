@@ -10,7 +10,7 @@ import MapKit
 
 struct Preview: View {
     @State var previewStyle: LayoutStyle = .compact
-
+    
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
@@ -25,7 +25,7 @@ struct Preview: View {
     var starTime: Date
     var endTime: Date
     
-    var tags = [""]
+    var tags: NSOrderedSet
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
@@ -58,7 +58,7 @@ struct Preview: View {
     
     var body: some View {
         NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags)) {
-
+            
             ZStack(alignment: .center) {
                 Rectangle()
                     .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
@@ -74,76 +74,82 @@ struct Preview: View {
                             .cornerRadius(15)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                                                
-                        VStack(alignment: .leading) {
-                            Text(date)
-                                .font(.custom("Gilroy", size: 18))
-                                .foregroundColor(.primary)
-                            Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
-                                .font(.custom("Gilroy", size: 12))
-                                .foregroundColor(.primary)
-                            
-//                            HStack(spacing: 40) {
-//                                Text(String(format:"%.1f", distance)+" km")
-//                                    .font(.custom("Gilroy", size: 22))
-//                                Image(systemName: "chevron.right")
-//                                    .font(Font.system(size: 15, weight: .black))
-//                            }
-                            Text("\(String(format:"%.1f", distance)+" km") · $\(String(format: "%.2f", reimbursementAmount * distance))")
-                                .font(.custom("Gilroy", size: 12))
-                                .foregroundColor(color)
-                            
-                            HStack {
-                                ForEach(tags, id: \.self) { tag in
-                                    Tag(name: tag.capitalized, colour: tagColours.values.randomElement()!)
+                        
+                        Group {
+                            VStack(alignment: .leading) {
+                                Text(date)
+                                    .font(.custom("Gilroy", size: 18))
+                                    .foregroundColor(.primary)
+                                Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
+                                    .font(.custom("Gilroy", size: 12))
+                                    .foregroundColor(.primary)
+                                
+                                Text("\(String(format:"%.1f", distance)+" km") · $\(String(format: "%.2f", reimbursementAmount * distance))")
+                                    .font(.custom("Gilroy", size: 12))
+                                    .foregroundColor(color)
+                                
+                                HStack {
+                                    ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
+                                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                                
+                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(Font.system(size: 24, weight: .black))
                                         .foregroundColor(.primary)
                                 }
                             }
-                     
-                            HStack {
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 24, weight: .black))
-                                    .foregroundColor(.primary)
-                            }
-                            
                         }
+                        .padding(.vertical, 15)
+                        .padding(.horizontal, 10)
                         .frame(width: 180)
+                        
+                        
                     }
+                    
+                    
                 } else {
-                        VStack(alignment: .center) {
-                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-                                .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
-                                .cornerRadius(15)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                                .padding(.top, 5)
-
-                            VStack(alignment: .leading) {
-                                HStack(spacing: 40) {
-                                    Text(String(format:"%.1f", distance)+" km")
-                                        .font(.custom("Gilroy", size: 22))
-                                    Image(systemName: "chevron.right")
-                                        .font(Font.system(size: 15, weight: .black))
-                                }
+                    VStack(alignment: .center) {
+                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
+                            .cornerRadius(15)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                            .padding(.top, 5)
+                        
+                        VStack(alignment: .leading) {
+                            HStack(spacing: 40) {
+                                Text(String(format:"%.1f", distance)+" km")
+                                    .font(.custom("Gilroy", size: 22))
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 15, weight: .black))
+                            }
+                            .foregroundColor(.primary)
+                            
+                            
+                            Text(date)
+                                .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(.primary)
-
-                                
-                                Text(date)
-                                    .font(.custom("Gilroy", size: 12))
-                                    .foregroundColor(.primary)
-
-                                Text("\(tags[0].uppercased()) · $\(String(format: "%.2f", reimbursementAmount * distance))")
+                            
+                            if (trip.tags!.array as! [UserTag]).count >= 1 {
+                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · $\(String(format: "%.2f", reimbursementAmount * distance))")
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(color)
-                                
                             }
-                            .padding(.horizontal, 5)
-
+                            
+                            
                         }
-                    }
-
-               
+                        .padding(.horizontal, 5)
+                        Spacer()
+                        
+                    }.padding(5)
+                }
+                
+                
             }
             .contextMenu {
                 Button {
@@ -158,6 +164,6 @@ struct Preview: View {
 
 struct Preview_Previews: PreviewProvider {
     static var previews: some View {
-        Preview(trip: Trip(), distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date())
+        Preview(trip: Trip(), distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date(), tags: NSOrderedSet())
     }
 }

@@ -30,7 +30,7 @@ struct TripBrowserView: View {
                 ScrollView {
                     scrollDetection
                     ForEach(trips, id: \.self) { trip in
-                        Preview(previewStyle: .expanded, trip: trip, distance: trip.distance, date: formatTimestamp(date: trip.startTimestamp ?? Date()), color: .green, time: trip.time ?? "", avgSpeed: trip.averageSpeed, starTime: trip.startTimestamp ?? Date(), endTime: trip.endTimestamp ?? Date(), tags: trip.tags, region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])), routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) }, notes: trip.notes ?? "")
+                        Preview(previewStyle: .expanded, trip: trip, distance: trip.distance, date: formatTimestamp(date: trip.startTimestamp ?? Date()), color: .green, time: trip.time ?? "", avgSpeed: trip.averageSpeed, starTime: trip.startTimestamp ?? Date(), endTime: trip.endTimestamp ?? Date(), tags: trip.tags!, region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])), routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) }, notes: trip.notes ?? "")
                     }
                 }
                 .coordinateSpace(name: "scroll")

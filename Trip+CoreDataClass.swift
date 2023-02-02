@@ -2,7 +2,7 @@
 //  Trip+CoreDataClass.swift
 //  Tripi
 //
-//  Created by Joshua Terry on 2022-10-02.
+//  Created by Joshua Terry on 2023-02-01.
 //
 //
 
