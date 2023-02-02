@@ -16,6 +16,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+
+            // Display the appropriate tab based on selectedTab variable
             switch selectedTab {
             case .home:
                 HomeView()
@@ -24,14 +26,13 @@ struct ContentView: View {
             case .trips:
                 TripBrowserView()
             }
-//            if showingTabBar {
-//                withAnimation {
-                    TabBar()
-                        .offset(y: model.fullScreen ? 200 : 0)
-//                }
-//            }
 
+            // Tab bar at bottom of screen
+            TabBar()
+                .offset(y: model.fullScreen ? 200 : 0)
+            
         }
+        // Inject routeManager instance into the various subviews
         .environmentObject(routeManager)
     }
 }

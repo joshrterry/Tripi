@@ -13,11 +13,11 @@ struct ExportWindow: View {
     @State var hasScrolled = false
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
     var trips: FetchedResults<Trip>
-
+    let fileManager = FileManager()
+    
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
-            Text("Export")
             List {
                 ZStack {
                     scrollDetection
@@ -28,13 +28,10 @@ struct ExportWindow: View {
                 DatePicker(selection: $endDate, in: startDate...Date.now, displayedComponents: .date) {
                     Text("End Date")
                 }
-                ShareLink(item: generateCSV())
-//                Button {
-//                 generateCSV()
-//                } label: {
-//                    Text("Export")
-//                }
-            }
+                ShareLink(item: fileManager.generateCSV(trips: trips, startDate: startDate, endDate: endDate))
+                
+                
+            }.scrollContentBackground(.hidden)
                 .coordinateSpace(name: "scroll")
                 .safeAreaInset(edge: .top, content: {
                     Color.clear.frame(height: 50)
@@ -46,51 +43,7 @@ struct ExportWindow: View {
         }
     }
     
-    // https://youtu.be/7luhStOgXjk
-    
-    func generateCSV() -> URL {
-        let sFileName = "export.csv"
-        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-        let documentURL = URL(filePath: documentDirectoryPath).appendingPathComponent(sFileName)
-        let output = OutputStream.toMemory()
-        let csvWriter = CHCSVWriter(outputStream: output, encoding: String.Encoding.utf8.rawValue, delimiter: ",".utf16.first!)
-        
-        // CSV File Header
-        csvWriter?.writeField("TRIP_START_TIME")
-        csvWriter?.writeField("TRIP_END_TIME")
-        csvWriter?.writeField("TRIP_DISTANCE")
-        csvWriter?.finishLine()
-        
-        // Data Array
-        var tripsData = [[String]]()
-        
-        for trip in trips {
-            if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
-                tripsData.append(["\(trip.startTimestamp ?? Date())", "\(trip.endTimestamp ?? Date())", "\(trip.distance)"])
-            }
 
-
-        }
-        
-        for elements in tripsData.enumerated() {
-            csvWriter?.writeField(elements.element[0])
-            csvWriter?.writeField(elements.element[1])
-            csvWriter?.writeField(elements.element[2])
-            csvWriter?.finishLine()
-        }
-        
-        csvWriter?.closeStream()
-        
-        let buffer = (output.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)!
-        
-        do {
-            try buffer.write(to: documentURL)
-        }
-        catch {
-            
-        }
-        return documentURL
-    }
     
     var scrollDetection: some View {
         GeometryReader { proxy in

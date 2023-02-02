@@ -20,9 +20,9 @@ class RouteManager: NSObject, ObservableObject {
     @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
     @Published var startTime = Date()
-    var lastTwoLocations: [CLLocation] = []
+    var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
 
-    
+    // Creates new instance of Trip
     var newTrip: Trip = Trip()
     
     @Published var secondsElapsed = 0.0
@@ -31,6 +31,7 @@ class RouteManager: NSObject, ObservableObject {
     
     var timer = Timer()
     
+    // Start a timer to track the duration of the trip
     func startTimer() {
         timerStartTime = Date()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
@@ -74,7 +75,8 @@ class RouteManager: NSObject, ObservableObject {
     
     typealias Output = (longitude: Double, latitude: Double, trip: Trip)
     typealias Failure = Never
-    private let wrapped = PassthroughSubject<(Output), Failure>()
+    private let dataPublisher = PassthroughSubject<(Output), Failure>()
+    
     
     override init() {
         super.init()
@@ -125,34 +127,40 @@ class RouteManager: NSObject, ObservableObject {
     }
     
     private func getCurrentSpeed() {
-        if lastTwoLocations.count == 2 {
-            currentSpeed = (lastTwoLocations[1].distance(from: lastTwoLocations[0])/1000)/(lastTwoLocations[1].timestamp.timeIntervalSince(lastTwoLocations[0].timestamp)/3600)
-
-        }
+        currentSpeed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)/3600)
     }
     
         
 }
     
 extension RouteManager: CLLocationManagerDelegate {
+    // delegate method called upon a device location update, calculates relevant metrics, and publishes to subscriber
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if trackingState != .active { return }
+        
+        if trackingState != .active { return } // exit function if user is not currently logging a trip
         guard let location = locations.last else { return }
+        
+        // error handling to prevent situations at the start of a trip when the program attempts to calcualate distance from last waypoint, and no other points exist
         if lastLocation != nil {
-            distanceTotal += location.distance(from: lastLocation) / 1000
+            distanceTotal += location.distance(from: lastLocation) / 1000 // divide by 1000 to convert m to km
             routeWaypoints.append(lastLocation.coordinate)
-            lastTwoLocations = []
-            lastTwoLocations.append(lastLocation)
-            lastTwoLocations.append(location)
+            lastTwoLocations.last = lastLocation
+            lastTwoLocations.current = location
         }
-        wrapped.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, trip: newTrip))
+        
+        // publishes coordinate and trip data to subscriber via dataPublisher instance
+        dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, trip: newTrip))
+        
+        // set lastLocation variable to the current location for this iteration
         lastLocation = location
     }
 }
 
 extension RouteManager: Publisher {
+    // subscribes a new subscriber to the dataPublisher
     func receive<Downstream: Subscriber>(subscriber: Downstream) where Failure == Downstream.Failure, Output == Downstream.Input {
-        wrapped.subscribe(subscriber)
+        dataPublisher.subscribe(subscriber)
     }
 }
+
 

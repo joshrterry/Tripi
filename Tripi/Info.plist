@@ -21,7 +21,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location information is required for tracking</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Tripi uses accelerometer data from your device to automatically detect and log your trips</string>
+	<string>Tripi uses motion data from your device to automatically detect and log your trips</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>

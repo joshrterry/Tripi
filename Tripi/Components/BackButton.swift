@@ -16,7 +16,7 @@ struct BackButton: View {
         } label: {
             Image(systemName: "xmark")
                 .font(.body.weight(.bold))
-                .frame(width: 36, height: 36)
+                .frame(width: 40, height: 40)
                 .foregroundColor(.secondary)
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .strokeStyle(cornerRadius: 14)

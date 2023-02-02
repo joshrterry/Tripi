@@ -31,21 +31,23 @@ struct PolylineMap: UIViewRepresentable {
         mapView.layoutMargins = edgeInsets
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.addOverlay(polyline)
-        
         return mapView
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
         view.tintColor = routeManager.trackingState == .active ? UIColor.systemBlue : UIColor.systemGray
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
-        view.addOverlay(polyline)
-        
-    }
+        let isVisible = polyline.intersects(view.visibleMapRect)
+        if isVisible {
+            view.addOverlay(polyline)
+        }
 
+    }
+//
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    
+
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: PolylineMap
 
@@ -57,6 +59,8 @@ struct PolylineMap: UIViewRepresentable {
                 let renderer = MKPolylineRenderer(polyline: routePolyline)
                 renderer.strokeColor = UIColor.systemBlue
                 renderer.lineWidth = 5
+                renderer.shouldRasterize = true
+
                 return renderer
             }
             return MKOverlayRenderer()

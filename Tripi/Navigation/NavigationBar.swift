@@ -18,10 +18,7 @@ struct NavigationBar: View {
     var body: some View {
         ZStack {
             Color("Background")
-//                .background(.ultraThinMaterial)
-//                .blur(radius: 10)
                 .edgesIgnoringSafeArea(.all)
-//                .opacity(hasScrolled ? 1 : 0)
             
             Text(title)
                 .animatableFont(size: hasScrolled ? 22 : 34)

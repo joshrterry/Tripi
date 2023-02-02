@@ -12,21 +12,27 @@ import SwiftUI
 struct TripiApp: App {
     @StateObject private var routeManager: RouteManager
     var cancellables = [AnyCancellable]()
+    private var activityManager: ActivityManager
+    
 
     init() {
-       // Creates a new instance of RouterManager (the one and only)
+       // Creates a new instance of RouterManager to be used throughout the app
        let routeManager = RouteManager()
-       // Stores the newly created instance in the StateObject property
+       // Stores the instance in the StateObject property
        _routeManager = .init(wrappedValue: routeManager)
        // Subscribes to the events of RouteManager
        routeManager
            .sink(receiveValue: PersistenceController.shared.addLocation).store(in: &cancellables)
+        
+        // creates a new instance of ActivityManager
+        activityManager = ActivityManager()
     }
     var body: some Scene {
         WindowGroup {
            ContentView()
-               .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext) 
+               .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+            // Inject routeManager instance into the ContextView()
                .environmentObject(routeManager)
-       }
+        }
+        }
    }
-}

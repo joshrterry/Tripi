@@ -7,6 +7,7 @@
 
 import CoreData
 import CoreLocation
+import SwiftUI
 
 struct PersistenceController {
     static var shared = PersistenceController()
@@ -26,6 +27,19 @@ struct PersistenceController {
             }
         })
 //        newTrip = Trip(context: container.viewContext)
+    }
+    
+    mutating func addTag(name: String, colour: [Double], reimbursementAmount: Double) {
+        let newTag = UserTag(context: container.viewContext)
+        newTag.dateCreated = Date()
+        newTag.name = name
+        newTag.reimbursementAmount = reimbursementAmount
+        if colour.count == 3 {
+            newTag.colour = [colour[0], colour [1], colour[2]]
+        } else {
+            newTag.colour = [0, 0, 0]
+        }
+        save()
     }
     
     mutating func addTrip(startTime: Date) -> Trip {
@@ -94,6 +108,12 @@ struct PersistenceController {
     func delete(trip: Trip) {
         let context = container.viewContext
         context.delete(trip)
+        save()
+    }
+    
+    func deleteTag(tag: UserTag) {
+        let context = container.viewContext
+        context.delete(tag)
         save()
     }
     

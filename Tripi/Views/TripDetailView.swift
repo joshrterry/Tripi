@@ -19,11 +19,12 @@ struct TripDetailView: View {
     @State var region: MKCoordinateRegion
     @State var routeCoords: [CLLocationCoordinate2D]
     @State var tags: [String]
-    @State var presentNewTag = false
     @State var descriptor = ""
     @Environment(\.dismiss) private var dismiss
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
-
+    
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \UserTag.dateCreated, ascending: true)], animation: .default)
+    private var globalTags: FetchedResults<UserTag>
     
     var tagColours = [
         0: Color(red: 47/255, green: 72/255, blue: 88/255),
@@ -61,15 +62,15 @@ struct TripDetailView: View {
                             .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
                             .frame(height: 800)
                             .edgesIgnoringSafeArea(.all)
-
+                        
                         VStack(alignment: .leading, spacing: 0) {
                             Group {
                                 HStack {
                                     Text("Trip Summary")
                                         .font(.custom("Gilroy", size: 32))
                                     Spacer()
-                            
-                      
+                                    
+                                    
                                     Menu {
                                         Button {
                                             PersistenceController.shared.delete(trip: trip)
@@ -83,13 +84,13 @@ struct TripDetailView: View {
                                 }
                                 .padding(.horizontal, 30)
                                 .padding(.top, 40)
-
+                                
                                 
                                 Text(formatTime(date: startTime)+" - "+formatTime(date: endTime)+" | "+formatDay(date: startTime))
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(.gray)
                                     .padding(.leading, 30)
-
+                                
                                 
                                 
                                 HStack(spacing: 32) {
@@ -101,69 +102,62 @@ struct TripDetailView: View {
                                 Text("Tags")
                                     .font(.custom("Gilroy", size: 24))
                                     .padding(.leading, 30)
-        //                            Rectangle()
-        //                                .foregroundColor(Color(.systemGray5))
-        //                                .frame(width: 330, height: 250)
-        //                                .cornerRadius(25)
+                                //                            Rectangle()
+                                //                                .foregroundColor(Color(.systemGray5))
+                                //                                .frame(width: 330, height: 250)
+                                //                                .cornerRadius(25)
                             }
                             
                             Group {
                                 HStack(alignment: .top) {
-                                    Button {
-                                        presentNewTag = true
-                                    }
-                                label: {
-                                        ZStack(alignment: .center) {
-                                            Rectangle()
-                                                .frame(width: 80, height: 30)
-                                                .cornerRadius(15)
-                                                .foregroundColor(Color(.systemGray5))
-
-                                            HStack {
-                                                Image(systemName: "plus")
-                                                Text("New")
+                                    Menu {
+                                        ForEach(globalTags, id: \.self) { tag in
+                                            Button {
+//                                                tags.append(Tag())
+                                            } label: {
+                                                HStack {
+                                                    Image(systemName: "plus")
+                                                    Text(tag.name!)
+  
+                                                }
                                             }
-                                                .foregroundColor(Color.primary)
-                                                .font(.custom("Gilroy", size: 16))
+
                                         }
-                                        .padding(.leading, 30)
+                                    } label: {
+                                    ZStack(alignment: .center) {
+                                        Rectangle()
+                                            .frame(width: 80, height: 30)
+                                            .cornerRadius(15)
+                                            .foregroundColor(Color(.systemGray5))
+                                        
+                                        HStack {
+                                            Image(systemName: "plus")
+                                            Text("Add")
+                                        }
+                                        .foregroundColor(Color.primary)
+                                        .font(.custom("Gilroy", size: 16))
+                                    }
+                                    .padding(.leading, 30)
                                 }
                                     ForEach(tags, id: \.self) { tag in
                                         Tag(name: tag.capitalized, colour: tagColours.values.randomElement()!)
                                             .contextMenu {
                                                 if tags.count > 1 {
-                                                Button {
-                                                    if let index = tags.firstIndex(of: tag) {
-                                                        tags.remove(at: index)
+                                                    Button {
+                                                        if let index = tags.firstIndex(of: tag) {
+                                                            tags.remove(at: index)
+                                                        }
+                                                    } label: {
+                                                        Label("Delete Tag", systemImage: "trash")
                                                     }
-                                                } label: {
-                                                    Label("Delete Tag", systemImage: "trash")
                                                 }
                                             }
-                                        }
-                                        
-
                                     }
                                     
                                 }
                             }
-                            
-                            .alert("New Tag", isPresented: $presentNewTag, actions: {
-                                
-                                TextField("Descriptor", text: $descriptor)
-
-                                
-                                Button("Add", action: {
-                                    tags.append(descriptor)
-                                    descriptor = ""
-                                })
-                                Button("Cancel", role: .cancel, action: {})
-                            }, message: {
-                                Text("Please give this tag a name.")
-                            })
-                        
                             .padding(.top, 15)
-
+                            
                             
                             Text("Notes")
                                 .font(.custom("Gilroy", size: 24))
@@ -183,15 +177,15 @@ struct TripDetailView: View {
                                     .padding(.top, 15)
                                     .frame(height: 150)
                             }
-
+                            
                         }
-
+                        
                     }
                 }
             }.toolbarBackground(.hidden, for: .navigationBar)
                 .navigationBarBackButtonHidden(true)
                 .navigationBarItems(leading: BackButton(dismiss: self.dismiss))
-            .edgesIgnoringSafeArea(.all)
+                .edgesIgnoringSafeArea(.all)
         }.onDisappear {
             uploadChanges()
             showingTabBar = true
