@@ -23,14 +23,13 @@ class ActivityManager {
         // start updating activity data and publishing to applications main thread
         self.activityManager.startActivityUpdates(to: .main) { (activity: CMMotionActivity?) in
             guard let activity = activity else { return }
-            DispatchQueue.main.async {
-                if activity.automotive {
-                    print("Automotive")
-                } else {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
-                        if !activity.automotive {
-                            self.notificationManager.promptToEnd()
-                        }
+            if activity.automotive {
+                print("Automotive")
+            } else {
+                // wait 2 minutes, then check again
+                DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
+                    if !activity.automotive {
+                        self.notificationManager.promptToEnd()
                     }
                 }
             }
