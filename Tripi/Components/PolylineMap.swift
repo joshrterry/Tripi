@@ -58,8 +58,8 @@ struct PolylineMap: UIViewRepresentable {
             if let routePolyline = overlay as? MKPolyline {
                 let renderer = MKPolylineRenderer(polyline: routePolyline)
                 renderer.strokeColor = UIColor.systemBlue
-                renderer.lineWidth = 5
-                renderer.shouldRasterize = true
+                renderer.lineWidth = 7
+//                renderer.shouldRasterize = true
 
                 return renderer
             }

@@ -24,7 +24,7 @@ struct ExportWindow: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
     var trips: FetchedResults<Trip>
     let fileManager = FileManager()
-        
+    
     @State var fields = [
         Field(id: "Start time", includeMetric: true),
         Field(id: "End time", includeMetric: true),
@@ -65,7 +65,7 @@ struct ExportWindow: View {
                         }
                     }
                 }
-               
+                
                 Section {
                     ForEach($fields) { $field in
                         Toggle(field.id, isOn: $field.includeMetric)
@@ -103,11 +103,11 @@ struct ExportWindow: View {
                 .coordinateSpace(name: "scroll")
                 .safeAreaInset(edge: .top, content: {
                     Color.clear.frame(height: 50)
-            })
-
-            .overlay(NavigationBar(showingButttons: false, title: "Export", hasScrolled: $hasScrolled))
-            .offset(y: 40)
-            .navigationBarHidden(true)
+                })
+            
+                .overlay(NavigationBar(showingButttons: false, title: "Export", hasScrolled: $hasScrolled))
+                .offset(y: 40)
+                .navigationBarHidden(true)
         }
     }
     

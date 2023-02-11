@@ -11,24 +11,6 @@ import UserNotifications
 class NotificationManager {
 
     // https://www.hackingwithswift.com/books/ios-swiftui/scheduling-local-notifications
-    
-    func checkAuthorizationStatus() {
-        
-    }
-    
-    func promptToStart() {
-            // define content of the push notification
-            let content = UNMutableNotificationContent()
-            content.title = "Track this trip?"
-            content.body = "It looks like you're driving. Press here to begin trip tracking."
-            content.sound = UNNotificationSound.default
-
-            // assigned random identifier and content to request
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-
-            // add notification request to queue
-            UNUserNotificationCenter.current().add(request)
-    }
 
     func promptToEnd() {
             // define content of the push notification

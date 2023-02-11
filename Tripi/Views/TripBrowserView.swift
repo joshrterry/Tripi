@@ -21,9 +21,9 @@ struct TripBrowserView: View {
     
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
-
+    
     var body: some View {
-
+        
         NavigationView {
             ZStack {
                 Color("Background").ignoresSafeArea()
@@ -44,7 +44,7 @@ struct TripBrowserView: View {
                 .navigationBarHidden(true)
             }
         }
-
+        
     }
     
     var scrollDetection: some View {

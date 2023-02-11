@@ -13,13 +13,11 @@ import UserNotifications
 import SwiftUI
 
 class ActivityManager: NSObject {
-//    let routeManager: RouteManager
-    
-
     var activityManager: CMMotionActivityManager!
     let notificationManager = NotificationManager()
     
     func startMotionUpdates() {
+        var sentNotification = false
         // creates a new instance of CMMotionActivityManager
         self.activityManager = CMMotionActivityManager()
         
@@ -27,26 +25,17 @@ class ActivityManager: NSObject {
         self.activityManager.startActivityUpdates(to: .main) { (activity: CMMotionActivity?) in
             guard let activity = activity else { return }
             print(activity)
-//            if activity.automotive {
-//                if self.routeManager.trackingState == .inactive {
-//                    print("INACTIVE")
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
-//                        if activity.automotive {
-//                            self.notificationManager.promptToStart()
-//                        }
-//                    }
-//                }
-//            } else {
-//                if self.routeManager.trackingState == .active {
-//                    print("ACTIVE")
-//                    // wait 2 minutes, then check again
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
-//                        if !activity.automotive {
-//                            self.notificationManager.promptToEnd()
-//                        }
-//                    }
-//                }
-//            }
+            if !activity.automotive {
+                // wait 2 minutes, then check again
+                DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
+                    if !activity.automotive {
+                        if !sentNotification {
+                            sentNotification = true
+                            self.notificationManager.promptToEnd()
+                        }
+                    }
+                }
+            }
         }
         
     }

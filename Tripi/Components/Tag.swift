@@ -12,9 +12,6 @@ struct Tag: View {
     @State var colour = Color(red: 0, green: 0, blue: 0)
     var body: some View {
         ZStack {
-//            Rectangle()
-//                .foregroundColor(.indigo)
-//                .frame(width: 100)
             Text(name)
                 .font(.custom("Gilroy", size: 14))
                 .padding()

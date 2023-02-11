@@ -23,7 +23,7 @@ class RouteManager: NSObject, ObservableObject {
     let activityManager = ActivityManager()
     
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
-
+    
     // Creates new instance of Trip
     var newTrip: Trip = Trip()
     
@@ -109,6 +109,7 @@ class RouteManager: NSObject, ObservableObject {
         PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
         locationManager.allowsBackgroundLocationUpdates = false
         trackingState = .inactive
+        activityManager.stopMotionUpdates()
         lastLocation = nil
         distanceTotal = 0
         currentSpeed = 0
@@ -133,9 +134,9 @@ class RouteManager: NSObject, ObservableObject {
         currentSpeed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)/3600)
     }
     
-        
-}
     
+}
+
 extension RouteManager: CLLocationManagerDelegate {
     // delegate method called upon a device location update, calculates relevant metrics, and publishes to subscriber
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
