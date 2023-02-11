@@ -149,15 +149,6 @@ struct Preview: View {
                         
                     }.padding(5)
                 }
-                
-                
-            }
-            .contextMenu {
-                Button {
-                    PersistenceController.shared.delete(trip: trip)
-                } label: {
-                    Label("Delete Trip", systemImage: "trash")
-                }
             }
         }
     }

@@ -224,7 +224,8 @@ struct TripDetailView: View {
                 let tripsArray = trip.tags?.array as? [UserTag]
                 trip.amountReimbursable = (tripsArray?[0].reimbursementAmount ?? 0) * distance
                 PersistenceController.shared.save()
-                print(trip.amountReimbursable)
+            } else {
+                trip.amountReimbursable = 0.0
             }
         }
         .onChange(of: isTyping) { value in

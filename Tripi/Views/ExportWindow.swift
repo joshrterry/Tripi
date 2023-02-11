@@ -28,8 +28,9 @@ struct ExportWindow: View {
     @State var fields = [
         Field(id: "Start time", includeMetric: true),
         Field(id: "End time", includeMetric: true),
-        Field(id: "Duration"),
         Field(id: "Distance", includeMetric: true),
+        Field(id: "Duration"),
+        Field(id: "Average Speed"),
         Field(id: "Amount reimbursable"),
         Field(id: "Notes")
     ]

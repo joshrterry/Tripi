@@ -29,33 +29,7 @@ struct SettingsView: View {
             ZStack {
                 Color("Background").ignoresSafeArea()
                 Form {
-                    //                        ZStack {
-                    //                                Button {
-                    //                                    showingAlert = true
-                    //                                } label: {
-                    //                                HStack {
-                    //                                    Image(systemName: "dollarsign.square.fill")
-                    //                                        .font(.system(size: 28))
-                    //                                        .foregroundColor(.green)
-                    //                                    Text("Reimbursement Rate")
-                    //                                        .foregroundColor(.primary)
-                    //                                    Spacer()
-                    //                                    Text(String(format: "%.2f", reimbursementAmount))
-                    //                                        .foregroundColor(.secondary)
-                    //                                    Image(systemName: "chevron.right")
-                    //                                        .foregroundColor(.secondary)
-                    //                                }
-                    //                                }.alert("Enter reimbursement amount:", isPresented: $showingAlert) {
-                    //                                    TextField("$0.00", value: $reimbursementAmount, formatter: numberFormatter)
-                    //                                        .keyboardType(.decimalPad)
-                    //                                }
-                    
-                    
-                    
-                    
-                    //                        Stepper("Reimbursement amount: $\(String(format: "%.2f", reimbursementAmount)) / km", value: $reimbursementAmount, in: 0...1.0, step: 0.05)
-                    //                        }
-                    
+            
                     Picker(selection: $selectedUnits) {
                         Text("Metric").tag("metric")
                         Text("Imperial").tag("imperial")
@@ -72,20 +46,6 @@ struct SettingsView: View {
                         }
                     }.pickerStyle(.inline)
                     
-                    //                        NavigationLink(destination:
-                    //                            List {
-                    //                            HStack {
-                    //                                Spacer()
-                    //                                Picker("Units", selection: $selectedUnits, content: {
-                    //                                    Text("Metric").tag("metric")
-                    //                                    Text("Imperial").tag("imperial")
-                    //                                })
-                    //                            }
-                    //
-                    //                        }
-                    //
-                    //                        ) {
-                    //                        }
                     
                     NavigationLink(destination: TagSort()) {
                         HStack {
@@ -121,11 +81,11 @@ struct SettingsView: View {
                     .onReceive(selectedAutonomy.description.publisher) { _ in
                         switch selectedAutonomy {
                         case 0:
-                            footerText = "Manual control - Trips must be started and stopped from within the application."
+                            footerText = "Manual control - Trip must be stopped from within the application."
                         case 1:
-                            footerText = "Notification mode - Alerts will be sent when it seems like you are driving, and you will be prompted to end the trip when stopped."
+                            footerText = "Notification mode - Alerts will be sent to remind you to end your trip when it seems like you've stopped driving."
                         case 2:
-                            footerText = "Fully automatic - Trips will be stopped and started without any user intervention. Note: This may result in unintentional trips being tracked."
+                            footerText = "Fully automatic - Trips will be automatically stopped without any user intervention. Note: This may result in some trips being ended prematurely."
                         default:
                             footerText = ""
                         }

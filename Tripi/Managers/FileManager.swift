@@ -43,7 +43,8 @@ class FileManager {
                 "Start time": trip.startTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
                 "End time": trip.endTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
                 "Duration": trip.time ?? "00:00",
-                "Distance": (String(unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi")),
+                "Distance": String(unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi"),
+                "Average Speed": String(unitFormatter.formatSpeed(speed: trip.averageSpeed, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " kph" : " mph"),
                 "Amount reimbursable": unitFormatter.formatReimbursable(amount: trip.amountReimbursable),
                 "Notes": trip.notes ?? ""
             ] as [String : Any]
