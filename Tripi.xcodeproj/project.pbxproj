@@ -38,11 +38,13 @@
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
+		F579F5302995CAF000EE03FF /* Graphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F579F52F2995CAF000EE03FF /* Graphs.swift */; };
 		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
 		F57A3F7F2926CD3900315971 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7E2926CD3900315971 /* ActivityManager.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
 		F5A12D5029711B2A0055E239 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A12D4F29711B2A0055E239 /* BackButton.swift */; };
 		F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A86BD1292F1389004CF3EA /* FileManager.swift */; };
+		F5B14FC5298EEBDC004C61BA /* UnitFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */; };
 		F5BCB34128C65A820063082E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BCB34028C65A820063082E /* SettingsView.swift */; };
 		F5BE3A69297346D50030B662 /* TagSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BE3A68297346D50030B662 /* TagSort.swift */; };
 		F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */; };
@@ -108,11 +110,13 @@
 		F56426E72856B9B6005FD118 /* TripiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56426EB2856B9B6005FD118 /* TripiUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITests.swift; sourceTree = "<group>"; };
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F579F52F2995CAF000EE03FF /* Graphs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graphs.swift; sourceTree = "<group>"; };
 		F57A3F7C2926C15000315971 /* LayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutStyle.swift; sourceTree = "<group>"; };
 		F57A3F7E2926CD3900315971 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
 		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		F5A12D4F29711B2A0055E239 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		F5A86BD1292F1389004CF3EA /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
+		F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitFormatter.swift; sourceTree = "<group>"; };
 		F5BCB34028C65A820063082E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F5BE3A68297346D50030B662 /* TagSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSort.swift; sourceTree = "<group>"; };
 		F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolylineMap.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */,
+				F579F52F2995CAF000EE03FF /* Graphs.swift */,
 				F517F2F5286FD3F0000E07AF /* RecentTrips.swift */,
 				F5BE3A68297346D50030B662 /* TagSort.swift */,
 			);
@@ -230,6 +235,7 @@
 				F56024EE286FAB450002403D /* PreferenceKeys.swift */,
 				F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */,
 				F57A3F7C2926C15000315971 /* LayoutStyle.swift */,
+				F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -464,9 +470,11 @@
 				F558FFDA28EA5B8500FA00B0 /* Location+CoreDataProperties.swift in Sources */,
 				F53AEE582966237A0026EEA9 /* ExportWindow.swift in Sources */,
 				F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */,
+				F579F5302995CAF000EE03FF /* Graphs.swift in Sources */,
 				F56426D52856B9B6005FD118 /* Persistence.swift in Sources */,
 				F56024F5286FAC300002403D /* AnimatableFontModifier.swift in Sources */,
 				F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */,
+				F5B14FC5298EEBDC004C61BA /* UnitFormatter.swift in Sources */,
 				F554A80D28AA62CB00E4F8D6 /* TrackingState.swift in Sources */,
 				F56426CE2856B9B4005FD118 /* HomeView.swift in Sources */,
 				F56024EF286FAB450002403D /* PreferenceKeys.swift in Sources */,

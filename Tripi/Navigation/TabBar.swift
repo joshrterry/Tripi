@@ -11,8 +11,10 @@ import SwiftUI
 struct TabBar: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("selectedTab") var selectedTab: Tab = .home
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
     @State var showLiveMetrics = false
+    let unitFormatter = UnitFormatter()
     
     var body: some View {
             VStack {
@@ -26,11 +28,11 @@ struct TabBar: View {
                             .cornerRadius(30)
                             .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                         HStack() {
-                            Metric(data: String(format:"%.1f", routeManager.distanceTotal), descriptor: "KM Travelled", color: .primary)
+                            Metric(data: "\(unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
                                 .frame(width: 100)
                             Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
                                 .frame(width: 120)
-                            Metric(data: String(format:"%.0f", routeManager.currentSpeed), descriptor: "Current KM/H", color: .primary)
+                            Metric(data: "\(Int(unitFormatter.formatSpeed(speed: routeManager.currentSpeed, selectedUnits: selectedUnits)))", descriptor: selectedUnits == "metric" ? "Current KPH" : "Current MPH", color: .primary)
                                 .frame(width: 100)
                         }
                         .padding(.top, 22)

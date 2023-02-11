@@ -12,7 +12,10 @@ import SwiftUI
 
 class FileManager {
     
-    func generateCSV(trips: FetchedResults<Trip>, startDate: Date, endDate: Date) -> URL {
+    let unitFormatter = UnitFormatter()
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
+    
+    func generateCSV(trips: FetchedResults<Trip>, startDate: Date, endDate: Date, fields: [Field]) -> URL {
         // name of the file to be shared
         let fileName = "tripi_export.csv"
         
@@ -26,9 +29,9 @@ class FileManager {
         let csvWriter = CHCSVWriter(outputStream: output, encoding: String.Encoding.utf8.rawValue, delimiter: ",".utf16.first!)
         
         // csv file header row
-        csvWriter?.writeField("TRIP_START_TIME")
-        csvWriter?.writeField("TRIP_END_TIME")
-        csvWriter?.writeField("TRIP_DISTANCE")
+        for field in fields {
+            csvWriter?.writeField(field.id.uppercased())
+        }
         csvWriter?.finishLine()
         
         // two-dimensional array of trips data
@@ -36,8 +39,26 @@ class FileManager {
         
         // for each trip, write its corresponding data to the tripsData array
         for trip in trips {
+            let idToData = [
+                "Start time": trip.startTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
+                "End time": trip.endTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
+                "Duration": trip.time ?? "00:00",
+                "Distance": (String(unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi")),
+                "Amount reimbursable": unitFormatter.formatReimbursable(amount: trip.amountReimbursable),
+                "Notes": trip.notes ?? ""
+            ] as [String : Any]
+            
+            let stringIdtoData = idToData.compactMapValues { "\($0)" }
+            
             if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
-                tripsData.append(["\(trip.startTimestamp ?? Date())", "\(trip.endTimestamp ?? Date())", "\(trip.distance)"])
+                
+                var dataArray: [String] = []
+
+                for field in fields {
+                    dataArray.append(stringIdtoData[field.id] ?? "")
+                }
+                tripsData.append(dataArray)
+                
             }
         }
         

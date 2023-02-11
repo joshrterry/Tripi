@@ -13,12 +13,14 @@ struct SummaryStats: View {
     @State var selectedHours = 0.0
     @State var showingWeekly = false
     @State var selectedReimbursable = 0.0
+    let unitFormatter = UnitFormatter()
 
     @EnvironmentObject var routeManager: RouteManager
         
     @FetchRequest var weeklyTrips: FetchedResults<Trip>
     @FetchRequest var monthlyTrips: FetchedResults<Trip>
 
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     
     init(filters: [Date]) {
@@ -31,24 +33,27 @@ struct SummaryStats: View {
         selectedDistance = 0.0
         selectedBusinessKM = 0.0
         selectedHours = 0.0
+        selectedReimbursable = 0.0
         if showingWeekly {
             for trip in weeklyTrips {
                 selectedDistance += trip.distance
+                selectedReimbursable += trip.amountReimbursable
                 selectedHours += trip.secondsElapsed
-                if trip.tags!.contains("business") {
+                if (trip.tags?.array as! [UserTag]).count >= 1 {
                     selectedBusinessKM += trip.distance
                 }
             }
         } else {
             for trip in monthlyTrips {
                 selectedDistance += trip.distance
+                selectedReimbursable += trip.amountReimbursable
                 selectedHours += trip.secondsElapsed
-                if trip.tags!.contains("business") {
+                if (trip.tags?.array as! [UserTag]).count >= 1 {
                     selectedBusinessKM += trip.distance
                 }
             }
         }
-        selectedReimbursable = selectedDistance*reimbursementAmount
+        
     }
     
     var body: some View {
@@ -77,9 +82,9 @@ struct SummaryStats: View {
 
             }
             HStack() {
-                Metric(data: String(format:"%.1f", selectedDistance), descriptor: "total km")
+                Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi")
                     .frame(width: 150, alignment: .leading)
-                Metric(data: String(format:"%.1f", selectedBusinessKM), descriptor: "business km")
+                Metric(data: "\(unitFormatter.formatDistance(distance: selectedBusinessKM, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "business km" : "business mi")
                     .frame(width: 150, alignment: .leading)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,6 +104,9 @@ struct SummaryStats: View {
         .onChange(of: reimbursementAmount, perform: { _ in
             loadData()
         })
+        .onChange(of: selectedUnits) { newValue in
+            loadData()
+        }
     }
 }
 

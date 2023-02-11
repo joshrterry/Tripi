@@ -13,8 +13,10 @@ struct SettingsView: View {
     @State var hasScrolled = false
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     @AppStorage("selectedUnits") var selectedUnits = "metric"
+    @AppStorage("selectedAutonomy") var selectedAutonomy = 0
     @State var showingAlert = false
     private let numberFormatter: NumberFormatter
+    @State var footerText = ""
     
     init() {
       numberFormatter = NumberFormatter()
@@ -27,33 +29,32 @@ struct SettingsView: View {
             ZStack {
                 Color("Background").ignoresSafeArea()
                     Form {
-                        ZStack {
-                            scrollDetection
-                                Button {
-                                    showingAlert = true
-                                } label: {
-                                HStack {
-                                    Image(systemName: "dollarsign.square.fill")
-                                        .font(.system(size: 28))
-                                        .foregroundColor(.green)
-                                    Text("Reimbursement Rate")
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                    Text(String(format: "%.2f", reimbursementAmount))
-                                        .foregroundColor(.secondary)
-                                    Image(systemName: "chevron.right")
-                                        .foregroundColor(.secondary)
-                                }
-                                }.alert("Enter reimbursement amount:", isPresented: $showingAlert) {
-                                    TextField("$0.00", value: $reimbursementAmount, formatter: numberFormatter)
-                                        .keyboardType(.decimalPad)
-                                }
+//                        ZStack {
+//                                Button {
+//                                    showingAlert = true
+//                                } label: {
+//                                HStack {
+//                                    Image(systemName: "dollarsign.square.fill")
+//                                        .font(.system(size: 28))
+//                                        .foregroundColor(.green)
+//                                    Text("Reimbursement Rate")
+//                                        .foregroundColor(.primary)
+//                                    Spacer()
+//                                    Text(String(format: "%.2f", reimbursementAmount))
+//                                        .foregroundColor(.secondary)
+//                                    Image(systemName: "chevron.right")
+//                                        .foregroundColor(.secondary)
+//                                }
+//                                }.alert("Enter reimbursement amount:", isPresented: $showingAlert) {
+//                                    TextField("$0.00", value: $reimbursementAmount, formatter: numberFormatter)
+//                                        .keyboardType(.decimalPad)
+//                                }
                                 
 
                             
 
     //                        Stepper("Reimbursement amount: $\(String(format: "%.2f", reimbursementAmount)) / km", value: $reimbursementAmount, in: 0...1.0, step: 0.05)
-                        }
+//                        }
                         
                         Picker(selection: $selectedUnits) {
                             Text("Metric").tag("metric")
@@ -90,10 +91,43 @@ struct SettingsView: View {
                             HStack {
                                 Image(systemName: "tag.square.fill")
                                     .font(.system(size: 28))
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.green)
                                 Text("Customize Tags")
                                     .foregroundColor(.primary)
 
+                            }
+                        }
+                        Section(footer: Text(footerText)) {
+                            ZStack {
+                                scrollDetection
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Image(systemName: "bolt.square.fill")
+                                            .font(.system(size: 28))
+                                            .foregroundColor(.orange)
+                                        Text("Autonomy level")
+                                            .foregroundColor(.primary)
+                                  }
+                                    Picker("Autonomy Level", selection: $selectedAutonomy) {
+                                        Text("None").tag(0)
+                                        Text("Notify").tag(1)
+                                        Text("Auto").tag(2)
+
+                                    }.pickerStyle(.segmented)
+                                }
+                            }
+
+                        }
+                        .onReceive(selectedAutonomy.description.publisher) { _ in
+                            switch selectedAutonomy {
+                            case 0:
+                                footerText = "Manual control - Trips must be started and stopped from within the application."
+                            case 1:
+                                footerText = "Notification mode - Alerts will be sent when it seems like you are driving, and you will be prompted to end the trip when stopped."
+                            case 2:
+                                footerText = "Fully automatic - Trips will be stopped and started without any user intervention. Note: This may result in unintentional trips being tracked."
+                            default:
+                                footerText = ""
                             }
                         }
                         
@@ -123,7 +157,7 @@ struct SettingsView: View {
                     .scrollContentBackground(.hidden)
                 .coordinateSpace(name: "scroll")
                 .safeAreaInset(edge: .top, content: {
-                    Color.clear.frame(height: 50)
+                    Color.clear.frame(height: 70)
                 })
 
                 .overlay(NavigationBar(showingButttons: false, title: "Settings", hasScrolled: $hasScrolled))

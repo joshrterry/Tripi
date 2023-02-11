@@ -14,6 +14,8 @@ struct TagSort: View {
     @State private var tagName = ""
     @State private var tagAmount = 0.0
     private let numberFormatter: NumberFormatter
+    @State private var isEditing = false
+    @State private var currentTag = UserTag()
     
     init() {
       numberFormatter = NumberFormatter()
@@ -31,7 +33,25 @@ struct TagSort: View {
                     Spacer()
                     Text("$\(String(format: "%.2f", tag.reimbursementAmount))")
                 }
-            }.onDelete(perform: delete)
+                .swipeActions(allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        PersistenceController.shared.deleteTag(tag: tag)
+                    } label: {
+                        Text("Delete")
+                    }
+
+                    Button() {
+                        tagName = tag.name ?? ""
+                        tagAmount = tag.reimbursementAmount
+                        currentTag = tag
+                        isEditing.toggle()
+                        showingAlert.toggle()
+                    } label: {
+                        Text("Edit")
+                    }
+
+                }
+            }
             
             Section {
                 Button {
@@ -47,13 +67,26 @@ struct TagSort: View {
                             TextField("Name", text: $tagName)
                             TextField("$0.00", value: $tagAmount, formatter: numberFormatter)
                                 .keyboardType(.decimalPad)
+                            Button {
+                                
+                            } label: {
+                                Text("Add Tag")
+                            }
+
                         }
                         
                     }.onChange(of: showingAlert) { newValue in
-                        if showingAlert == false {
-                            PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
-                            tagName = ""
-                            tagAmount = 0.0
+                        if !showingAlert {
+                            if isEditing {
+                                currentTag.name = tagName
+                                currentTag.reimbursementAmount = tagAmount
+                                PersistenceController.shared.save()
+                                isEditing.toggle()
+                            } else {
+                                PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
+                                tagName = ""
+                                tagAmount = 0.0
+                            }
 
                         }
                     }

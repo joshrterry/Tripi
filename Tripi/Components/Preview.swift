@@ -14,6 +14,7 @@ struct Preview: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     var trip: Trip
     var distance = 0.0
@@ -84,7 +85,7 @@ struct Preview: View {
                                     .font(.custom("Gilroy", size: 12))
                                     .foregroundColor(.primary)
                                 
-                                Text("\(String(format:"%.1f", distance)+" km") · $\(String(format: "%.2f", reimbursementAmount * distance))")
+                                Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · $\(String(format: "%.2f", trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 12))
                                     .foregroundColor(color)
                                 
@@ -123,7 +124,7 @@ struct Preview: View {
                         
                         VStack(alignment: .leading) {
                             HStack(spacing: 40) {
-                                Text(String(format:"%.1f", distance)+" km")
+                                Text(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi"))
                                     .font(.custom("Gilroy", size: 22))
                                 Image(systemName: "chevron.right")
                                     .font(Font.system(size: 15, weight: .black))
@@ -136,7 +137,7 @@ struct Preview: View {
                                 .foregroundColor(.primary)
                             
                             if (trip.tags!.array as! [UserTag]).count >= 1 {
-                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · $\(String(format: "%.2f", reimbursementAmount * distance))")
+                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · $\(String(format: "%.2f", (trip.tags!.array as! [UserTag])[0].reimbursementAmount * distance))")
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(color)
                             }

@@ -95,11 +95,12 @@ struct PersistenceController {
 
     }
         
-    func addLocation(location: (longitude: Double, latitude: Double, trip: Trip)) {
+    func addLocation(location: (longitude: Double, latitude: Double, speed: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)
         newLocation.timestamp = Date()
         newLocation.longitude = location.longitude
         newLocation.latitude = location.latitude
+        newLocation.speed = location.speed
         newLocation.trip = location.trip
         save()
     }

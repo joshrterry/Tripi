@@ -20,8 +20,11 @@ struct TripDetailView: View {
     @State var routeCoords: [CLLocationCoordinate2D]
     @State var tags: NSOrderedSet
     @State var descriptor = ""
+    @FocusState private var isTyping: Bool
+    @State var showingDone = false
     @Environment(\.dismiss) private var dismiss
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \UserTag.dateCreated, ascending: true)], animation: .default)
     private var globalTags: FetchedResults<UserTag>
@@ -52,7 +55,7 @@ struct TripDetailView: View {
                             .foregroundColor(Color("Background"))
                             .cornerRadius(50, corners: [.topLeft, .topRight])
                             .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                            .frame(height: 800)
+                            .frame(height: 1000)
                             .edgesIgnoringSafeArea(.all)
                         
                         VStack(alignment: .leading, spacing: 0) {
@@ -86,9 +89,9 @@ struct TripDetailView: View {
                                 
                                 
                                 HStack(spacing: 32) {
-                                    Metric(data: String(format:"%.1f", distance), descriptor: "TOTAL KM")
+                                    Metric(data: String(format:"%.1f", distance), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
                                     Metric(data: time, descriptor: "MINUTES")
-                                    Metric(data: String(format:"%.0f", avgSpeed), descriptor: "AVG KM/H")
+                                    Metric(data: String(format:"%.0f", avgSpeed), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
                                 }
                                 .padding(30)
                                 Text("Tags")
@@ -115,42 +118,49 @@ struct TripDetailView: View {
                                                     Text(tag.name!)
                                                 }
                                             }
-
+                                            
                                         }
                                     } label: {
-                                    ZStack(alignment: .center) {
-                                        Rectangle()
-                                            .frame(width: 80, height: 30)
-                                            .cornerRadius(15)
-                                            .foregroundColor(Color(.systemGray5))
-                                        
-                                        HStack {
-                                            Image(systemName: "plus")
-                                            Text("Add")
+                                        ZStack(alignment: .center) {
+                                            Rectangle()
+                                                .frame(width: 80, height: 30)
+                                                .cornerRadius(15)
+                                                .foregroundColor(Color(.systemGray5))
+                                            
+                                            HStack {
+                                                Image(systemName: "plus")
+                                                Text("Add")
+                                            }
+                                            .foregroundColor(Color.primary)
+                                            .font(.custom("Gilroy", size: 16))
                                         }
-                                        .foregroundColor(Color.primary)
-                                        .font(.custom("Gilroy", size: 16))
+                                        .padding(.leading, 30)
                                     }
-                                    .padding(.leading, 30)
-                                }
-                                    ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
+                                    ForEach(trip.tags?.array as? [UserTag] ?? [], id: \.self) { tag in
                                         Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
-//                                            .contextMenu {
-//                                                if tags.count > 1 {
-//                                                    Button {
-//                                                        if let index = tags.firstIndex(of: tag) {
-//                                                            tags.remove(at: index)
-//                                                        }
-//                                                    } label: {
-//                                                        Label("Delete Tag", systemImage: "trash")
-//                                                    }
-//                                                }
-//                                            }
+                                            .contextMenu {
+                                                Button {
+                                                    let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
+                                                    mutableTags.remove(tag)
+                                                    tags = mutableTags.copy() as! NSOrderedSet
+                                                    uploadChanges()
+                                                } label: {
+                                                    Label("Remove Tag", systemImage: "trash")
+                                                }
+                                            }
                                     }
                                     
                                 }
                             }
-                            .padding(.top, 15)
+                            .padding(.vertical, 15)
+                            
+                            Text("Speed")
+                                .font(.custom("Gilroy", size: 24))
+                                .padding(.top, 15)
+                                .padding(.leading, 30)
+                            Graphs(trip: trip)
+                                .frame(height: 175)
+                                .padding(.horizontal, 30)
                             
                             
                             Text("Notes")
@@ -158,18 +168,40 @@ struct TripDetailView: View {
                                 .padding(.vertical, 15)
                                 .padding(.leading, 30)
                             
-                            ZStack(alignment: .top) {
+                            ZStack(alignment: .bottomTrailing) {
                                 Rectangle()
                                     .cornerRadius(20)
                                     .foregroundColor(Color(.systemGray5))
                                     .padding(.horizontal, 30)
                                     .frame(height: 150)
                                 TextEditor(text: $notes)
+                                    .focused($isTyping)
                                     .scrollContentBackground(.hidden)
                                     .scrollDisabled(true)
                                     .padding(.horizontal, 40)
                                     .padding(.top, 15)
                                     .frame(height: 150)
+                                if showingDone {
+                                    Button {
+                                        isTyping = false
+                                    } label: {
+                                        HStack {
+                                            Text("Done")
+                                                .font(.custom("Gilroy", size: 14))
+                                            Image(systemName: "checkmark.circle")
+                                                .fontWeight(.bold)
+                                        }
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 15)
+                                        .padding(.vertical, 7)
+                                        .background(RoundedRectangle(cornerRadius: 10))
+                                        .padding(.horizontal, 50)
+                                        .padding(.bottom, 15)
+                                        
+                                    }
+                                }
+                                
+                                
                             }
                             
                         }
@@ -186,6 +218,19 @@ struct TripDetailView: View {
         }
         .onAppear {
             showingTabBar = false
+        }
+        .onChange(of: tags) { _ in
+            if tags.count >= 1 {
+                let tripsArray = trip.tags?.array as? [UserTag]
+                trip.amountReimbursable = (tripsArray?[0].reimbursementAmount ?? 0) * distance
+                PersistenceController.shared.save()
+                print(trip.amountReimbursable)
+            }
+        }
+        .onChange(of: isTyping) { value in
+            withAnimation {
+                showingDone = value
+            }
         }
     }
     

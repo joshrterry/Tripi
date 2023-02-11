@@ -20,6 +20,8 @@ class RouteManager: NSObject, ObservableObject {
     @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
     @Published var startTime = Date()
+    let activityManager = ActivityManager()
+    
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
 
     // Creates new instance of Trip
@@ -73,7 +75,7 @@ class RouteManager: NSObject, ObservableObject {
     
     private var locationManager: CLLocationManager!
     
-    typealias Output = (longitude: Double, latitude: Double, trip: Trip)
+    typealias Output = (longitude: Double, latitude: Double, speed: Double, trip: Trip)
     typealias Failure = Never
     private let dataPublisher = PassthroughSubject<(Output), Failure>()
     
@@ -96,6 +98,7 @@ class RouteManager: NSObject, ObservableObject {
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.allowsBackgroundLocationUpdates = true
         self.trackingState = .active
+        activityManager.startMotionUpdates()
         startTimer()
         startTime = Date()
         newTrip = PersistenceController.shared.addTrip(startTime: startTime)
@@ -149,7 +152,7 @@ extension RouteManager: CLLocationManagerDelegate {
         }
         
         // publishes coordinate and trip data to subscriber via dataPublisher instance
-        dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, trip: newTrip))
+        dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, speed: currentSpeed, trip: newTrip))
         
         // set lastLocation variable to the current location for this iteration
         lastLocation = location

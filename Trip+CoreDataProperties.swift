@@ -16,6 +16,7 @@ extension Trip {
         return NSFetchRequest<Trip>(entityName: "Trip")
     }
 
+    @NSManaged public var amountReimbursable: Double
     @NSManaged public var averageSpeed: Double
     @NSManaged public var distance: Double
     @NSManaged public var endTimestamp: Date?
