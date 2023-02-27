@@ -11,12 +11,13 @@ import UserNotifications
 struct SettingsView: View {
     
     @State var hasScrolled = false
-    @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @AppStorage("selectedAutonomy") var selectedAutonomy = 0
     @State var showingAlert = false
     private let numberFormatter: NumberFormatter
     @State var footerText = ""
+    @Environment(\.dismiss) var dismiss
+
     
     init() {
         numberFormatter = NumberFormatter()
@@ -26,8 +27,9 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
+            ZStack(alignment: .topTrailing) {
                 Color("Background").ignoresSafeArea()
+
                 Form {
             
                     Picker(selection: $selectedUnits) {
@@ -122,7 +124,17 @@ struct SettingsView: View {
                 
                 .overlay(NavigationBar(showingButttons: false, title: "Settings", hasScrolled: $hasScrolled))
                 .offset(y: 40)
+                .overlay(
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button("Done", action: dismiss.callAsFunction).padding(25)
+                        }
+                        Spacer()
+                    }
+                )
                 .navigationBarHidden(true)
+
             }
         }
     }

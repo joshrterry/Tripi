@@ -90,10 +90,10 @@ class RouteManager: NSObject, ObservableObject {
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
     }
     
     public func startRoute() {
+        self.locationManager.startUpdatingLocation()
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.allowsBackgroundLocationUpdates = true
@@ -108,6 +108,7 @@ class RouteManager: NSObject, ObservableObject {
     public func stopRoute() {
         PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
         locationManager.allowsBackgroundLocationUpdates = false
+        locationManager.stopUpdatingLocation()
         trackingState = .inactive
         activityManager.stopMotionUpdates()
         lastLocation = nil
@@ -116,6 +117,12 @@ class RouteManager: NSObject, ObservableObject {
         averageSpeed = 0
         routeWaypoints = []
         resetTimer()
+    }
+    
+    public func pauseRoute() {
+        pauseTimer()
+        activityManager.stopMotionUpdates()
+        locationManager.stopUpdatingLocation()
     }
     
     public func toggleTrip() {
@@ -166,5 +173,3 @@ extension RouteManager: Publisher {
         dataPublisher.subscribe(subscriber)
     }
 }
-
-

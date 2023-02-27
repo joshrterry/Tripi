@@ -84,13 +84,32 @@ struct PersistenceController {
                 maxLon = location.longitude
             }
         }
+    
+
+
         trip.region = [0.0, 0.0, 0.0, 0.0]
         trip.region[0] = (minLat + maxLat) / 2
         trip.region[1] = (minLon + maxLon) / 2
         trip.region[2] = (maxLat - minLat) * 1.4
         trip.region[3] = (maxLon - minLon) * 1.4
     
-        
+        if trip.locationsArray.count >= 5 {
+            var speedsOnly: [Double] = []
+            let splitData = trip.locationsArray.chunked(into: Int(trip.locationsArray.count/5))
+            for element in splitData {
+                speedsOnly = []
+                for value in element {
+                    speedsOnly.append(value.speed)
+                }
+                trip.graphedSpeedsY.append(speedsOnly.reduce(0, +)/Double(speedsOnly.count))
+                trip.graphedSpeedsX.append(element[0].timestamp ?? Date())
+            }
+
+            print(trip.graphedSpeedsX)
+            print(trip.graphedSpeedsY)
+            
+        }
+
         save()
 
     }

@@ -32,6 +32,7 @@ struct ContentView: View {
                 .offset(y: model.fullScreen ? 200 : 0)
             
         }
+        
         // Inject routeManager instance into the various subviews
         .environmentObject(routeManager)
     }

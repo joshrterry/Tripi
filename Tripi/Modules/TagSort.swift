@@ -16,6 +16,8 @@ struct TagSort: View {
     private let numberFormatter: NumberFormatter
     @State private var isEditing = false
     @State private var currentTag = UserTag()
+    @State private var doneText = "Add Tag"
+    @State private var showError = false
     
     init() {
       numberFormatter = NumberFormatter()
@@ -44,6 +46,7 @@ struct TagSort: View {
                         tagName = tag.name ?? ""
                         tagAmount = tag.reimbursementAmount
                         currentTag = tag
+                        doneText = "Save Edits"
                         isEditing.toggle()
                         showingAlert.toggle()
                     } label: {
@@ -55,8 +58,8 @@ struct TagSort: View {
             
             Section {
                 Button {
+                    doneText = "Add Tag"
                     showingAlert.toggle()
-
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -70,24 +73,36 @@ struct TagSort: View {
                             Button {
                                 
                             } label: {
-                                Text("Add Tag")
+                                Text(doneText)
                             }
 
                         }
                         
-                    }.onChange(of: showingAlert) { newValue in
+                    }
+                    .alert(isPresented: $showError) {
+                        Alert(title: Text("Unable to save tag"), message: Text("Please make sure the name field is not empty and has a unique name"))
+                    }
+                    .onChange(of: showingAlert) { newValue in // monitor value of showingAlert
                         if !showingAlert {
-                            if isEditing {
-                                currentTag.name = tagName
-                                currentTag.reimbursementAmount = tagAmount
-                                PersistenceController.shared.save()
-                                isEditing.toggle()
+                            if tagName.isEmpty || tags.contains(where: { $0.name == tagName}) {
+                                // present error message if tag added with no name
+                                showError.toggle()
                             } else {
-                                PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
-                                tagName = ""
-                                tagAmount = 0.0
+                                if isEditing {
+                                    // update current tag attributes, then save changes by overwriting existing values
+                                    currentTag.name = tagName
+                                    currentTag.reimbursementAmount = tagAmount
+                                    PersistenceController.shared.save()
+                                }
+                                else {
+                                    // add new tag to CoreData
+                                    PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
+                                }
                             }
-
+                            // clear fields in alert dialogue
+                            tagName = ""
+                            tagAmount = 0.0
+                            isEditing = false
                         }
                     }
                 }

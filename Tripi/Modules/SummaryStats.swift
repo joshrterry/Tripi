@@ -60,8 +60,10 @@ struct SummaryStats: View {
         VStack(alignment: .leading, spacing: 25) {
             HStack {
                 Button {
-                    showingWeekly = false
-                    loadData()
+                    withAnimation {
+                        showingWeekly = false
+                        loadData()
+                    }
                 } label: {
                     Text("This Month")
                         .font(.custom("Gilroy", size: 24))
@@ -71,8 +73,10 @@ struct SummaryStats: View {
                 }
                 
                 Button {
-                    showingWeekly = true
-                    loadData()
+                    withAnimation {
+                        showingWeekly = true
+                        loadData()
+                    }
                 } label: {
                     Text("This Week")
                         .font(.custom("Gilroy", size: 24))

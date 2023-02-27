@@ -15,8 +15,9 @@ import SwiftUI
 class ActivityManager: NSObject {
     var activityManager: CMMotionActivityManager!
     let notificationManager = NotificationManager()
+    @AppStorage("selectedAutonomy") var selectedAutonomy = 0
     
-    func startMotionUpdates() {
+    func startMotionUpdates(){
         var sentNotification = false
         // creates a new instance of CMMotionActivityManager
         self.activityManager = CMMotionActivityManager()
@@ -29,15 +30,19 @@ class ActivityManager: NSObject {
                 // wait 2 minutes, then check again
                 DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
                     if !activity.automotive {
-                        if !sentNotification {
+                        if !sentNotification { // verify that a notification has not already been pushed to the user
                             sentNotification = true
-                            self.notificationManager.promptToEnd()
+                            if self.selectedAutonomy == 1 {
+                                self.notificationManager.promptToEnd()
+                            }
+                            else if self.selectedAutonomy == 2 {
+                                self.notificationManager.autoStopMessage()
+                            }
                         }
                     }
                 }
             }
         }
-        
     }
     
     func stopMotionUpdates() {

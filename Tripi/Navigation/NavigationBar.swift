@@ -14,7 +14,7 @@ struct NavigationBar: View {
     @Binding var hasScrolled: Bool
     @State private var showingSettings = false
     @State private var showingExport = false
-    
+
     var body: some View {
         ZStack {
             Color("Background")

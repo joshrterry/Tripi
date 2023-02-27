@@ -15,7 +15,7 @@ class FileManager {
     let unitFormatter = UnitFormatter()
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
-    func generateCSV(trips: FetchedResults<Trip>, startDate: Date, endDate: Date, fields: [Field]) -> URL {
+    func generateCSV(trips: FetchedResults<Trip>, startDate: Date, endDate: Date, tags: [String], fields: [Field]) -> URL {
         // name of the file to be shared
         let fileName = "tripi_export.csv"
         
@@ -37,6 +37,7 @@ class FileManager {
         // two-dimensional array of trips data
         var tripsData = [[String]]()
         
+        
         // for each trip, write its corresponding data to the tripsData array
         for trip in trips {
             let idToData = [
@@ -52,14 +53,31 @@ class FileManager {
             let stringIdtoData = idToData.compactMapValues { "\($0)" }
             
             if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
-                
-                var dataArray: [String] = []
+                if tags.isEmpty {
+                    var dataArray: [String] = []
 
-                for field in fields {
-                    dataArray.append(stringIdtoData[field.id] ?? "")
+                    for field in fields {
+                        dataArray.append(stringIdtoData[field.id] ?? "")
+                    }
+                    tripsData.append(dataArray)
+                } else {
+                    var tagNames: [String] = []
+                    for tag in trip.tags! {
+                        tagNames.append((tag as AnyObject).name)
+                    }
+                    for tagName in tagNames {
+                        if tags.contains(tagName) {
+                            var dataArray: [String] = []
+
+                            for field in fields {
+                                dataArray.append(stringIdtoData[field.id] ?? "")
+                            }
+                            tripsData.append(dataArray)
+                            break
+                        }
+                    }
                 }
-                tripsData.append(dataArray)
-                
+
             }
         }
         

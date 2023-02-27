@@ -51,7 +51,9 @@ struct TabBar: View {
                     HStack(spacing: 45) {
                         Group {
                             Button {
-                                selectedTab = .home
+                                withAnimation {
+                                    selectedTab = .home
+                                }
                                 withAnimation {
                                     showLiveMetrics = false
                                 }
@@ -70,8 +72,9 @@ struct TabBar: View {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
                                     } else {
-                                        selectedTab = .route
-                                        
+                                        withAnimation {
+                                            selectedTab = .route
+                                        }
                                     }
                                     withAnimation {
                                         showLiveMetrics = true
@@ -110,7 +113,9 @@ struct TabBar: View {
                             .offset(y: -10)
                             
                             Button {
-                                selectedTab = .trips
+                                withAnimation {
+                                    selectedTab = .trips
+                                }
                                 withAnimation {
                                     showLiveMetrics = false
                                 }

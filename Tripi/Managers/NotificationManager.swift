@@ -25,6 +25,20 @@ class NotificationManager {
             // add notification request to queue
             UNUserNotificationCenter.current().add(request)
     }
+    
+    func autoStopMessage() {
+        // define content of the push notification
+        let content = UNMutableNotificationContent()
+        content.title = "Current Trip Paused"
+        content.body = "Trip tracking has been automatically paused. Press here to resume or end the trip."
+        content.sound = UNNotificationSound.default
+
+        // assigned random identifier and content to request
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+
+        // add notification request to queue
+        UNUserNotificationCenter.current().add(request)
+    }
 
 }
 

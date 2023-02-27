@@ -13,7 +13,6 @@ struct Preview: View {
     
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var routeManager: RouteManager
-    @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     var trip: Trip
@@ -27,6 +26,10 @@ struct Preview: View {
     var endTime: Date
     
     var tags: NSOrderedSet
+    
+    var amountReimbursable = 0.0
+    
+    let unitFormatter = UnitFormatter()
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
@@ -58,7 +61,7 @@ struct Preview: View {
     }
     
     var body: some View {
-        NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags)) {
+        NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags, amountReimbursable: amountReimbursable)) {
             
             ZStack(alignment: .center) {
                 Rectangle()
@@ -70,22 +73,24 @@ struct Preview: View {
                 
                 if previewStyle == .expanded {
                     HStack(alignment: .center) {
-                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
-                            .cornerRadius(15)
-                            .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
-                            .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                        ZStack(alignment: .bottomLeading) {
+                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                                .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
+                                .cornerRadius(15)
+                                .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
+                                .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                        }
                         
                         Group {
                             VStack(alignment: .leading) {
                                 Text(date)
-                                    .font(.custom("Gilroy", size: 18))
+                                    .font(.custom("Gilroy", size: 16))
                                     .foregroundColor(.primary)
                                 Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
                                     .font(.custom("Gilroy", size: 12))
                                     .foregroundColor(.primary)
                                 
-                                Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · $\(String(format: "%.2f", trip.amountReimbursable))")
+                                Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 12))
                                     .foregroundColor(color)
                                 
@@ -137,7 +142,7 @@ struct Preview: View {
                                 .foregroundColor(.primary)
                             
                             if (trip.tags!.array as! [UserTag]).count >= 1 {
-                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · $\(String(format: "%.2f", (trip.tags!.array as! [UserTag])[0].reimbursementAmount * distance))")
+                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(color)
                             }

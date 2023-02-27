@@ -9,8 +9,14 @@
 import Foundation
 import CoreData
 
-
 extension Trip {
+    
+    public struct Speed: Identifiable {
+        var speed: Double
+        var timestamp: Date
+        public var id = UUID()
+    }
+
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Trip> {
         return NSFetchRequest<Trip>(entityName: "Trip")
@@ -29,6 +35,9 @@ extension Trip {
     @NSManaged public var time: String?
     @NSManaged public var locations: NSSet?
     @NSManaged public var tags: NSOrderedSet?
+    @NSManaged public var graphedSpeedsX: [Date]
+    @NSManaged public var graphedSpeedsY: [Double]
+    @NSManaged public var isPinned: Bool
 
     public var locationsArray: [Location] {
         let locations = locations as? Set<Location> ?? []
@@ -36,7 +45,6 @@ extension Trip {
             $0.wrappedTimestamp < $1.wrappedTimestamp
         }
     }
-    
 }
 
 // MARK: Generated accessors for locations
@@ -93,4 +101,12 @@ extension Trip {
 
 extension Trip : Identifiable {
 
+}
+
+extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
+    }
 }

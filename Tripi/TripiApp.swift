@@ -11,9 +11,7 @@ import SwiftUI
 @main
 struct TripiApp: App {
     @StateObject private var routeManager: RouteManager
-    var cancellables = [AnyCancellable]()
-    //    private var activityManager: ActivityManager
-    
+    var cancellables = [AnyCancellable]()    
     
     init() {
         // Creates a new instance of RouterManager to be used throughout the app
