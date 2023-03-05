@@ -26,7 +26,8 @@ struct TagSort: View {
     }
     
     var body: some View {
-        List() {
+        // list out tags that the user has created
+        List {
             ForEach(tags, id: \.self) { tag in
                 HStack {
                     Image(systemName: "circle.fill")
@@ -36,12 +37,13 @@ struct TagSort: View {
                     Text("$\(String(format: "%.2f", tag.reimbursementAmount))")
                 }
                 .swipeActions(allowsFullSwipe: false) {
+                    // swipe to delete
                     Button(role: .destructive) {
                         PersistenceController.shared.deleteTag(tag: tag)
                     } label: {
                         Text("Delete")
                     }
-
+                    // swipe to edit
                     Button() {
                         tagName = tag.name ?? ""
                         tagAmount = tag.reimbursementAmount
@@ -57,6 +59,7 @@ struct TagSort: View {
             }
             
             Section {
+                // add tag button
                 Button {
                     doneText = "Add Tag"
                     showingAlert.toggle()
@@ -84,19 +87,19 @@ struct TagSort: View {
                     }
                     .onChange(of: showingAlert) { newValue in // monitor value of showingAlert
                         if !showingAlert {
-                            if tagName.isEmpty || tags.contains(where: { $0.name == tagName}) {
+                            if tagName.isEmpty || (tags.contains(where: { $0.name?.trimmingCharacters(in: .whitespacesAndNewlines) == tagName.trimmingCharacters(in: .whitespacesAndNewlines)}) && !isEditing) {
                                 // present error message if tag added with no name
                                 showError.toggle()
                             } else {
                                 if isEditing {
                                     // update current tag attributes, then save changes by overwriting existing values
-                                    currentTag.name = tagName
+                                    currentTag.name = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
                                     currentTag.reimbursementAmount = tagAmount
                                     PersistenceController.shared.save()
                                 }
                                 else {
                                     // add new tag to CoreData
-                                    PersistenceController.shared.addTag(name: tagName, colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
+                                    PersistenceController.shared.addTag(name: tagName.trimmingCharacters(in: .whitespacesAndNewlines), colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
                                 }
                             }
                             // clear fields in alert dialogue
@@ -111,6 +114,7 @@ struct TagSort: View {
         }
     }
     
+    // function for deleting tag from swipe action
     func delete(at offsets: IndexSet) {
         for offset in offsets {
             let tag = tags[offset]
@@ -118,10 +122,4 @@ struct TagSort: View {
         }
     }
     
-}
-
-struct TagSort_Previews: PreviewProvider {
-    static var previews: some View {
-        TagSort()
-    }
 }

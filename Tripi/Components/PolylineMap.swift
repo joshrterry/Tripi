@@ -16,19 +16,23 @@ struct PolylineMap: UIViewRepresentable {
     @State var isTracking: Bool
     @State var edgeInsets: UIEdgeInsets
     
-    // Create the MKMapView using UIKit.
+    // create the MKMapView using UIKit
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.region = region
         mapView.showsCompass = false
+        // center map on user location
         if isTracking {
             mapView.showsUserLocation = true
             mapView.userTrackingMode = .follow
         }
         mapView.isScrollEnabled = false
         
+        // ensure watermark is within view margins
         mapView.layoutMargins = edgeInsets
+        
+        // generate polyline
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.removeOverlays(mapView.overlays)
         mapView.addOverlay(polyline)
@@ -37,6 +41,7 @@ struct PolylineMap: UIViewRepresentable {
     
     func updateUIView(_ view: MKMapView, context: Context) {
         view.tintColor = routeManager.trackingState == .active ? UIColor.systemBlue : UIColor.systemGray
+        // update polyline
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         view.removeOverlays(view.overlays)
         view.addOverlay(polyline)
@@ -55,6 +60,7 @@ struct PolylineMap: UIViewRepresentable {
         }
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             if let routePolyline = overlay as? MKPolyline {
+                // customize polyline properties
                 let renderer = MKPolylineRenderer(polyline: routePolyline)
                 renderer.strokeColor = UIColor.systemBlue
                 renderer.lineWidth = 7
@@ -66,11 +72,3 @@ struct PolylineMap: UIViewRepresentable {
         }
     }
 }
-
-
-
-//struct Map_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Map()
-//    }
-//}

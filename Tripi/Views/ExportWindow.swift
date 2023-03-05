@@ -30,6 +30,7 @@ struct ExportWindow: View {
     
     @State var selectedTags: [String] = []
     
+    // dictionary of possible fields; first 3 are on by default
     @State var fields = [
         Field(id: "Start time", includeMetric: true),
         Field(id: "End time", includeMetric: true),
@@ -44,6 +45,7 @@ struct ExportWindow: View {
         ZStack {
             Color("Background").ignoresSafeArea()
             List {
+                // select start and end date range
                 Section {
                     ZStack {
                         scrollDetection
@@ -55,6 +57,7 @@ struct ExportWindow: View {
                         Text("End Date")
                     }
                 }
+                // if selected tags changes, determine new amount of available trips
                 .onChange(of: selectedTags) { newValue in
                     tripCount = 0
                     for trip in trips {
@@ -75,6 +78,7 @@ struct ExportWindow: View {
                         }
                     }
                 }
+                // if selected start date changes, determine new amount of available trips
                 .onChange(of: startDate) { newValue in
                     tripCount = 0
                     for trip in trips {
@@ -96,6 +100,7 @@ struct ExportWindow: View {
                     }
 
                 }
+                // if selected end date changes, determine new amount of available trips
                 .onChange(of: endDate) { newValue in
                     tripCount = 0
                     for trip in trips {
@@ -117,6 +122,7 @@ struct ExportWindow: View {
                     }
 
                 }
+                // when view first appears, determine initial amount of available trips
                 .onAppear {
                     tripCount = 0
                     for trip in trips {
@@ -139,6 +145,7 @@ struct ExportWindow: View {
 
                 }
                 
+                // checkboxes to apply tag filters
                 Section {
                     ForEach(tags) { tag in
                         Button {
@@ -163,6 +170,7 @@ struct ExportWindow: View {
                     Text("Filter by tags")
                 }
                 
+                // configure metrics that appear in export file
                 Section {
                     ForEach($fields) { $field in
                         Toggle(field.id, isOn: $field.includeMetric)
@@ -186,6 +194,7 @@ struct ExportWindow: View {
                     }
                 }
                 
+                // share button at bottom of screen
                 ShareLink(item: fileManager.generateCSV(trips: trips, startDate: startDate, endDate: endDate, tags: selectedTags, fields: fields.filter({
                     $0.includeMetric == true
                 }))) {
@@ -193,7 +202,7 @@ struct ExportWindow: View {
                         Image(systemName: "square.and.arrow.up")
                         Text("Export \(tripCount) trips...")
                     }
-                }.disabled(noMetricsSelected)
+                }.disabled(noMetricsSelected) // disable if no metrics are selected or no trips in range
                 
                 
             }.scrollContentBackground(.hidden)
@@ -217,6 +226,13 @@ struct ExportWindow: View {
                     }
                 )
                 .navigationBarHidden(true)
+        }.onAppear {
+            for trip in trips {
+                // handle errors with index out of range
+                if trip.region.reduce(0, +) == 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                    PersistenceController.shared.delete(trip: trip)
+                }
+            }
         }
     }
     
@@ -238,9 +254,3 @@ struct ExportWindow: View {
         })
     }
     }
-
-struct ExportWindow_Previews: PreviewProvider {
-    static var previews: some View {
-        ExportWindow()
-    }
-}

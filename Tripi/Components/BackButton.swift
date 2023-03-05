@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+// button for closing TripDetailView
 struct BackButton: View {
     let dismiss: DismissAction
     
     var body: some View {
+        // dismisses current view that is open
         Button {
             dismiss()
         } label: {
@@ -23,9 +25,3 @@ struct BackButton: View {
         }
     }
 }
-
-//struct BackButton_Previews: PreviewProvider {
-//    static var previews: some View {
-//        BackButton(dismiss: )
-//    }
-//}

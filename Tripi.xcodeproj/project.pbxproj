@@ -17,7 +17,6 @@
 		F52EC445286FA42800420410 /* gilroyextrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F52EC444286FA42800420410 /* gilroyextrabold.otf */; };
 		F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341212870E8B700E7E5C1 /* ContentView.swift */; };
 		F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341232870E9CA00E7E5C1 /* Tab.swift */; };
-		F53341262870FCD300E7E5C1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341252870FCD300E7E5C1 /* Model.swift */; };
 		F53ADA4F296DFF330079F91D /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F53ADA4D296DFF330079F91D /* CHCSVParser.m */; };
 		F53AEE582966237A0026EEA9 /* ExportWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53AEE572966237A0026EEA9 /* ExportWindow.swift */; };
 		F543E0FD29859FF7007FC5CE /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F543E0FC29859FF7007FC5CE /* NotificationManager.swift */; };
@@ -41,10 +40,9 @@
 		F571830A29983DF400DD2BED /* Polyline in Frameworks */ = {isa = PBXBuildFile; productRef = F571830929983DF400DD2BED /* Polyline */; };
 		F579F5302995CAF000EE03FF /* Graphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F579F52F2995CAF000EE03FF /* Graphs.swift */; };
 		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
-		F57A3F7F2926CD3900315971 /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7E2926CD3900315971 /* ActivityManager.swift */; };
-		F5975EBE29AC306D0043CB4E /* SwiftUITrackableScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = F5975EBD29AC306D0043CB4E /* SwiftUITrackableScrollView */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
 		F5A12D5029711B2A0055E239 /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A12D4F29711B2A0055E239 /* BackButton.swift */; };
+		F5A7E41429B4809D00B36ACF /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A7E41329B4809D00B36ACF /* Model.swift */; };
 		F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A86BD1292F1389004CF3EA /* FileManager.swift */; };
 		F5B14FC5298EEBDC004C61BA /* UnitFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */; };
 		F5BCB34128C65A820063082E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BCB34028C65A820063082E /* SettingsView.swift */; };
@@ -85,7 +83,6 @@
 		F52EC444286FA42800420410 /* gilroyextrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gilroyextrabold.otf; sourceTree = "<group>"; };
 		F53341212870E8B700E7E5C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F53341232870E9CA00E7E5C1 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
-		F53341252870FCD300E7E5C1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		F53ADA4C296DFF320079F91D /* Tripi-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tripi-Bridging-Header.h"; sourceTree = "<group>"; };
 		F53ADA4D296DFF330079F91D /* CHCSVParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCSVParser.m; sourceTree = "<group>"; };
 		F53ADA4E296DFF330079F91D /* CHCSVParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCSVParser.h; sourceTree = "<group>"; };
@@ -114,9 +111,9 @@
 		F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripiUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		F579F52F2995CAF000EE03FF /* Graphs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graphs.swift; sourceTree = "<group>"; };
 		F57A3F7C2926C15000315971 /* LayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutStyle.swift; sourceTree = "<group>"; };
-		F57A3F7E2926CD3900315971 /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
 		F59870E628BFD70B00F9CC89 /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		F5A12D4F29711B2A0055E239 /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
+		F5A7E41329B4809D00B36ACF /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		F5A86BD1292F1389004CF3EA /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitFormatter.swift; sourceTree = "<group>"; };
 		F5BCB34028C65A820063082E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -134,7 +131,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5975EBE29AC306D0043CB4E /* SwiftUITrackableScrollView in Frameworks */,
 				F571830A29983DF400DD2BED /* Polyline in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,8 +201,8 @@
 		F5334127287107CA00E7E5C1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */,
 				F51D3B5428AB338E00C6B116 /* RouteManager.swift */,
-				F57A3F7E2926CD3900315971 /* ActivityManager.swift */,
 				F543E0FC29859FF7007FC5CE /* NotificationManager.swift */,
 				F5A86BD1292F1389004CF3EA /* FileManager.swift */,
 			);
@@ -234,12 +230,11 @@
 		F56024F0286FABAE0002403D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F53341252870FCD300E7E5C1 /* Model.swift */,
+				F5A7E41329B4809D00B36ACF /* Model.swift */,
 				F53341232870E9CA00E7E5C1 /* Tab.swift */,
 				F56024EE286FAB450002403D /* PreferenceKeys.swift */,
 				F554A80C28AA62CB00E4F8D6 /* TrackingState.swift */,
 				F57A3F7C2926C15000315971 /* LayoutStyle.swift */,
-				F5B14FC4298EEBDC004C61BA /* UnitFormatter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,7 +339,6 @@
 			name = Tripi;
 			packageProductDependencies = (
 				F571830929983DF400DD2BED /* Polyline */,
-				F5975EBD29AC306D0043CB4E /* SwiftUITrackableScrollView */,
 			);
 			productName = Tripi;
 			productReference = F56426C82856B9B4005FD118 /* Tripi.app */;
@@ -421,7 +415,6 @@
 			mainGroup = F56426BF2856B9B4005FD118;
 			packageReferences = (
 				F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */,
-				F5975EBC29AC306D0043CB4E /* XCRemoteSwiftPackageReference "trackable-scroll-view" */,
 			);
 			productRefGroup = F56426C92856B9B4005FD118 /* Products */;
 			projectDirPath = "";
@@ -472,6 +465,7 @@
 				F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */,
 				F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */,
 				F5BE3A69297346D50030B662 /* TagSort.swift in Sources */,
+				F5A7E41429B4809D00B36ACF /* Model.swift in Sources */,
 				F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */,
 				F5FF5F8C298B8704009FF3EB /* Trip+CoreDataClass.swift in Sources */,
 				F5A12D5029711B2A0055E239 /* BackButton.swift in Sources */,
@@ -490,11 +484,9 @@
 				F5D674EC28BD0A430053B6A7 /* PolylineMap.swift in Sources */,
 				F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */,
 				F51D3B5528AB338E00C6B116 /* RouteManager.swift in Sources */,
-				F53341262870FCD300E7E5C1 /* Model.swift in Sources */,
 				F5FF5F89298B5EF4009FF3EB /* UserTag+CoreDataProperties.swift in Sources */,
 				F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */,
 				F56426D82856B9B6005FD118 /* LocationTracker.xcdatamodeld in Sources */,
-				F57A3F7F2926CD3900315971 /* ActivityManager.swift in Sources */,
 				F53ADA4F296DFF330079F91D /* CHCSVParser.m in Sources */,
 				F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */,
 				F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */,
@@ -861,14 +853,6 @@
 				kind = branch;
 			};
 		};
-		F5975EBC29AC306D0043CB4E /* XCRemoteSwiftPackageReference "trackable-scroll-view" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maxnatchanon/trackable-scroll-view.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -876,11 +860,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */;
 			productName = Polyline;
-		};
-		F5975EBD29AC306D0043CB4E /* SwiftUITrackableScrollView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F5975EBC29AC306D0043CB4E /* XCRemoteSwiftPackageReference "trackable-scroll-view" */;
-			productName = SwiftUITrackableScrollView;
 		};
 /* End XCSwiftPackageProductDependency section */
 

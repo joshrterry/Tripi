@@ -1,12 +1,12 @@
 //
 //  AnimatableFontModifier.swift
-//  DesignCodeiOS15
 //
 //  Created by Joshua Terry on 2022-02-05.
 //
 
 import SwiftUI
 
+// animatable font scaling
 struct AnimatableFontModifier: AnimatableModifier {
     var size: Double
     

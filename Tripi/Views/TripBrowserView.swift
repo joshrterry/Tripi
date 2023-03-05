@@ -35,6 +35,7 @@ struct TripBrowserView: View {
                 ScrollView() {
                     scrollDetection
                     
+                    // toggle between showing all trips and only pinned trips
                     HStack {
                         Button {
                             withAnimation {
@@ -48,6 +49,7 @@ struct TripBrowserView: View {
                                 .opacity(showingPinned == true ? 0.2 : 1)
                         }
                         
+                        // changes to only show pinned trips
                         Button {
                             withAnimation {
                                 showingPinned = true
@@ -62,9 +64,33 @@ struct TripBrowserView: View {
                     }
                     .padding(.leading, 30)
                 
+                    // only show pinned trips if showingPinned is true
                     if showingPinned {
                         ForEach(trips, id: \.self) { trip in
                             if trip.isPinned {
+                                // handle errors with index out of range
+                                if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                                    Preview(previewStyle: .expanded,
+                                            trip: trip,
+                                            distance: trip.distance,
+                                            date: formatTimestamp(date: trip.startTimestamp ?? Date()),
+                                            color: .green, time: trip.time ?? "",
+                                            avgSpeed: trip.averageSpeed,
+                                            starTime: trip.startTimestamp ?? Date(),
+                                            endTime: trip.endTimestamp ?? Date(),
+                                            tags: trip.tags!,
+                                            amountReimbursable: trip.amountReimbursable,
+                                            region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
+                                            routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
+                                            notes: trip.notes ?? "")
+                                }
+                            }
+                        }
+                    } else {
+                        // show all trips if showingPinned is false
+                        ForEach(trips, id: \.self) { trip in
+                            // handle errors with index out of range
+                            if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
                                 Preview(previewStyle: .expanded,
                                         trip: trip,
                                         distance: trip.distance,
@@ -79,22 +105,6 @@ struct TripBrowserView: View {
                                         routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
                                         notes: trip.notes ?? "")
                             }
-                        }
-                    } else {
-                        ForEach(trips, id: \.self) { trip in
-                            Preview(previewStyle: .expanded,
-                                    trip: trip,
-                                    distance: trip.distance,
-                                    date: formatTimestamp(date: trip.startTimestamp ?? Date()),
-                                    color: .green, time: trip.time ?? "",
-                                    avgSpeed: trip.averageSpeed,
-                                    starTime: trip.startTimestamp ?? Date(),
-                                    endTime: trip.endTimestamp ?? Date(),
-                                    tags: trip.tags!,
-                                    amountReimbursable: trip.amountReimbursable,
-                                    region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
-                                    routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
-                                    notes: trip.notes ?? "")
                         }
                     }
                 }
@@ -126,29 +136,5 @@ struct TripBrowserView: View {
                 }
             }
         })
-    }
-}
-
-struct filter: View {
-    @Environment(\.colorScheme) var colorScheme
-
-    var name: String
-    var body: some View {
-        Text(name)
-            .font(.custom("Gilroy", size: 14))
-            .foregroundColor(.primary)
-            .padding(12)
-            .background(Rectangle()
-                .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
-                .cornerRadius(10)
-                .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
-                .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5))
-    }
-    
-}
-
-struct TripBrowserView_Previews: PreviewProvider {
-    static var previews: some View {
-        TripBrowserView()
     }
 }

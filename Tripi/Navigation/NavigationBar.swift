@@ -9,17 +9,22 @@ import SwiftUI
 
 struct NavigationBar: View {
     
+    enum Sheet: String, Identifiable {
+        case settingsView, exportView
+        var id: String { rawValue }
+    }
+    
     @State var showingButttons = true
     var title = ""
     @Binding var hasScrolled: Bool
-    @State private var showingSettings = false
-    @State private var showingExport = false
+    @State private var presentedSheet: Sheet?
 
     var body: some View {
         ZStack {
             Color("Background")
                 .edgesIgnoringSafeArea(.all)
             
+            // amimated navbar header (dependant on value passed to view)
             Text(title)
                 .animatableFont(size: hasScrolled ? 22 : 34)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -28,9 +33,11 @@ struct NavigationBar: View {
                 .offset(y: hasScrolled ? -4 : 0)
             
             if showingButttons {
+                // display exportwindow and settingsview buttons in nav bar
                 HStack(spacing: 16) {
+                    // button for export view
                     Button {
-                        showingExport.toggle()
+                        presentedSheet = .exportView
                     } label: {
                         Image(systemName: "square.and.arrow.up.circle")
                             .font(.body.weight(.bold))
@@ -39,8 +46,9 @@ struct NavigationBar: View {
                             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                             .strokeStyle(cornerRadius: 14)
                     }
+                    // button for settings view
                     Button {
-                        showingSettings.toggle()
+                        presentedSheet = .settingsView
                     } label: {
                         Image(systemName: "gear")
                             .font(.body.weight(.bold))
@@ -49,12 +57,6 @@ struct NavigationBar: View {
                             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                             .strokeStyle(cornerRadius: 14)
                     }
-                    .sheet(isPresented: $showingSettings) {
-                        SettingsView()
-                    }
-                    .sheet(isPresented: $showingExport) {
-                        ExportWindow()
-                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding(.trailing, 20)
@@ -62,13 +64,16 @@ struct NavigationBar: View {
                 .offset(y: hasScrolled ? -4 : 0)
             }
         }
+        // open exportwindow or settingsview as modal when selected
+        .sheet(item: $presentedSheet, content: { sheet in
+            switch sheet {
+            case .exportView:
+                ExportWindow()
+            case .settingsView:
+                SettingsView()
+            }
+        })
         .frame(height: hasScrolled ? 70 : 80)
         .frame(maxHeight: .infinity, alignment: .top)
-    }
-}
-
-struct NavigationBar_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationBar(title: "Title", hasScrolled: .constant(false))
     }
 }

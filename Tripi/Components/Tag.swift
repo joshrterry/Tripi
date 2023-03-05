@@ -11,6 +11,7 @@ struct Tag: View {
     @State var name = ""
     @State var colour = Color(red: 0, green: 0, blue: 0)
     var body: some View {
+        // design for tags component
         ZStack {
             Text(name)
                 .font(.custom("Gilroy", size: 14))
@@ -19,11 +20,5 @@ struct Tag: View {
                 .background(colour)
                 .cornerRadius(30)
         }
-    }
-}
-
-struct Tag_Previews: PreviewProvider {
-    static var previews: some View {
-        Tag(name: "Personal", colour: Color(red: 0, green: 0, blue: 0))
     }
 }

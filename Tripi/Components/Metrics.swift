@@ -13,6 +13,7 @@ struct Metric: View {
     var color = Color.primary
     
     var body: some View {
+        // design for metrics component as seen in SummaryStats and DetailView
         VStack(alignment: .leading) {
             Text(data)
                 .font(.custom("Gilroy", size: 40))
@@ -21,11 +22,5 @@ struct Metric: View {
                 .font(.custom("Gilroy", size: 13))
                 .opacity(0.4)
         }
-    }
-}
-
-struct Metric_Previews: PreviewProvider {
-    static var previews: some View {
-        Metric(data: "313.2", descriptor: "total km")
     }
 }

@@ -10,6 +10,7 @@ import MapKit
 import Combine
 import CoreLocation
 import SwiftUI
+import CoreMotion
 
 
 class RouteManager: NSObject, ObservableObject {
@@ -20,11 +21,10 @@ class RouteManager: NSObject, ObservableObject {
     @Published var currentSpeed = 0.0
     @Published var routeWaypoints: [CLLocationCoordinate2D] = []
     @Published var startTime = Date()
-    let activityManager = ActivityManager()
     
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
     
-    // Creates new instance of Trip
+    // creates new instance of Trip
     var newTrip: Trip = Trip()
     
     @Published var secondsElapsed = 0.0
@@ -33,9 +33,9 @@ class RouteManager: NSObject, ObservableObject {
     
     var timer = Timer()
     
-    // Start a timer to track the duration of the trip
+    // start a timer to track the duration of the trip
     func startTimer() {
-        timerStartTime = Date()
+        timerStartTime = Date() // start from the current time
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             let current = Date()
             let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.timerStartTime, to: current)
@@ -48,25 +48,44 @@ class RouteManager: NSObject, ObservableObject {
         }
     }
     
+    // resume timer after being paused
+    func resumeTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            let current = Date()
+            let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.timerStartTime, to: current)
+            let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
+            self.secondsElapsed += seconds
+            self.time = secondstoMinutesSeconds(seconds: secondsElapsed.self)
+            getAvgSpeed()
+            getCurrentSpeed()
+            self.timerStartTime = current
+        }
+    }
+    
+    // pause timer
     func pauseTimer() {
         timer.invalidate()
     }
     
+    // reset timer to 00:00
     func resetTimer() {
         timer.invalidate()
         secondsElapsed = 0
         time = "00:00"
     }
     
+    // format seconds to form MM:SS
     public func secondstoMinutesSeconds(seconds: Double) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .positional
         formatter.zeroFormattingBehavior  = .pad
         
+        // return formatted duration as string
         return formatter.string(from: TimeInterval(seconds))!
     }
     
+    // convert seconds to hours
     public func secondstoHours(seconds: Double) -> Double {
         return seconds/3600
     }
@@ -77,14 +96,17 @@ class RouteManager: NSObject, ObservableObject {
     
     typealias Output = (longitude: Double, latitude: Double, speed: Double, trip: Trip)
     typealias Failure = Never
+    
+    // initialize passthroughsubject to transmit location data
     private let dataPublisher = PassthroughSubject<(Output), Failure>()
     
-    
+    // run locationManagerConfig when RouteManager is initialized
     override init() {
         super.init()
         locationManagerConfig()
     }
     
+    // request access to location services and initialize location manager
     private func locationManagerConfig() {
         locationManager = CLLocationManager()
         self.locationManager.delegate = self
@@ -92,25 +114,29 @@ class RouteManager: NSObject, ObservableObject {
         self.locationManager.requestWhenInUseAuthorization()
     }
     
+    // start route tracking, timer, and motion updates
     public func startRoute() {
         self.locationManager.startUpdatingLocation()
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()
-        self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.allowsBackgroundLocationUpdates = true // allows program to function while not open
         self.trackingState = .active
-        activityManager.startMotionUpdates()
-        startTimer()
+        startMotionUpdates() // monitor activity type for end trip automation
+        startTimer() // start timer to monitor trip duration
         startTime = Date()
-        newTrip = PersistenceController.shared.addTrip(startTime: startTime)
+        newTrip = PersistenceController.shared.addTrip(startTime: startTime) // initialize the newTrip object with startTime variable
         
     }
     
+    // end trip tracking, timer, and motion updates
     public func stopRoute() {
-        PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed)
+        PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
         trackingState = .inactive
-        activityManager.stopMotionUpdates()
+        stopMotionUpdates()
+        
+        // clear variables from last trip
         lastLocation = nil
         distanceTotal = 0
         currentSpeed = 0
@@ -119,28 +145,89 @@ class RouteManager: NSObject, ObservableObject {
         resetTimer()
     }
     
+    // temporarily pause route until it is stopped entirely or resumed
     public func pauseRoute() {
+        trackingState = .paused
         pauseTimer()
-        activityManager.stopMotionUpdates()
+        stopMotionUpdates()
+        lastLocation = nil
         locationManager.stopUpdatingLocation()
     }
     
+    // resume route from pause state
+    public func resumeRoute() {
+        trackingState = .active
+        resumeTimer()
+        startMotionUpdates()
+        locationManager.startUpdatingLocation()
+    }
+    
+    // toggle between active and inactive route depending on current state
     public func toggleTrip() {
-        if trackingState == .active {
-            stopRoute()
-        } else {
+        if trackingState == .inactive {
             startRoute()
+        } else {
+            stopRoute()
         }
     }
     
+    // toggle between paused and active route depending on current state
+    public func togglePause() {
+        if trackingState == .paused {
+            resumeRoute()
+        } else {
+            pauseRoute()
+        }
+    }
+    
+    // gets average speed over the course of the trip
     private func getAvgSpeed() {
         averageSpeed = (distanceTotal)/(secondsElapsed/3600)
     }
     
+    // gets current speed to display at bottom of screen in tab bar
     private func getCurrentSpeed() {
         currentSpeed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)/3600)
     }
     
+    // MARK: Activity Manager
+    
+    var activityManager: CMMotionActivityManager!
+    let notificationManager = NotificationManager()
+    @AppStorage("selectedAutonomy") var selectedAutonomy = 0
+    
+    
+    func startMotionUpdates() {
+        var sentNotification = false
+        // creates a new instance of CMMotionActivityManager
+        self.activityManager = CMMotionActivityManager()
+        
+        // start updating activity data and publishing to applications main thread
+        self.activityManager.startActivityUpdates(to: .main) { (activity: CMMotionActivity?) in
+            guard let activity = activity else { return }
+            if !activity.automotive {
+                // wait 2 minutes, then check again
+                DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
+                    if !activity.automotive {
+                        if !sentNotification { // verify that a notification has not already been pushed to the user
+                            sentNotification = true
+                            if self.selectedAutonomy == 1 {
+                                self.notificationManager.promptToEnd()
+                            }
+                            else if self.selectedAutonomy == 2 {
+                                self.notificationManager.autoStopMessage()
+                                self.pauseRoute()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func stopMotionUpdates() {
+        self.activityManager.stopActivityUpdates()
+    }
     
 }
 

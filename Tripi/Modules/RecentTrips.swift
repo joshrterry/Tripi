@@ -67,9 +67,3 @@ struct RecentTrips: View {
         }
     }
 }
-
-struct RecentTrips_Previews: PreviewProvider {
-    static var previews: some View {
-        RecentTrips()
-    }
-}

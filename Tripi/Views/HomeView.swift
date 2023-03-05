@@ -34,11 +34,13 @@ struct HomeView: View {
                 ScrollView {
                     scrollDetection
                     VStack {
+                        // monthly and weekly metrics at top of view
                         SummaryStats(filters: [startDateOfMonth, startDateOfWeek])
+                        // displays trip previews for past 7 days
                         RecentTrips()
                     }
                 }
-                .coordinateSpace(name: "scroll")
+                .coordinateSpace(name: "scroll") // used to monitor scroll position
                 .safeAreaInset(edge: .top, content: {
                     Color.clear.frame(height: 50)
                 })
@@ -55,6 +57,7 @@ struct HomeView: View {
         .frame(height: 0)
         .onPreferenceChange(ScrollPreferenceKey.self, perform: { value in
             withAnimation(.easeInOut) {
+                // if user scrolls down, shrink the nav bar
                 if value < 0 {
                     hasScrolled = true
                 } else {
@@ -62,12 +65,5 @@ struct HomeView: View {
                 }
             }
         })
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView().environmentObject(RouteManager())
-        
     }
 }

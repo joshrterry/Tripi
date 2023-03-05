@@ -61,6 +61,7 @@ struct Preview: View {
     }
     
     var body: some View {
+        // link to detail view when preview is pressed
         NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags, amountReimbursable: amountReimbursable)) {
             
             ZStack(alignment: .center) {
@@ -71,9 +72,11 @@ struct Preview: View {
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
                 
+                // expanded preview style for TripBrowserView
                 if previewStyle == .expanded {
                     HStack(alignment: .center) {
                         ZStack(alignment: .bottomLeading) {
+                            // map with overlays
                             PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                                 .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                                 .cornerRadius(15)
@@ -81,6 +84,7 @@ struct Preview: View {
                                 .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
                         }
                         
+                        // summarized metrics
                         Group {
                             VStack(alignment: .leading) {
                                 Text(date)
@@ -94,6 +98,7 @@ struct Preview: View {
                                     .font(.custom("Gilroy", size: 12))
                                     .foregroundColor(color)
                                 
+                                // dipslay tags in expanded view
                                 HStack {
                                     ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
                                         Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
@@ -119,7 +124,9 @@ struct Preview: View {
                     
                     
                 } else {
+                    // compact layout for RecentTrips
                     VStack(alignment: .center) {
+                        // map with overlays
                         PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                             .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                             .cornerRadius(15)
@@ -127,6 +134,7 @@ struct Preview: View {
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
                             .padding(.top, 5)
                         
+                        // summarized metrics
                         VStack(alignment: .leading) {
                             HStack(spacing: 40) {
                                 Text(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi"))
@@ -141,6 +149,7 @@ struct Preview: View {
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(.primary)
                             
+                            // display only primary tag (if one exists) and reimbursement amount
                             if (trip.tags!.array as! [UserTag]).count >= 1 {
                                 Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 15))
@@ -156,11 +165,5 @@ struct Preview: View {
                 }
             }
         }
-    }
-}
-
-struct Preview_Previews: PreviewProvider {
-    static var previews: some View {
-        Preview(trip: Trip(), distance: 22.3, date: "June 24 | 8:32 AM", starTime: Date(), endTime: Date(), tags: NSOrderedSet())
     }
 }

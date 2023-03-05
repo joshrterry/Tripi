@@ -23,12 +23,14 @@ struct SummaryStats: View {
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @AppStorage("reimbursementAmount") var reimbursementAmount = 1.00
     
+    // filter out fetch request by week or month date ranges
     init(filters: [Date]) {
         _weeklyTrips = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "startTimestamp >= %@", filters[1] as CVarArg))
         _monthlyTrips = FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "startTimestamp >= %@", filters[0] as CVarArg))
 
     }
     
+    // refresh all values and recalculate totals
     func loadData() {
         selectedDistance = 0.0
         selectedBusinessKM = 0.0
@@ -39,7 +41,8 @@ struct SummaryStats: View {
                 selectedDistance += trip.distance
                 selectedReimbursable += trip.amountReimbursable
                 selectedHours += trip.secondsElapsed
-                if (trip.tags?.array as! [UserTag]).count >= 1 {
+                // only inlcude as business km if it has a reimbursement amount > 0
+                if trip.amountReimbursable > 0 {
                     selectedBusinessKM += trip.distance
                 }
             }
@@ -48,7 +51,8 @@ struct SummaryStats: View {
                 selectedDistance += trip.distance
                 selectedReimbursable += trip.amountReimbursable
                 selectedHours += trip.secondsElapsed
-                if (trip.tags?.array as! [UserTag]).count >= 1 {
+                // only inlcude as business km if it has a reimbursement amount > 0
+                if trip.amountReimbursable > 0 {
                     selectedBusinessKM += trip.distance
                 }
             }
@@ -59,6 +63,7 @@ struct SummaryStats: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 25) {
             HStack {
+                // buttons to toggle between monthly and weekly data
                 Button {
                     withAnimation {
                         showingWeekly = false
@@ -85,6 +90,7 @@ struct SummaryStats: View {
                 }
 
             }
+            // display metrics in a 2x2 arrangement
             HStack() {
                 Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi")
                     .frame(width: 150, alignment: .leading)
@@ -111,11 +117,5 @@ struct SummaryStats: View {
         .onChange(of: selectedUnits) { newValue in
             loadData()
         }
-    }
-}
-
-struct SummaryStats_Previews: PreviewProvider {
-    static var previews: some View {
-        SummaryStats(filters: [Date(), Date()])
     }
 }

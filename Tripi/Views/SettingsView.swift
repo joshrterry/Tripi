@@ -31,7 +31,7 @@ struct SettingsView: View {
                 Color("Background").ignoresSafeArea()
 
                 Form {
-            
+                    // toggle between metric and imperial units
                     Picker(selection: $selectedUnits) {
                         Text("Metric").tag("metric")
                         Text("Imperial").tag("imperial")
@@ -48,7 +48,7 @@ struct SettingsView: View {
                         }
                     }.pickerStyle(.inline)
                     
-                    
+                    // open tag sort view on new page
                     NavigationLink(destination: TagSort()) {
                         HStack {
                             Image(systemName: "tag.square.fill")
@@ -62,6 +62,7 @@ struct SettingsView: View {
                     Section(footer: Text(footerText)) {
                         ZStack {
                             scrollDetection
+                            // autonomy level preference
                             VStack(alignment: .leading) {
                                 HStack {
                                     Image(systemName: "bolt.square.fill")
@@ -80,6 +81,7 @@ struct SettingsView: View {
                         }
                         
                     }
+                    // change footer text with change of selected autonomy level
                     .onReceive(selectedAutonomy.description.publisher) { _ in
                         switch selectedAutonomy {
                         case 0:
@@ -87,18 +89,19 @@ struct SettingsView: View {
                         case 1:
                             footerText = "Notification mode - Alerts will be sent to remind you to end your trip when it seems like you've stopped driving."
                         case 2:
-                            footerText = "Fully automatic - Trips will be automatically stopped without any user intervention. Note: This may result in some trips being ended prematurely."
+                            footerText = "Fully automatic - Trips will be automatically paused without any user intervention. Note: You can still manually resume the trip through the app."
                         default:
                             footerText = ""
                         }
                     }
                     
+                    // button to manually authorize notifications
                     Section {
                         Button {
                             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                                 if success {
                                 } else if let error = error {
-                                    print(error.localizedDescription)
+                                    print(error.localizedDescription) // print errors to console
                                 }
                             }
                         } label: {
@@ -121,7 +124,6 @@ struct SettingsView: View {
                 .safeAreaInset(edge: .top, content: {
                     Color.clear.frame(height: 70)
                 })
-                
                 .overlay(NavigationBar(showingButttons: false, title: "Settings", hasScrolled: $hasScrolled))
                 .offset(y: 40)
                 .overlay(
@@ -153,11 +155,5 @@ struct SettingsView: View {
                 }
             }
         })
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
     }
 }

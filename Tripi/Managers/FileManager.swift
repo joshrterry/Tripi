@@ -50,17 +50,22 @@ class FileManager {
                 "Notes": trip.notes ?? ""
             ] as [String : Any]
             
+            // convert all metrics to strings
             let stringIdtoData = idToData.compactMapValues { "\($0)" }
             
+            // find trips in selected date range
             if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
+                // if no tags selected, append all data to the array
                 if tags.isEmpty {
                     var dataArray: [String] = []
 
+                    // write each field to dataArray
                     for field in fields {
                         dataArray.append(stringIdtoData[field.id] ?? "")
                     }
                     tripsData.append(dataArray)
                 } else {
+                    // if tag filter applied, only allow accepted tags
                     var tagNames: [String] = []
                     for tag in trip.tags! {
                         tagNames.append((tag as AnyObject).name)
@@ -69,6 +74,7 @@ class FileManager {
                         if tags.contains(tagName) {
                             var dataArray: [String] = []
 
+                            // write each field to dataArray
                             for field in fields {
                                 dataArray.append(stringIdtoData[field.id] ?? "")
                             }

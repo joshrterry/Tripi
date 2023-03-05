@@ -4,7 +4,6 @@
 //
 //  Created by Joshua Terry on 2022-07-01.
 //
-// CONSOLE: withAnimation causing "Missing MeshRenderables for ground mesh..."
 
 import SwiftUI
 
@@ -21,6 +20,7 @@ struct TabBar: View {
             Spacer()
             ZStack(alignment: .bottom) {
                 
+                // live metrics that appear in routeview
                 ZStack(alignment: .top) {
                     Rectangle()
                         .frame(maxWidth: .infinity, maxHeight: 210)
@@ -28,18 +28,19 @@ struct TabBar: View {
                         .cornerRadius(30)
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     HStack() {
+                        // distance travelled
                         Metric(data: "\(unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
                             .frame(width: 100)
+                        // trip duration
                         Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
                             .frame(width: 120)
+                        // current speed
                         Metric(data: "\(Int(unitFormatter.formatSpeed(speed: routeManager.currentSpeed, selectedUnits: selectedUnits)))", descriptor: selectedUnits == "metric" ? "Current KPH" : "Current MPH", color: .primary)
                             .frame(width: 100)
                     }
                     .padding(.top, 22)
                 }
-                .offset(y: showLiveMetrics ? 0 : 120)
-                
-                
+                .offset(y: showLiveMetrics ? 0 : 120) // if routeview is not selected, offset elements beneath the screen safe area
                 
                 
                 ZStack(alignment: .top) {
@@ -48,8 +49,11 @@ struct TabBar: View {
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
                         .cornerRadius(30)
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
+                    
+                    // buttons for switching tabs
                     HStack(spacing: 45) {
                         Group {
+                            // HomeView
                             Button {
                                 withAnimation {
                                     selectedTab = .home
@@ -68,6 +72,7 @@ struct TabBar: View {
                                     .shadow(color: .primary.opacity(0.1), radius: 20, x: 10, y: 10)
                                     .shadow(color: .primary.opacity(0.1), radius: 20, x: -5, y: -5)
                                 
+                                // RouteView
                                 Button {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
@@ -82,6 +87,7 @@ struct TabBar: View {
                                     print(routeManager.trackingState)
                                     
                                 } label: {
+                                    // icon depends on whether trip is currently in progress
                                     if selectedTab == .route {
                                         if routeManager.trackingState == .inactive {
                                             Image("go_icon")
@@ -91,7 +97,7 @@ struct TabBar: View {
                                                 .foregroundColor(.black)
                                                 .font(.system(size: 50))
                                         }
-                                        if routeManager.trackingState == .active {
+                                        else {
                                             Image("stop_icon")
                                                 .resizable()
                                                 .scaledToFit()
@@ -112,10 +118,9 @@ struct TabBar: View {
                             }
                             .offset(y: -10)
                             
+                            // TripBrowser
                             Button {
-                                withAnimation {
-                                    selectedTab = .trips
-                                }
+                                selectedTab = .trips
                                 withAnimation {
                                     showLiveMetrics = false
                                 }
@@ -131,12 +136,5 @@ struct TabBar: View {
             }
         }
         .edgesIgnoringSafeArea(.all)
-    }
-}
-
-
-struct TabBar_Previews: PreviewProvider {
-    static var previews: some View {
-        TabBar()
     }
 }

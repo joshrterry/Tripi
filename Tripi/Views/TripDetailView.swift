@@ -35,8 +35,9 @@ struct TripDetailView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
+            // polyline map at top of view
             PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 20, bottom: 150, right: 20))
-                .scaleEffect(scrollAmount > 0 ? 1 + scrollAmount/1000 : 1)
+                .scaleEffect(scrollAmount > 0 ? 1 + scrollAmount/1000 : 1) // scale animation when scrolling above safe area
                 .edgesIgnoringSafeArea(.all)
                 .frame(height: 300)
             ScrollView(showsIndicators: false) {
@@ -55,12 +56,14 @@ struct TripDetailView: View {
                             .edgesIgnoringSafeArea(.all)
                         
                         VStack(alignment: .leading, spacing: 0) {
+                            // header includes date, time, and pin/delete menus
                             Header(trip: trip, startTime: startTime, endTime: endTime)
-                            
+                            // metrics include distance, duration, and time
                             Metrics(selectedUnits: selectedUnits, distance: distance, avgSpeed: avgSpeed, time: time)
-                            
+                            // includes tags section and related reimbursement amount
                             Reimbursement(amountReimbursable: amountReimbursable, trip: trip, globalTags: globalTags, tags: tags, distance: distance)
-                                                        
+                                       
+                            // graph of average speed at different points during the trip
                             Text("Speed")
                                 .font(.custom("Gilroy", size: 24))
                                 .padding(.top, 15)
@@ -69,6 +72,7 @@ struct TripDetailView: View {
                                 .frame(height: 175)
                                 .padding(.horizontal, 30)
                             
+                            // notes seciton for user inputted text
                             Notes(notes: notes, showingDone: showingDone, trip: trip)
                                 
                         }
@@ -106,6 +110,7 @@ struct TripDetailView: View {
 
     }
     
+    // save changes to database
     func uploadChanges() {
         trip.tags = tags
         trip.notes = notes
@@ -159,7 +164,7 @@ struct Header: View {
                 .font(.custom("Gilroy", size: 32))
             Spacer()
             
-            
+            // menu for pinning or deleting
             Menu {
                 Button {
                     isPinned.toggle()
@@ -198,6 +203,7 @@ struct Metrics: View {
     @State var time: String
     
     var body: some View {
+        // display recorded metrics
         HStack(spacing: 32) {
             Metric(data: String(format:"%.1f", distance), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
             Metric(data: time, descriptor: "MINUTES")
@@ -230,16 +236,25 @@ struct Notes: View {
                 .foregroundColor(Color(.systemGray5))
                 .padding(.horizontal, 30)
                 .frame(height: 150)
-            TextEditor(text: $notes)
+            
+            // limited text field for user input
+            TextField("Start typing...", text: $notes, axis: .vertical)
+                .lineLimit(4)
                 .focused($isTyping)
                 .scrollContentBackground(.hidden)
                 .scrollDisabled(true)
-                .padding(.horizontal, 40)
-                .padding(.top, 15)
-                .frame(height: 150)
+                .padding(.horizontal, 45)
+                .padding(.top, 20)
+                .frame(height: 150, alignment: .topLeading)
+                // only allow a max of 120 characters
+                .onChange(of: notes) { newValue in
+                    notes = String(newValue.prefix(120))
+                }
             if showingDone {
+                // done button for textfield
                 Button {
                     isTyping = false
+                    uploadChanges()
                 } label: {
                     HStack {
                         Text("Done")
@@ -254,7 +269,11 @@ struct Notes: View {
                     .padding(.horizontal, 50)
                     .padding(.bottom, 15)
                 }
+                .zIndex(1)
             }
+        }
+        .onTapGesture {
+            isTyping = true
         }
         .onChange(of: isTyping) { value in
             withAnimation {
@@ -274,6 +293,7 @@ struct Reimbursement: View {
     @State var globalTags: FetchedResults<UserTag>
     @State var tags: NSOrderedSet
     @State var distance: Double
+    @State var isEditing = false
     
     func uploadChanges() {
         trip.tags = tags
@@ -281,22 +301,29 @@ struct Reimbursement: View {
     }
     
     var body: some View {
+        // amount reimbursable metric
         Metric(data: unitFormatter.formatReimbursable(amount: amountReimbursable), descriptor: "reimbursable", color: Color.green)
             .padding(.leading, 30)
             .padding(.bottom, 15)
         
-        Text("Tags")
-            .font(.custom("Gilroy", size: 24))
-            .padding(.leading, 30)
-        
-        HStack(alignment: .top) {
+        HStack(spacing: 15) {
+            
+            Text("Tags")
+                .font(.custom("Gilroy", size: 24))
+                .padding(.leading, 30)
+            Spacer()
             Menu {
+                // display all available tags
                 ForEach(globalTags, id: \.self) { tag in
+                    // add tag button
                     Button {
-                        let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
-                        mutableTags.add(tag)
-                        tags = mutableTags.copy() as! NSOrderedSet
-                        uploadChanges()
+                        withAnimation {
+                            let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
+                            mutableTags.add(tag)
+                            tags = mutableTags.copy() as! NSOrderedSet
+                            uploadChanges()
+                        }
+
                     } label: {
                         HStack {
                             Image(systemName: "plus")
@@ -308,36 +335,88 @@ struct Reimbursement: View {
             } label: {
                 ZStack(alignment: .center) {
                     Rectangle()
-                        .frame(width: 80, height: 30)
+                        .frame(width: 30, height: 30)
                         .cornerRadius(15)
                         .foregroundColor(Color(.systemGray5))
                     
-                    HStack {
                         Image(systemName: "plus")
-                        Text("Add")
-                    }
                     .foregroundColor(Color.primary)
-                    .font(.custom("Gilroy", size: 16))
                 }
-                .padding(.leading, 30)
             }
-            ForEach(trip.tags?.array as? [UserTag] ?? [], id: \.self) { tag in
-                Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
-                    .contextMenu {
-                        Button {
+            
+            // edit button
+            Button {
+                withAnimation {
+                    isEditing.toggle()
+                }
+            } label: {
+                ZStack(alignment: .center) {
+                    Rectangle()
+                        .frame(width: 30, height: 30)
+                        .cornerRadius(15)
+                        .foregroundColor(Color(.systemGray5))
+                    
+                    Image(systemName: isEditing ? "pencil.slash" : "pencil")
+                    .foregroundColor(Color.primary)
+                }
+            }
+
+        }
+        .padding(.trailing, 30)
+
+        
+        
+
+        
+        HStack(alignment: .top) {
+
+            // display placeholder text
+            if tags.count == 0 {
+                Text("No tags to display")
+                    .opacity(0.4)
+                    .font(.custom("Gilroy", size: 18))
+                    .foregroundColor(.primary)
+            } else {
+                
+                // display each tag applied to the trip visually
+                ForEach(trip.tags?.array as? [UserTag] ?? [], id: \.self) { tag in
+                Button {
+                    if isEditing {
+                        withAnimation {
                             let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
                             mutableTags.remove(tag)
                             tags = mutableTags.copy() as! NSOrderedSet
                             uploadChanges()
-                        } label: {
-                            Label("Remove Tag", systemImage: "trash")
                         }
                     }
+                    } label: {
+                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                            .foregroundColor(.primary)
+                            .zIndex(1)
+                            .overlay(alignment: .topTrailing) {
+                                ZStack {
+                                    if isEditing {
+                                        Circle()
+                                            .foregroundColor(.white)
+                                            .frame(width: 24, height: 24)
+                                        Image(systemName: "x.circle.fill")
+                                            .font(.system(size: 24))
+                                            .foregroundColor(.red)
+                                            .zIndex(1)
+                                    }
+                                }.offset(x: 9, y: -9)
+
+                            }
+                    }
+                }
             }
+
+
             
         }
+        .padding(.leading, 30)
         .padding(.vertical, 15)
-        
+        // if tags change, update reimbursement amount and save changes
         .onChange(of: tags) { _ in
             if tags.count >= 1 {
                 let tripsArray = trip.tags?.array as? [UserTag]
@@ -346,6 +425,7 @@ struct Reimbursement: View {
                 print(trip.amountReimbursable)
             } else {
                 trip.amountReimbursable = 0.0
+                isEditing = false
             }
             withAnimation {
                 amountReimbursable = trip.amountReimbursable
@@ -356,11 +436,5 @@ struct Reimbursement: View {
         }
 
 
-    }
-}
-
-struct TripDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        TripDetailView(trip: Trip(), distance: 200, time: "22:12", avgSpeed: 102, startTime: Date(), endTime: Date(), notes: "", region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)), routeCoords: [], tags: [], amountReimbursable: 0.0)
     }
 }

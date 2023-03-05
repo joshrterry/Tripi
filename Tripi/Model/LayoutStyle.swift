@@ -7,7 +7,8 @@
 
 import Foundation
 
+// layout style for preview types
 enum LayoutStyle {
-    case compact
-    case expanded
+    case compact // used in RecentTrips
+    case expanded // used in TripBrowserView
 }
