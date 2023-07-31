@@ -48,20 +48,6 @@ class RouteManager: NSObject, ObservableObject {
         }
     }
     
-    // resume timer after being paused
-    func resumeTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
-            let current = Date()
-            let diffComponents = Calendar.current.dateComponents([.second, .nanosecond], from: self.timerStartTime, to: current)
-            let seconds = Double(diffComponents.second ?? 0) + Double(diffComponents.nanosecond ?? 0) / 1000000000
-            self.secondsElapsed += seconds
-            self.time = secondstoMinutesSeconds(seconds: secondsElapsed.self)
-            getAvgSpeed()
-            getCurrentSpeed()
-            self.timerStartTime = current
-        }
-    }
-    
     // pause timer
     func pauseTimer() {
         timer.invalidate()
@@ -157,7 +143,7 @@ class RouteManager: NSObject, ObservableObject {
     // resume route from pause state
     public func resumeRoute() {
         trackingState = .active
-        resumeTimer()
+        startTimer()
         startMotionUpdates()
         locationManager.startUpdatingLocation()
     }

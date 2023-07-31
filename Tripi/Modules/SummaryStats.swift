@@ -94,15 +94,23 @@ struct SummaryStats: View {
             HStack() {
                 Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi")
                     .frame(width: 150, alignment: .leading)
+                    .transition(.scale)
+                    .id("tripi" + String(showingWeekly))
                 Metric(data: "\(unitFormatter.formatDistance(distance: selectedBusinessKM, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "business km" : "business mi")
                     .frame(width: 150, alignment: .leading)
+                    .transition(.scale)
+                    .id("tripi" + String(showingWeekly))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             HStack() {
                 Metric(data: String(format:"%.1f", routeManager.secondstoHours(seconds: selectedHours)), descriptor: "hours driven")
                     .frame(width: 150, alignment: .leading)
+                    .transition(.scale)
+                    .id("tripi" + String(showingWeekly))
                 Metric(data: "$"+String(format:"%.2f", selectedReimbursable), descriptor: "reimbursable", color: Color.green)
                     .frame(width: 150, alignment: .leading)
+                    .transition(.scale)
+                    .id("tripi" + String(showingWeekly))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

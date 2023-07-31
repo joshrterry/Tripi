@@ -132,6 +132,10 @@ struct TripDetailView: View {
                     coveringStatusBar = false
                 }
             }
+            
+            if value > 165 {
+                dismiss()
+            }
 
             scrollAmount = value
         })
