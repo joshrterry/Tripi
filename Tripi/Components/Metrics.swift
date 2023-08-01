@@ -11,7 +11,6 @@ struct Metric: View {
     var data = ""
     var descriptor = ""
     var color = Color.primary
-    @State var value: Double = 1.2
     
     var body: some View {
         // design for metrics component as seen in SummaryStats and DetailView
@@ -19,7 +18,8 @@ struct Metric: View {
             Text(data)
                 .font(.custom("Gilroy", size: 40))
                 .foregroundColor(color)
-            RollingText(font: .custom("Gilroy", size: 40), weight: .black, value: $value)
+                .transition(AnyTransition.opacity.combined(with: .scale))
+                .id("tripi" + String(data))
             Text(descriptor.uppercased())
                 .font(.custom("Gilroy", size: 13))
                 .opacity(0.4)
