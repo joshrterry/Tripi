@@ -92,7 +92,7 @@ struct SummaryStats: View {
             }
             // display metrics in a 2x2 arrangement
             HStack() {
-                Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi")
+                Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi", value: unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))
                     .frame(width: 150, alignment: .leading)
                     .transition(.scale)
                     .id("tripi" + String(showingWeekly))
