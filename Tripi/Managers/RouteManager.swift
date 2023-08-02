@@ -220,10 +220,8 @@ class RouteManager: NSObject, ObservableObject {
 extension RouteManager: CLLocationManagerDelegate {
     // delegate method called upon a device location update, calculates relevant metrics, and publishes to subscriber
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         if trackingState != .active { return } // exit function if user is not currently logging a trip
         guard let location = locations.last else { return }
-        
         // error handling to prevent situations at the start of a trip when the program attempts to calcualate distance from last waypoint, and no other points exist
         if lastLocation != nil {
             distanceTotal += location.distance(from: lastLocation) / 1000 // divide by 1000 to convert m to km

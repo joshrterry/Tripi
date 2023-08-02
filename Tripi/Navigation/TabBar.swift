@@ -12,6 +12,8 @@ struct TabBar: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
+    @AppStorage("liveMetrics") var liveMetrics = false
+
     @State var showLiveMetrics = false
     let unitFormatter = UnitFormatter()
     
@@ -39,6 +41,12 @@ struct TabBar: View {
                             .frame(width: 100)
                     }
                     .padding(.top, 22)
+                }
+                .onAppear {
+                    showLiveMetrics = liveMetrics
+                }
+                .onDisappear {
+                    liveMetrics = showLiveMetrics
                 }
                 .offset(y: showLiveMetrics ? 0 : 120) // if routeview is not selected, offset elements beneath the screen safe area
                 
