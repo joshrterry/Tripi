@@ -43,7 +43,9 @@ struct TabBar: View {
                     .padding(.top, 22)
                 }
                 .onAppear {
-                    showLiveMetrics = liveMetrics
+                    if selectedTab == .route {
+                        showLiveMetrics = liveMetrics
+                    }
                 }
                 .onDisappear {
                     liveMetrics = showLiveMetrics

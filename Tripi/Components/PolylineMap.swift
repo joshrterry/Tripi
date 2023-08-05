@@ -25,7 +25,9 @@ struct PolylineMap: UIViewRepresentable {
         // center map on user location
         if isTracking {
             mapView.showsUserLocation = true
-            mapView.userTrackingMode = .follow
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                mapView.userTrackingMode = .follow
+            }
         }
         mapView.isScrollEnabled = false
         
