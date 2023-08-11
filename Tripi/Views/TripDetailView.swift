@@ -36,7 +36,7 @@ struct TripDetailView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // polyline map at top of view
-            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 20, bottom: 150, right: 20))
+            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 20, bottom: UIScreen.main.bounds.height/5.5, right: 20))
                 .scaleEffect(scrollAmount > 0 ? 1 + scrollAmount/1000 : 1) // scale animation when scrolling above safe area
                 .edgesIgnoringSafeArea(.all)
                 .frame(height: 300)

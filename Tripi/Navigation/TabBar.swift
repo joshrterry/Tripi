@@ -13,8 +13,10 @@ struct TabBar: View {
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("liveMetrics") var liveMetrics = false
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
 
     @State var showLiveMetrics = false
+    @State var showTabBar = true
     let unitFormatter = UnitFormatter()
     
     var body: some View {
@@ -144,6 +146,22 @@ struct TabBar: View {
                     
                 }
             }
+            .onAppear {
+                withAnimation {
+                    showTabBar = showingTabBar
+                }
+            }
+            .onChange(of: showingTabBar, perform: { newValue in
+                withAnimation {
+                    showTabBar = newValue
+                }
+            })
+            .onDisappear {
+                withAnimation {
+                    showingTabBar = showTabBar
+                }
+            }
+            .offset(y: showTabBar ? 0 : 120)
         }
         .edgesIgnoringSafeArea(.all)
     }

@@ -37,7 +37,6 @@
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
-		F571830A29983DF400DD2BED /* Polyline in Frameworks */ = {isa = PBXBuildFile; productRef = F571830929983DF400DD2BED /* Polyline */; };
 		F579F5302995CAF000EE03FF /* Graphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F579F52F2995CAF000EE03FF /* Graphs.swift */; };
 		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
@@ -131,7 +130,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F571830A29983DF400DD2BED /* Polyline in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +336,6 @@
 			);
 			name = Tripi;
 			packageProductDependencies = (
-				F571830929983DF400DD2BED /* Polyline */,
 			);
 			productName = Tripi;
 			productReference = F56426C82856B9B4005FD118 /* Tripi.app */;
@@ -414,7 +411,6 @@
 			);
 			mainGroup = F56426BF2856B9B4005FD118;
 			packageReferences = (
-				F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */,
 			);
 			productRefGroup = F56426C92856B9B4005FD118 /* Products */;
 			projectDirPath = "";
@@ -853,25 +849,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/raphaelmor/Polyline.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F571830929983DF400DD2BED /* Polyline */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */;
-			productName = Polyline;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F56426D62856B9B6005FD118 /* LocationTracker.xcdatamodeld */ = {
