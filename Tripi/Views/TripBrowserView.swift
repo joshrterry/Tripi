@@ -113,7 +113,7 @@ struct TripBrowserView: View {
                     Color.clear.frame(height: 75)
                 })
                 .safeAreaInset(edge: .bottom, content: {
-                    Color.clear.frame(height: 85)
+                    Color.clear.frame(height: 100)
                 })
                 .overlay(NavigationBar(title: "Browse", hasScrolled: $hasScrolled))
                 .navigationBarHidden(true)

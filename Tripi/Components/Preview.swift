@@ -38,6 +38,8 @@ struct Preview: View {
     
     @State var routeCoords: [CLLocationCoordinate2D] = []
     
+    var screenWidth = UIScreen.main.bounds.width
+    
     var notes = ""
     
     var tagColours = [
@@ -67,7 +69,7 @@ struct Preview: View {
             ZStack(alignment: .center) {
                 Rectangle()
                     .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
-                    .frame(width: previewStyle == .compact ? 154 : 337, height: previewStyle == .compact ? 256 : 151)
+                    .frame(width: previewStyle == .compact ? 154 : screenWidth*0.87, height: previewStyle == .compact ? 256 : 151)
                     .cornerRadius(25)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
@@ -75,52 +77,53 @@ struct Preview: View {
                 // expanded preview style for TripBrowserView
                 if previewStyle == .expanded {
                     HStack(alignment: .center) {
-                        ZStack(alignment: .bottomLeading) {
-                            // map with overlays
-                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-                                .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
-                                .cornerRadius(15)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                        }
-                        
-                        // summarized metrics
-                        Group {
-                            VStack(alignment: .leading) {
-                                Text(date)
-                                    .font(.custom("Gilroy", size: 16))
-                                    .foregroundColor(.primary)
-                                Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
-                                    .font(.custom("Gilroy", size: 12))
-                                    .foregroundColor(.primary)
-                                
-                                Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
-                                    .font(.custom("Gilroy", size: 12))
-                                    .foregroundColor(color)
-                                
-                                // dipslay tags in expanded view
+
+                        // map with overlays
+                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
+                            .cornerRadius(17)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                                                
+                    // summarized metrics
+                        VStack(alignment: .leading) {
+                            Text(date)
+                                .font(.custom("Gilroy", size: 16))
+                                .foregroundColor(.primary)
+                            Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
+                                .font(.custom("Gilroy", size: 12))
+                                .foregroundColor(.primary)
+
+                            Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                                .font(.custom("Gilroy", size: 12))
+                                .foregroundColor(color)
+
+                            // dipslay tags in expanded view
+                            GeometryReader { geo in
                                 HStack {
                                     ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
                                         Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
                                             .foregroundColor(.primary)
                                     }
                                 }
-                                
+                            }
+
+                            Spacer()
+                            HStack {
                                 Spacer()
-                                HStack {
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(Font.system(size: 24, weight: .black))
-                                        .foregroundColor(.primary)
-                                }
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 24, weight: .black))
+                                    .foregroundColor(.primary)
                             }
                         }
                         .padding(.vertical, 15)
                         .padding(.horizontal, 10)
-                        .frame(width: 180)
                         
-                        
+
                     }
+//                    .padding(.horizontal, screenWidth*0.05)
+                    .frame(width: screenWidth*0.833)
+//                    .background(Color.red)
                     
                     
                 } else {
@@ -163,7 +166,8 @@ struct Preview: View {
                         
                     }.padding(5)
                 }
-            }
+            }.frame(width: previewStyle == .expanded ? screenWidth*0.47 : .none)
+
         }
     }
 }

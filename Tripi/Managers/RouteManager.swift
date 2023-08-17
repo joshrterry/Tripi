@@ -78,7 +78,7 @@ class RouteManager: NSObject, ObservableObject {
     
     private var lastLocation: CLLocation!
     
-    private var locationManager: CLLocationManager!
+    public var locationManager: CLLocationManager!
     
     typealias Output = (longitude: Double, latitude: Double, speed: Double, trip: Trip)
     typealias Failure = Never
