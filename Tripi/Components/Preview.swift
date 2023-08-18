@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import WrappingHStack
 
 struct Preview: View {
     @State var previewStyle: LayoutStyle = .compact
@@ -30,6 +31,8 @@ struct Preview: View {
     var amountReimbursable = 0.0
     
     let unitFormatter = UnitFormatter()
+    
+    @State private var tagID = NSOrderedSet()
     
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
@@ -69,7 +72,7 @@ struct Preview: View {
             ZStack(alignment: .center) {
                 Rectangle()
                     .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
-                    .frame(width: previewStyle == .compact ? 154 : screenWidth*0.87, height: previewStyle == .compact ? 256 : 151)
+                    .frame(width: previewStyle == .compact ? 154 : screenWidth*0.87, height: previewStyle == .compact ? 256 : 158)
                     .cornerRadius(25)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
@@ -80,13 +83,13 @@ struct Preview: View {
 
                         // map with overlays
                         PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
+                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 145)
                             .cornerRadius(17)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
                                                 
                     // summarized metrics
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 0) {
                             Text(date)
                                 .font(.custom("Gilroy", size: 16))
                                 .foregroundColor(.primary)
@@ -97,22 +100,24 @@ struct Preview: View {
                             Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(color)
-
                             // dipslay tags in expanded view
-                            GeometryReader { geo in
-                                HStack {
-                                    ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
-                                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
-                                            .foregroundColor(.primary)
-                                    }
-                                }
+                            WrappingHStack(trip.tags!.array as! [UserTag], id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
+                                Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255), isSmall: true)
+                                    .foregroundColor(.primary)
+                                    .fixedSize()
                             }
+                                .frame(height: 48, alignment: .top)
+                                .padding(.vertical, 5)
+                            .clipped()
+                            .id(tagID)
+//                            .background(Color.red)
+
 
                             Spacer()
                             HStack {
                                 Spacer()
                                 Image(systemName: "chevron.right")
-                                    .font(Font.system(size: 24, weight: .black))
+                                    .font(Font.system(size: 22, weight: .black))
                                     .foregroundColor(.primary)
                             }
                         }
@@ -121,7 +126,7 @@ struct Preview: View {
                         
 
                     }
-//                    .padding(.horizontal, screenWidth*0.05)
+                    .padding(.vertical)
                     .frame(width: screenWidth*0.833)
 //                    .background(Color.red)
                     
@@ -166,8 +171,14 @@ struct Preview: View {
                         
                     }.padding(5)
                 }
-            }.frame(width: previewStyle == .expanded ? screenWidth*0.47 : .none)
-
+            }
+            .frame(width: previewStyle == .expanded ? screenWidth*0.47 : 154, height: previewStyle == .expanded ? 158 : 256)
+            .onChange(of: tags) { newValue in
+                tagID = newValue
+            }
+            .onAppear {
+                tagID = NSOrderedSet()
+            }
         }
     }
 }

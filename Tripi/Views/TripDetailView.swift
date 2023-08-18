@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import WrappingHStack
 
 struct TripDetailView: View {
     @State var trip: Trip
@@ -298,6 +299,7 @@ struct Reimbursement: View {
     @State var tags: NSOrderedSet
     @State var distance: Double
     @State var isEditing = false
+    @State private var tagID = NSOrderedSet()
     
     func uploadChanges() {
         trip.tags = tags
@@ -383,7 +385,7 @@ struct Reimbursement: View {
             } else {
                 
                 // display each tag applied to the trip visually
-                ForEach(trip.tags?.array as? [UserTag] ?? [], id: \.self) { tag in
+                WrappingHStack(trip.tags?.array as? [UserTag] ?? [], id: \.self, spacing: .constant(8), lineSpacing: 8) { tag in
                 Button {
                     if isEditing {
                         withAnimation {
@@ -395,6 +397,7 @@ struct Reimbursement: View {
                     }
                     } label: {
                         Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                            .id(tagID)
                             .foregroundColor(.primary)
                             .zIndex(1)
                             .overlay(alignment: .topTrailing) {
@@ -412,7 +415,12 @@ struct Reimbursement: View {
 
                             }
                     }
+                    .onChange(of: tags) { newValue in
+                        tagID = newValue
+                    }
                 }
+                .padding(.trailing, 5)
+
             }
 
 

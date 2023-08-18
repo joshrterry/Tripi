@@ -48,8 +48,7 @@ struct PolylineMap: UIViewRepresentable {
         // update polyline
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         view.removeOverlays(view.overlays)
-        view.addOverlay(polyline)
-        
+        view.addOverlay(polyline)        
     }
 
     func makeCoordinator() -> Coordinator {
