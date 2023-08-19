@@ -182,33 +182,55 @@ class RouteManager: NSObject, ObservableObject {
     let notificationManager = NotificationManager()
     @AppStorage("selectedAutonomy") var selectedAutonomy = 0
     
+    @Published var recentActivities: [Int] = []
+    
+    private func checkIfStopped(activity: CMMotionActivity) {
+        if trackingState == .active {
+            Timer.scheduledTimer(withTimeInterval: 20, repeats: false) { (_) in
+                if !activity.automotive && self.trackingState == .active {
+                    self.recentActivities.append(1)
+                } else {
+                    self.recentActivities.append(0)
+                }
+                if self.recentActivities.count > 10 && self.trackingState == .active {
+                    self.recentActivities.removeFirst()
+                    // calculate the sum of the array
+                    let sum = self.recentActivities.reduce(0) { result, number in
+                        result + number
+                    }
+                    // convert to double and divide by the count of the array
+                    let average = Double(sum) / Double(self.recentActivities.count)
+                    
+                    if average >= 0.7 && self.trackingState == .active {
+                        self.recentActivities = []
+                        if self.selectedAutonomy == 1 {
+                            self.notificationManager.promptToEnd()
+                        }
+                        else if self.selectedAutonomy == 2 {
+                            self.notificationManager.autoStopMessage()
+                            self.pauseRoute()
+                        }
+                    }
+                }
+                self.checkIfStopped(activity: activity)
+            }
+        }
+    }
+    
     
     func startMotionUpdates() {
-        var sentNotification = false
+        var currentActivity: CMMotionActivity = CMMotionActivity()
         // creates a new instance of CMMotionActivityManager
         self.activityManager = CMMotionActivityManager()
         
         // start updating activity data and publishing to applications main thread
         self.activityManager.startActivityUpdates(to: .main) { (activity: CMMotionActivity?) in
             guard let activity = activity else { return }
-            if !activity.automotive {
-                // wait 2 minutes, then check again
-                DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
-                    if !activity.automotive {
-                        if !sentNotification { // verify that a notification has not already been pushed to the user
-                            sentNotification = true
-                            if self.selectedAutonomy == 1 {
-                                self.notificationManager.promptToEnd()
-                            }
-                            else if self.selectedAutonomy == 2 {
-                                self.notificationManager.autoStopMessage()
-                                self.pauseRoute()
-                            }
-                        }
-                    }
-                }
-            }
+            currentActivity = activity
         }
+        self.recentActivities = []
+        self.checkIfStopped(activity: currentActivity)
+
     }
     
     func stopMotionUpdates() {

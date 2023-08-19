@@ -172,7 +172,7 @@ struct Preview: View {
                     }.padding(5)
                 }
             }
-            .frame(width: previewStyle == .expanded ? screenWidth*0.47 : 154, height: previewStyle == .expanded ? 158 : 256)
+            .frame(width: previewStyle == .expanded ? screenWidth*0.87 : 154, height: previewStyle == .expanded ? 158 : 256)
             .onChange(of: tags) { newValue in
                 tagID = newValue
             }

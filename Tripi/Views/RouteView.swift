@@ -91,6 +91,9 @@ struct RouteView: View {
                     hasHomeButton = false
                 }
             }
+            .onChange(of: routeManager.recentActivities) { newValue in
+                print(newValue)
+            }
         }
     }
 }
