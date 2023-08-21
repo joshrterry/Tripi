@@ -10,7 +10,7 @@ import CoreLocation
 import MapKit
 
 struct RecentTrips: View {
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], predicate: NSPredicate(format: "startTimestamp >= %@",  Date.now.addingTimeInterval(-604800) as CVarArg), animation: .default)
     private var trips: FetchedResults<Trip>
     
     func formatTimestamp(date: Date) -> String {
@@ -37,7 +37,7 @@ struct RecentTrips: View {
                         
                         ForEach(trips, id: \.self) { trip in
                             // only display trips that occurred within the past 7 days
-                            if trip.startTimestamp ?? Date() > Date.now.addingTimeInterval(-604800) {
+//                            if trip.startTimestamp ?? Date() > Date.now.addingTimeInterval(-604800) {
                                 // handle errors with index out of range
                                 if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
                                     // creates the trip previews and formats and passes all required parameters
@@ -55,7 +55,7 @@ struct RecentTrips: View {
                                             routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
                                             notes: trip.notes ?? "")
                                 }
-                            }
+//                            }
                         }
                         
                     }
@@ -69,21 +69,31 @@ struct RecentTrips: View {
                         .frame(height: 120)
                     HStack(alignment: .center) {
                         Spacer()
-                        Text("No trips to display")
-                            .opacity(0.4)
-                            .font(.custom("Gilroy", size: 18))
-                            .foregroundColor(.primary)
+                        ProgressView()
+                            .progressViewStyle(.circular)
                         Spacer()
                     }
                 }
+
+//                VStack {
+//                    Spacer()
+//                        .frame(height: 120)
+//                    HStack(alignment: .center) {
+//                        Spacer()
+//                        Text("No trips to display")
+//                            .opacity(0.4)
+//                            .font(.custom("Gilroy", size: 18))
+//                            .foregroundColor(.primary)
+//                        Spacer()
+//                    }
+//                }
 
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
-            print(trips.count)
-            for trip in trips {
-                if trip.startTimestamp ?? Date() > Date.now.addingTimeInterval(-604800) {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if trips.count > 0 {
                     hasTrips = true
                 }
             }

@@ -15,6 +15,7 @@ struct Tag: View {
         // design for tags component
         ZStack {
             Text(name)
+                .foregroundColor(.black)
                 .font(.custom("Gilroy", size: isSmall ? 12 : 14))
                 .padding()
                 .frame(height: isSmall ? 22 : 30)

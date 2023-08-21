@@ -96,8 +96,6 @@ struct TabBar: View {
                                     withAnimation {
                                         showLiveMetrics = true
                                     }
-                                    print(routeManager.trackingState)
-                                    
                                 } label: {
                                     // icon depends on whether trip is currently in progress
                                     if selectedTab == .route {

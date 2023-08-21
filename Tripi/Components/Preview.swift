@@ -82,7 +82,8 @@ struct Preview: View {
                     HStack(alignment: .center) {
 
                         // map with overlays
-                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                        StaticPolylineMap(region: $region, routeCoordinates: $routeCoords, trip: trip)
+//                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                             .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 145)
                             .cornerRadius(17)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
@@ -135,7 +136,8 @@ struct Preview: View {
                     // compact layout for RecentTrips
                     VStack(alignment: .center) {
                         // map with overlays
-                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                        StaticPolylineMap(region: $region, routeCoordinates: $routeCoords, trip: trip)
+//                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                             .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                             .cornerRadius(15)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)

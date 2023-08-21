@@ -18,6 +18,7 @@
         <attribute name="isPinned" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="notes" optional="YES" attributeType="String"/>
         <attribute name="region" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Double]"/>
+        <attribute name="routeImage" optional="YES" attributeType="Binary"/>
         <attribute name="routeWaypoints" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[[Double]]"/>
         <attribute name="secondsElapsed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="startTimestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

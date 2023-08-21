@@ -12,7 +12,7 @@ struct TripBrowserView: View {
     @State var hasScrolled = false
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
     private var trips: FetchedResults<Trip>
-    
+        
     func formatTimestamp(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE, MMM d"
@@ -21,7 +21,7 @@ struct TripBrowserView: View {
     @State var showingDateFilter = false
     @State var startDate = Date.now
     @State var endDate = Date.now
-    
+    @State var tripsHaveLoaded = false
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
     @State var showingPinned = false
@@ -63,11 +63,33 @@ struct TripBrowserView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(.leading, 30)
-                
-                    // only show pinned trips if showingPinned is true
-                    if showingPinned {
-                        ForEach(trips, id: \.self) { trip in
-                            if trip.isPinned {
+                    
+                    if tripsHaveLoaded {
+                        // only show pinned trips if showingPinned is true
+                        if showingPinned {
+                            ForEach(trips, id: \.self) { trip in
+                                if trip.isPinned {
+                                    // handle errors with index out of range
+                                    if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                                        Preview(previewStyle: .expanded,
+                                                trip: trip,
+                                                distance: trip.distance,
+                                                date: formatTimestamp(date: trip.startTimestamp ?? Date()),
+                                                color: .green, time: trip.time ?? "",
+                                                avgSpeed: trip.averageSpeed,
+                                                starTime: trip.startTimestamp ?? Date(),
+                                                endTime: trip.endTimestamp ?? Date(),
+                                                tags: trip.tags!,
+                                                amountReimbursable: trip.amountReimbursable,
+                                                region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
+                                                routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
+                                                notes: trip.notes ?? "")
+                                    }
+                                }
+                            }
+                        } else {
+                            // show all trips if showingPinned is false
+                            ForEach(trips, id: \.self) { trip in
                                 // handle errors with index out of range
                                 if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
                                     Preview(previewStyle: .expanded,
@@ -87,26 +109,10 @@ struct TripBrowserView: View {
                             }
                         }
                     } else {
-                        // show all trips if showingPinned is false
-                        ForEach(trips, id: \.self) { trip in
-                            // handle errors with index out of range
-                            if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
-                                Preview(previewStyle: .expanded,
-                                        trip: trip,
-                                        distance: trip.distance,
-                                        date: formatTimestamp(date: trip.startTimestamp ?? Date()),
-                                        color: .green, time: trip.time ?? "",
-                                        avgSpeed: trip.averageSpeed,
-                                        starTime: trip.startTimestamp ?? Date(),
-                                        endTime: trip.endTimestamp ?? Date(),
-                                        tags: trip.tags!,
-                                        amountReimbursable: trip.amountReimbursable,
-                                        region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
-                                        routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
-                                        notes: trip.notes ?? "")
-                            }
-                        }
+                        ProgressView()
+                            .progressViewStyle(.circular)
                     }
+
                 }
                 .coordinateSpace(name: "scroll")
                 .safeAreaInset(edge: .top, content: {
@@ -117,6 +123,12 @@ struct TripBrowserView: View {
                 })
                 .overlay(NavigationBar(title: "Browse", hasScrolled: $hasScrolled))
                 .navigationBarHidden(true)
+            }
+        }.onAppear {
+            DispatchQueue.global(qos: .userInitiated).async {
+                if trips.count > 0 {
+                    tripsHaveLoaded = true
+                }
             }
         }
         
