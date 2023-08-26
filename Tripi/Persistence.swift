@@ -94,8 +94,8 @@ struct PersistenceController {
         trip.region[1] = (minLon + maxLon) / 2
         
         // determine an appropriate zoom level by finding the difference between max and min
-        trip.region[2] = (maxLat - minLat) * 1.4
-        trip.region[3] = (maxLon - minLon) * 1.4
+        trip.region[2] = abs(maxLat - minLat) * 1.4
+        trip.region[3] = abs(maxLon - minLon) * 1.4
     
         // if more than 5 waypoints in array, we have enough to graph the speed of the trip
         if trip.locationsArray.count >= 5 {

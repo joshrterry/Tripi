@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F50767392A8EE75E00E9605F /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = F50767382A8EE75E00E9605F /* WrappingHStack */; };
 		F50767582A914ADA00E9605F /* StaticPolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50767572A914ADA00E9605F /* StaticPolylineMap.swift */; };
+		F507675A2A92F6CD00E9605F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50767592A92F6CD00E9605F /* OnboardingView.swift */; };
 		F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F3286FC1D9000E07AF /* Preview.swift */; };
 		F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F5286FD3F0000E07AF /* RecentTrips.swift */; };
 		F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F7286FEB1C000E07AF /* RouteView.swift */; };
@@ -75,6 +76,7 @@
 
 /* Begin PBXFileReference section */
 		F50767572A914ADA00E9605F /* StaticPolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticPolylineMap.swift; sourceTree = "<group>"; };
+		F50767592A92F6CD00E9605F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		F517F2F3286FC1D9000E07AF /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		F517F2F5286FD3F0000E07AF /* RecentTrips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrips.swift; sourceTree = "<group>"; };
 		F517F2F7286FEB1C000E07AF /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				F56426CD2856B9B4005FD118 /* HomeView.swift */,
+				F50767592A92F6CD00E9605F /* OnboardingView.swift */,
 				F55FA73928C8E513000C0740 /* TripBrowserView.swift */,
 				F517F2F7286FEB1C000E07AF /* RouteView.swift */,
 				F59870E628BFD70B00F9CC89 /* TripDetailView.swift */,
@@ -469,6 +472,7 @@
 				F50767582A914ADA00E9605F /* StaticPolylineMap.swift in Sources */,
 				F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */,
 				F5BE3A69297346D50030B662 /* TagSort.swift in Sources */,
+				F507675A2A92F6CD00E9605F /* OnboardingView.swift in Sources */,
 				F5A7E41429B4809D00B36ACF /* Model.swift in Sources */,
 				F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */,
 				F5FF5F8C298B8704009FF3EB /* Trip+CoreDataClass.swift in Sources */,

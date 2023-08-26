@@ -37,11 +37,14 @@ struct StaticPolylineMap: View {
         // We use addLine() and move() to draw the line, this should be easy to understand.
         // The diificult part is that they both take CGPoint as parameters, and it would be way too complex for us to calculate by ourselves
         // Thus we use snapshot.point() to save the pain.
-        context!.move(to: snapshot.point(for: routeCoordinates[0]))
-        for i in 0...routeCoordinates.count-1 {
-            context!.addLine(to: snapshot.point(for: routeCoordinates[i]))
-            context!.move(to: snapshot.point(for: routeCoordinates[i]))
+        if !routeCoordinates.isEmpty {
+            context!.move(to: snapshot.point(for: routeCoordinates[0]))
+            for i in 0...routeCoordinates.count-1 {
+                context!.addLine(to: snapshot.point(for: routeCoordinates[i]))
+                context!.move(to: snapshot.point(for: routeCoordinates[i]))
+            }
         }
+
         
         // apply the stroke to the context
         context!.strokePath()
@@ -60,8 +63,8 @@ struct StaticPolylineMap: View {
             // Map options
             let mapOptions = MKMapSnapshotter.Options()
             mapOptions.region.center = self.region.center
-            mapOptions.region.span.longitudeDelta = self.region.span.longitudeDelta*2
-            mapOptions.region.span.latitudeDelta = self.region.span.latitudeDelta*2
+            mapOptions.region.span.longitudeDelta = self.region.span.longitudeDelta // *2
+            mapOptions.region.span.latitudeDelta = self.region.span.latitudeDelta // *2
             mapOptions.size = CGSize(width: width, height: height)
             mapOptions.showsBuildings = true
             mapOptions.pointOfInterestFilter = .excludingAll
@@ -104,7 +107,7 @@ struct StaticPolylineMap: View {
             }
         }
         .onAppear {
-            generateSnapshot(width: 300, height: 300)
+            generateSnapshot(width: 150, height: 220)
         }
     }
 }

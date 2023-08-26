@@ -14,12 +14,6 @@ struct TripiApp: App {
     var cancellables = [AnyCancellable]()    
     
     init() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-            if success {
-            } else if let error = error {
-                print(error.localizedDescription) // print errors to console
-            }
-        }
         // Creates a new instance of RouterManager to be used throughout the app
         let routeManager = RouteManager()
         // Stores the instance in the StateObject property

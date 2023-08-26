@@ -63,7 +63,7 @@ struct TabBar: View {
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     
                     // buttons for switching tabs
-                    HStack(spacing: 45) {
+                    HStack(spacing: 30) {
                         Group {
                             // HomeView
                             Button {
@@ -76,6 +76,7 @@ struct TabBar: View {
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
+                                    .padding()
                             }
                             ZStack {
                                 Circle()
@@ -137,6 +138,7 @@ struct TabBar: View {
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)
+                                    .padding()
                             }
                         }
                         .font(.system(size: 24, weight: .bold))

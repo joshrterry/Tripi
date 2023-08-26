@@ -21,7 +21,7 @@ struct TripBrowserView: View {
     @State var showingDateFilter = false
     @State var startDate = Date.now
     @State var endDate = Date.now
-    @State var tripsHaveLoaded = false
+    @State var hasTrips = 0
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
     @State var showingPinned = false
@@ -64,7 +64,7 @@ struct TripBrowserView: View {
                     }
                     .padding(.leading, 30)
                     
-                    if tripsHaveLoaded {
+                    if hasTrips == 1 {
                         // only show pinned trips if showingPinned is true
                         if showingPinned {
                             ForEach(trips, id: \.self) { trip in
@@ -108,7 +108,23 @@ struct TripBrowserView: View {
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else if hasTrips == 2 {
+                        VStack {
+                            Spacer()
+                                .frame(height: 120)
+                            HStack(alignment: .center) {
+                                Spacer()
+                                Text("No trips to display")
+                                    .opacity(0.4)
+                                    .font(.custom("Gilroy", size: 18))
+                                    .foregroundColor(.primary)
+                                Spacer()
+                            }
+                        }
+                    }
+                    
+                    else {
                         ProgressView()
                             .progressViewStyle(.circular)
                     }
@@ -127,7 +143,9 @@ struct TripBrowserView: View {
         }.onAppear {
             DispatchQueue.global(qos: .userInitiated).async {
                 if trips.count > 0 {
-                    tripsHaveLoaded = true
+                    hasTrips = 1
+                } else if trips.count == 0 {
+                    hasTrips = 2
                 }
             }
         }
