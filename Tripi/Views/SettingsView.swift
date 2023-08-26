@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UserNotifications
+import CoreLocation
 
 struct SettingsView: View {
     
@@ -17,7 +18,13 @@ struct SettingsView: View {
     private let numberFormatter: NumberFormatter
     @State var footerText = ""
     @Environment(\.dismiss) var dismiss
-
+    @State var notificationsEnabled = false
+    @State var locationAlways = false
+    @State var locationInUse = false
+    @EnvironmentObject var routeManager: RouteManager
+    
+    
+    let current = UNUserNotificationCenter.current()
     
     init() {
         numberFormatter = NumberFormatter()
@@ -29,7 +36,7 @@ struct SettingsView: View {
         NavigationView {
             ZStack(alignment: .topTrailing) {
                 Color("Background").ignoresSafeArea()
-
+                
                 Form {
                     // toggle between metric and imperial units
                     Picker(selection: $selectedUnits) {
@@ -95,27 +102,40 @@ struct SettingsView: View {
                         }
                     }
                     
-                    // button to manually authorize notifications
+//                    if !notificationsEnabled {
+//                        // button to manually authorize notifications
+//                        Section {
+//                            Button {
+//                                current.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+//                                    if success {
+//                                    } else if let error = error {
+//                                        print(error.localizedDescription) // print errors to console
+//                                    }
+//                                }
+//                            } label: {
+//                                HStack {
+//                                    Image(systemName: "bell.square.fill")
+//                                        .font(.system(size: 28))
+//                                        .foregroundColor(.red)
+//                                    Text("Authorize Notifications")
+//                                        .foregroundColor(.primary)
+//                                }
+//                            }
+//                        }
+//                    }
+                   
+                    
                     Section {
-                        Button {
-                            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                                if success {
-                                } else if let error = error {
-                                    print(error.localizedDescription) // print errors to console
-                                }
-                            }
-                        } label: {
+                        Link(destination: URL(string: "https://tripi.codeflyt.com/privacy")!) {
                             HStack {
-                                Image(systemName: "bell.square.fill")
+                                Image(systemName: "hand.raised.square.fill")
                                     .font(.system(size: 28))
-                                    .foregroundColor(.red)
-                                Text("Authorize Notifications")
+                                    .foregroundColor(.blue)
+                                Text("Privacy Policy")
                                     .foregroundColor(.primary)
                             }
                         }
                     }
-                    
-                    
                     
                     
                 }
@@ -136,9 +156,29 @@ struct SettingsView: View {
                     }
                 )
                 .navigationBarHidden(true)
-
+                
             }
         }
+//        .onAppear {
+//            current.getNotificationSettings { settings in
+//                if settings.authorizationStatus == .authorized {
+//                    notificationsEnabled = true
+//                } else {
+//                    notificationsEnabled = false
+//                }
+//            }
+//            switch routeManager.locationManager.authorizationStatus {
+//            case .authorizedAlways:
+//                locationAlways = true
+//                locationInUse = true
+//            case .authorizedWhenInUse:
+//                locationInUse = true
+//            default:
+//                locationAlways = false
+//                locationInUse = false
+//            }
+//
+//        }
     }
     
     var scrollDetection: some View {

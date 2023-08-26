@@ -13,8 +13,10 @@ struct TabBar: View {
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("liveMetrics") var liveMetrics = false
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
 
     @State var showLiveMetrics = false
+    @State var showTabBar = true
     let unitFormatter = UnitFormatter()
     
     var body: some View {
@@ -43,7 +45,9 @@ struct TabBar: View {
                     .padding(.top, 22)
                 }
                 .onAppear {
-                    showLiveMetrics = liveMetrics
+                    if selectedTab == .route {
+                        showLiveMetrics = liveMetrics
+                    }
                 }
                 .onDisappear {
                     liveMetrics = showLiveMetrics
@@ -59,7 +63,7 @@ struct TabBar: View {
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     
                     // buttons for switching tabs
-                    HStack(spacing: 45) {
+                    HStack(spacing: 30) {
                         Group {
                             // HomeView
                             Button {
@@ -72,6 +76,7 @@ struct TabBar: View {
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
+                                    .padding()
                             }
                             ZStack {
                                 Circle()
@@ -92,8 +97,6 @@ struct TabBar: View {
                                     withAnimation {
                                         showLiveMetrics = true
                                     }
-                                    print(routeManager.trackingState)
-                                    
                                 } label: {
                                     // icon depends on whether trip is currently in progress
                                     if selectedTab == .route {
@@ -135,6 +138,7 @@ struct TabBar: View {
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)
+                                    .padding()
                             }
                         }
                         .font(.system(size: 24, weight: .bold))
@@ -142,6 +146,22 @@ struct TabBar: View {
                     
                 }
             }
+            .onAppear {
+                withAnimation {
+                    showTabBar = showingTabBar
+                }
+            }
+            .onChange(of: showingTabBar, perform: { newValue in
+                withAnimation {
+                    showTabBar = newValue
+                }
+            })
+            .onDisappear {
+                withAnimation {
+                    showingTabBar = showTabBar
+                }
+            }
+            .offset(y: showTabBar ? 0 : 120)
         }
         .edgesIgnoringSafeArea(.all)
     }

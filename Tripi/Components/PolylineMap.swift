@@ -25,7 +25,11 @@ struct PolylineMap: UIViewRepresentable {
         // center map on user location
         if isTracking {
             mapView.showsUserLocation = true
-            mapView.userTrackingMode = .follow
+            
+            // slight delay to properly fetch current location first
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                mapView.userTrackingMode = .follow
+            }
         }
         mapView.isScrollEnabled = false
         
@@ -44,8 +48,7 @@ struct PolylineMap: UIViewRepresentable {
         // update polyline
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         view.removeOverlays(view.overlays)
-        view.addOverlay(polyline)
-        
+        view.addOverlay(polyline)        
     }
 
     func makeCoordinator() -> Coordinator {

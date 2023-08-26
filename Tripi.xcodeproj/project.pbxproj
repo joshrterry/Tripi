@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F50767392A8EE75E00E9605F /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = F50767382A8EE75E00E9605F /* WrappingHStack */; };
+		F50767582A914ADA00E9605F /* StaticPolylineMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50767572A914ADA00E9605F /* StaticPolylineMap.swift */; };
+		F507675A2A92F6CD00E9605F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50767592A92F6CD00E9605F /* OnboardingView.swift */; };
 		F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F3286FC1D9000E07AF /* Preview.swift */; };
 		F517F2F6286FD3F0000E07AF /* RecentTrips.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F5286FD3F0000E07AF /* RecentTrips.swift */; };
 		F517F2F8286FEB1C000E07AF /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F517F2F7286FEB1C000E07AF /* RouteView.swift */; };
@@ -37,7 +40,6 @@
 		F56426E22856B9B6005FD118 /* TripiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426E12856B9B6005FD118 /* TripiTests.swift */; };
 		F56426EC2856B9B6005FD118 /* TripiUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426EB2856B9B6005FD118 /* TripiUITests.swift */; };
 		F56426EE2856B9B6005FD118 /* TripiUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56426ED2856B9B6005FD118 /* TripiUITestsLaunchTests.swift */; };
-		F571830A29983DF400DD2BED /* Polyline in Frameworks */ = {isa = PBXBuildFile; productRef = F571830929983DF400DD2BED /* Polyline */; };
 		F579F5302995CAF000EE03FF /* Graphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F579F52F2995CAF000EE03FF /* Graphs.swift */; };
 		F57A3F7D2926C15000315971 /* LayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57A3F7C2926C15000315971 /* LayoutStyle.swift */; };
 		F59870E728BFD70B00F9CC89 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59870E628BFD70B00F9CC89 /* TripDetailView.swift */; };
@@ -73,6 +75,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F50767572A914ADA00E9605F /* StaticPolylineMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticPolylineMap.swift; sourceTree = "<group>"; };
+		F50767592A92F6CD00E9605F /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		F517F2F3286FC1D9000E07AF /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		F517F2F5286FD3F0000E07AF /* RecentTrips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTrips.swift; sourceTree = "<group>"; };
 		F517F2F7286FEB1C000E07AF /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
@@ -131,7 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F571830A29983DF400DD2BED /* Polyline in Frameworks */,
+				F50767392A8EE75E00E9605F /* WrappingHStack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				F56426CD2856B9B4005FD118 /* HomeView.swift */,
+				F50767592A92F6CD00E9605F /* OnboardingView.swift */,
 				F55FA73928C8E513000C0740 /* TripBrowserView.swift */,
 				F517F2F7286FEB1C000E07AF /* RouteView.swift */,
 				F59870E628BFD70B00F9CC89 /* TripDetailView.swift */,
@@ -181,6 +186,7 @@
 				F52C30D1286FB95C0026FAEE /* Metrics.swift */,
 				F5EC7C7A2925EF6E00DAB7EE /* Tag.swift */,
 				F517F2F3286FC1D9000E07AF /* Preview.swift */,
+				F50767572A914ADA00E9605F /* StaticPolylineMap.swift */,
 				F5D674EB28BD0A430053B6A7 /* PolylineMap.swift */,
 				F5A12D4F29711B2A0055E239 /* BackButton.swift */,
 			);
@@ -338,7 +344,7 @@
 			);
 			name = Tripi;
 			packageProductDependencies = (
-				F571830929983DF400DD2BED /* Polyline */,
+				F50767382A8EE75E00E9605F /* WrappingHStack */,
 			);
 			productName = Tripi;
 			productReference = F56426C82856B9B4005FD118 /* Tripi.app */;
@@ -414,7 +420,7 @@
 			);
 			mainGroup = F56426BF2856B9B4005FD118;
 			packageReferences = (
-				F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */,
+				F50767372A8EE75E00E9605F /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = F56426C92856B9B4005FD118 /* Products */;
 			projectDirPath = "";
@@ -463,8 +469,10 @@
 				F56024ED286FA6C90002403D /* NavigationBar.swift in Sources */,
 				F56024F4286FAC2E0002403D /* Styles.swift in Sources */,
 				F5A86BD2292F1389004CF3EA /* FileManager.swift in Sources */,
+				F50767582A914ADA00E9605F /* StaticPolylineMap.swift in Sources */,
 				F55FA73A28C8E513000C0740 /* TripBrowserView.swift in Sources */,
 				F5BE3A69297346D50030B662 /* TagSort.swift in Sources */,
+				F507675A2A92F6CD00E9605F /* OnboardingView.swift in Sources */,
 				F5A7E41429B4809D00B36ACF /* Model.swift in Sources */,
 				F517F2F4286FC1D9000E07AF /* Preview.swift in Sources */,
 				F5FF5F8C298B8704009FF3EB /* Trip+CoreDataClass.swift in Sources */,
@@ -664,10 +672,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location information is required for tracking";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Tripi uses motion data from your device to automatically detect and log your trips";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -709,10 +717,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationUsageDescription = "Location information is required for tracking";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location information is required for tracking";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Tripi uses motion data from your device to automatically detect and log your trips";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -855,21 +863,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */ = {
+		F50767372A8EE75E00E9605F /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/raphaelmor/Polyline.git";
+			repositoryURL = "https://github.com/dkk/WrappingHStack.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F571830929983DF400DD2BED /* Polyline */ = {
+		F50767382A8EE75E00E9605F /* WrappingHStack */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F571830829983DF400DD2BED /* XCRemoteSwiftPackageReference "Polyline" */;
-			productName = Polyline;
+			package = F50767372A8EE75E00E9605F /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
 		};
 /* End XCSwiftPackageProductDependency section */
 

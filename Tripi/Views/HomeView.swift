@@ -44,6 +44,9 @@ struct HomeView: View {
                 .safeAreaInset(edge: .top, content: {
                     Color.clear.frame(height: 50)
                 })
+                .safeAreaInset(edge: .bottom, content: {
+                    Color.clear.frame(height: 100)
+                })
                 .overlay(NavigationBar(title: "Dashboard", hasScrolled: $hasScrolled))
                 .navigationBarHidden(true)
             }

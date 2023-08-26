@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import WrappingHStack
 
 struct TripDetailView: View {
     @State var trip: Trip
@@ -34,80 +35,81 @@ struct TripDetailView: View {
     
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // polyline map at top of view
-            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 20, bottom: 150, right: 20))
-                .scaleEffect(scrollAmount > 0 ? 1 + scrollAmount/1000 : 1) // scale animation when scrolling above safe area
-                .edgesIgnoringSafeArea(.all)
-                .frame(height: 300)
-            ScrollView(showsIndicators: false) {
-                if monitoringScroll {
-                    scrollDetection
-                }
-                VStack {
-                    Spacer()
-                        .frame(height: 250)
-                    ZStack(alignment: .topLeading) {
-                        Rectangle()
-                            .foregroundColor(Color("Background"))
-                            .cornerRadius(50, corners: [.topLeft, .topRight])
-                            .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                            .frame(height: 1200)
-                            .edgesIgnoringSafeArea(.all)
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            // header includes date, time, and pin/delete menus
-                            Header(trip: trip, startTime: startTime, endTime: endTime)
-                            // metrics include distance, duration, and time
-                            Metrics(selectedUnits: selectedUnits, distance: distance, avgSpeed: avgSpeed, time: time)
-                            // includes tags section and related reimbursement amount
-                            Reimbursement(amountReimbursable: amountReimbursable, trip: trip, globalTags: globalTags, tags: tags, distance: distance)
-                                       
-                            // graph of average speed at different points during the trip
-                            Text("Speed")
-                                .font(.custom("Gilroy", size: 24))
-                                .padding(.top, 15)
-                                .padding(.leading, 30)
-                            Graphs(trip: trip)
-                                .frame(height: 175)
-                                .padding(.horizontal, 30)
-                            
-                            // notes seciton for user inputted text
-                            Notes(notes: notes, showingDone: showingDone, trip: trip)
-                                
-                        }
-                        
+        GeometryReader { geometry in
+            ZStack(alignment: .topLeading) {
+                // polyline map at top of view
+                PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 40, left: 20, bottom: geometry.size.height/3.8, right: 20))
+//                StaticPolylineMap(region: $region, routeCoordinates: $routeCoords)
+                    .scaleEffect(scrollAmount > 0 ? 1 + scrollAmount/1000 : 1) // scale animation when scrolling above safe area
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(height: geometry.size.height/2)
+                ScrollView(showsIndicators: false) {
+                    if monitoringScroll {
+                        scrollDetection
                     }
+                    VStack {
+                        Spacer()
+                            .frame(height: geometry.size.height/3)
+                        ZStack(alignment: .topLeading) {
+                            Rectangle()
+                                .foregroundColor(Color("Background"))
+                                .cornerRadius(50, corners: [.topLeft, .topRight])
+                                .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
+                                .frame(height: 1200)
+                                .edgesIgnoringSafeArea(.all)
+                            
+                            VStack(alignment: .leading, spacing: 0) {
+                                // header includes date, time, and pin/delete menus
+                                Header(trip: trip, startTime: startTime, endTime: endTime)
+                                // metrics include distance, duration, and time
+                                Metrics(selectedUnits: selectedUnits, distance: distance, avgSpeed: avgSpeed, time: time)
+                                // includes tags section and related reimbursement amount
+                                Reimbursement(amountReimbursable: amountReimbursable, trip: trip, globalTags: globalTags, tags: tags, distance: distance)
+                                           
+                                // graph of average speed at different points during the trip
+                                Text("Speed")
+                                    .font(.custom("Gilroy", size: 24))
+                                    .padding(.top, 15)
+                                    .padding(.leading, 30)
+                                Graphs(trip: trip)
+                                    .frame(height: 175)
+                                    .padding(.horizontal, 30)
+                                
+                                // notes seciton for user inputted text
+                                Notes(notes: notes, showingDone: showingDone, trip: trip)
+                                    
+                            }
+                            
+                        }
+                    }
+                }.toolbarBackground(.hidden, for: .navigationBar)
+                    .navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: BackButton(dismiss: self.dismiss).opacity(1+scrollAmount/150))
+                    .edgesIgnoringSafeArea(.all)
+            }.onDisappear {
+                showingTabBar = true
+            }
+            .onAppear {
+                showingTabBar = false
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                    monitoringScroll = true
                 }
-            }.toolbarBackground(.hidden, for: .navigationBar)
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(leading: BackButton(dismiss: self.dismiss).opacity(1+scrollAmount/150))
-                .edgesIgnoringSafeArea(.all)
-        }.onDisappear {
-            showingTabBar = true
-        }
-        .onAppear {
-            showingTabBar = false
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                monitoringScroll = true
             }
-        }
-        .overlay(alignment: .top) {
-            if coveringStatusBar {
-                ZStack(alignment: .top) {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
-                        .frame(height: 100)
-                    Text("Trip Summary")
-                        .font(.custom("Gilroy", size: 18))
-                        .padding(.top, 60)
+            .overlay(alignment: .top) {
+                if coveringStatusBar {
+                    ZStack(alignment: .top) {
+                        Rectangle()
+                            .foregroundStyle(.thinMaterial)
+                            .frame(height: 100)
+                        Text("Trip Summary")
+                            .font(.custom("Gilroy", size: 18))
+                            .padding(.top, 60)
+                    }
+                    .edgesIgnoringSafeArea(.all)
+
                 }
-                .edgesIgnoringSafeArea(.all)
-
-            }
-            }
-
-
+                }
+        }
     }
     
     // save changes to database
@@ -298,6 +300,7 @@ struct Reimbursement: View {
     @State var tags: NSOrderedSet
     @State var distance: Double
     @State var isEditing = false
+    @State private var tagID = NSOrderedSet()
     
     func uploadChanges() {
         trip.tags = tags
@@ -383,7 +386,7 @@ struct Reimbursement: View {
             } else {
                 
                 // display each tag applied to the trip visually
-                ForEach(trip.tags?.array as? [UserTag] ?? [], id: \.self) { tag in
+                WrappingHStack(trip.tags?.array as? [UserTag] ?? [], id: \.self, spacing: .constant(8), lineSpacing: 8) { tag in
                 Button {
                     if isEditing {
                         withAnimation {
@@ -395,6 +398,7 @@ struct Reimbursement: View {
                     }
                     } label: {
                         Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                            .id(tagID)
                             .foregroundColor(.primary)
                             .zIndex(1)
                             .overlay(alignment: .topTrailing) {
@@ -412,7 +416,12 @@ struct Reimbursement: View {
 
                             }
                     }
+                    .onChange(of: tags) { newValue in
+                        tagID = newValue
+                    }
                 }
+                .padding(.trailing, 5)
+
             }
 
 

@@ -18,6 +18,7 @@ struct NavigationBar: View {
     var title = ""
     @Binding var hasScrolled: Bool
     @State private var presentedSheet: Sheet?
+    @EnvironmentObject var routeManager: RouteManager
 
     var body: some View {
         ZStack {
@@ -42,10 +43,10 @@ struct NavigationBar: View {
                         Image(systemName: "square.and.arrow.up.circle")
                             .font(.body.weight(.bold))
                             .frame(width: 36, height: 36)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(routeManager.trackingState == .active ? .secondary.opacity(0.4) : .secondary)
                             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                             .strokeStyle(cornerRadius: 14)
-                    }
+                    }.disabled(routeManager.trackingState == .active ? true : false)
                     // button for settings view
                     Button {
                         presentedSheet = .settingsView

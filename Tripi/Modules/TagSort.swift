@@ -18,6 +18,7 @@ struct TagSort: View {
     @State private var currentTag = UserTag()
     @State private var doneText = "Add Tag"
     @State private var showError = false
+    @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     init() {
       numberFormatter = NumberFormatter()
@@ -25,16 +26,21 @@ struct TagSort: View {
       numberFormatter.maximumFractionDigits = 2
     }
     
+    private let tagColours = [[251.0, 248.0, 204.0], [253.0, 228.0, 207.0], [255.0, 207.0, 210.0], [241.0, 192.0, 232.0], [207.0, 186.0, 240.0], [163.0, 196.0, 243.0], [144.0, 219.0, 244.0], [142.0, 236.0, 245.0], [152.0, 245.0, 225.0], [185.0, 251.0, 192.0]]
+    
     var body: some View {
         // list out tags that the user has created
         List {
             ForEach(tags, id: \.self) { tag in
-                HStack {
+                HStack(spacing: 0) {
                     Image(systemName: "circle.fill")
                         .foregroundColor(Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                        .padding(.trailing, 10)
                     Text(tag.name!)
                     Spacer()
-                    Text("$\(String(format: "%.2f", tag.reimbursementAmount))")
+                    Text("$\(String(format: "%.2f", selectedUnits == "metric" ? tag.reimbursementAmount : tag.reimbursementAmount*1/0.62137119223733))")
+                    Text("/\(selectedUnits == "metric" ? "km" : "mi")")
+                        .foregroundColor(.secondary)
                 }
                 .swipeActions(allowsFullSwipe: false) {
                     // swipe to delete
@@ -98,8 +104,9 @@ struct TagSort: View {
                                     PersistenceController.shared.save()
                                 }
                                 else {
+                                    
                                     // add new tag to CoreData
-                                    PersistenceController.shared.addTag(name: tagName.trimmingCharacters(in: .whitespacesAndNewlines), colour: [Double.random(in: 0...255), Double.random(in: 0...255), Double.random(in: 0...255)], reimbursementAmount: tagAmount)
+                                    PersistenceController.shared.addTag(name: tagName.trimmingCharacters(in: .whitespacesAndNewlines), colour: tagColours.randomElement()!, reimbursementAmount: selectedUnits == "metric" ? tagAmount : tagAmount * 0.62137119223733)
                                 }
                             }
                             // clear fields in alert dialogue

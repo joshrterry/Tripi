@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import WrappingHStack
 
 struct Preview: View {
     @State var previewStyle: LayoutStyle = .compact
@@ -31,12 +32,16 @@ struct Preview: View {
     
     let unitFormatter = UnitFormatter()
     
+    @State private var tagID = NSOrderedSet()
+    
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.endTimestamp, ascending: true)], animation: .default)
     private var trips: FetchedResults<Trip>
     
     @State var region: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 53.5461, longitude: -113.4937), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     
     @State var routeCoords: [CLLocationCoordinate2D] = []
+    
+    var screenWidth = UIScreen.main.bounds.width
     
     var notes = ""
     
@@ -67,7 +72,7 @@ struct Preview: View {
             ZStack(alignment: .center) {
                 Rectangle()
                     .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color.white)
-                    .frame(width: previewStyle == .compact ? 154 : 337, height: previewStyle == .compact ? 256 : 151)
+                    .frame(width: previewStyle == .compact ? 154 : screenWidth*0.87, height: previewStyle == .compact ? 256 : 158)
                     .cornerRadius(25)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: 10, y: 10)
                     .shadow(color: .primary.opacity(0.025), radius: 7, x: -5, y: -5)
@@ -75,59 +80,64 @@ struct Preview: View {
                 // expanded preview style for TripBrowserView
                 if previewStyle == .expanded {
                     HStack(alignment: .center) {
-                        ZStack(alignment: .bottomLeading) {
-                            // map with overlays
-                            PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-                                .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
-                                .cornerRadius(15)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
-                                .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
-                        }
-                        
-                        // summarized metrics
-                        Group {
-                            VStack(alignment: .leading) {
-                                Text(date)
-                                    .font(.custom("Gilroy", size: 16))
+
+                        // map with overlays
+                        StaticPolylineMap(region: $region, routeCoordinates: $routeCoords, trip: trip)
+//                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                            .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 145)
+                            .cornerRadius(17)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
+                            .shadow(color: .primary.opacity(0.05), radius: 20, x: -5, y: -5)
+                                                
+                    // summarized metrics
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(date)
+                                .font(.custom("Gilroy", size: 16))
+                                .foregroundColor(.primary)
+                            Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
+                                .font(.custom("Gilroy", size: 12))
+                                .foregroundColor(.primary)
+
+                            Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                                .font(.custom("Gilroy", size: 12))
+                                .foregroundColor(color)
+                            // dipslay tags in expanded view
+                            WrappingHStack(trip.tags!.array as! [UserTag], id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
+                                Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255), isSmall: true)
                                     .foregroundColor(.primary)
-                                Text("\(formatTime(date:starTime)) - \(formatTime(date:endTime))")
-                                    .font(.custom("Gilroy", size: 12))
-                                    .foregroundColor(.primary)
-                                
-                                Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
-                                    .font(.custom("Gilroy", size: 12))
-                                    .foregroundColor(color)
-                                
-                                // dipslay tags in expanded view
-                                HStack {
-                                    ForEach(trip.tags!.array as! [UserTag], id: \.self) { tag in
-                                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
-                                            .foregroundColor(.primary)
-                                    }
-                                }
-                                
+                                    .fixedSize()
+                            }
+                                .frame(height: 48, alignment: .top)
+                                .padding(.vertical, 5)
+                            .clipped()
+                            .id(tagID)
+//                            .background(Color.red)
+
+
+                            Spacer()
+                            HStack {
                                 Spacer()
-                                HStack {
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(Font.system(size: 24, weight: .black))
-                                        .foregroundColor(.primary)
-                                }
+                                Image(systemName: "chevron.right")
+                                    .font(Font.system(size: 22, weight: .black))
+                                    .foregroundColor(.primary)
                             }
                         }
                         .padding(.vertical, 15)
                         .padding(.horizontal, 10)
-                        .frame(width: 180)
                         
-                        
+
                     }
+                    .padding(.vertical)
+                    .frame(width: screenWidth*0.833)
+//                    .background(Color.red)
                     
                     
                 } else {
                     // compact layout for RecentTrips
                     VStack(alignment: .center) {
                         // map with overlays
-                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+                        StaticPolylineMap(region: $region, routeCoordinates: $routeCoords, trip: trip)
+//                        PolylineMap(region: $region, routeCoordinates: $routeCoords, isTracking: false, edgeInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
                             .frame(width: previewStyle == .compact ? 134 : 129, height: previewStyle == .compact ? 161 : 138)
                             .cornerRadius(15)
                             .shadow(color: .primary.opacity(0.05), radius: 20, x: 10, y: 10)
@@ -163,6 +173,13 @@ struct Preview: View {
                         
                     }.padding(5)
                 }
+            }
+            .frame(width: previewStyle == .expanded ? screenWidth*0.87 : 154, height: previewStyle == .expanded ? 158 : 256)
+            .onChange(of: tags) { newValue in
+                tagID = newValue
+            }
+            .onAppear {
+                tagID = NSOrderedSet()
             }
         }
     }
