@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct TripiApp: App {
     @StateObject private var routeManager: RouteManager
-    var cancellables = [AnyCancellable]()    
+    var cancellables = [AnyCancellable]()
     
     init() {
         // Creates a new instance of RouterManager to be used throughout the app
@@ -21,7 +21,7 @@ struct TripiApp: App {
         // Subscribes to the events of RouteManager
         routeManager
             .sink(receiveValue: PersistenceController.shared.addLocation).store(in: &cancellables)
-        
+                
     }
     var body: some Scene {
         WindowGroup {

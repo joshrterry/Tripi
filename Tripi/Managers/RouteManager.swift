@@ -192,6 +192,9 @@ class RouteManager: NSObject, ObservableObject {
 
     
     private func checkIfStopped() {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+//            self.notificationManager.promptToEnd()
+//        }
         if trackingState == .active {
             activityTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { (_) in
                 if self.currentActivity.automotive && self.trackingState == .active {
@@ -199,7 +202,7 @@ class RouteManager: NSObject, ObservableObject {
                 } else {
                     self.recentActivities.append(1)
                 }
-                if self.recentActivities.count > 12 && self.trackingState == .active {
+                if self.recentActivities.count > 9 && self.trackingState == .active {
                     self.recentActivities.removeFirst()
                     // calculate the sum of the array
                     let sum = self.recentActivities.reduce(0) { result, number in

@@ -182,5 +182,13 @@ struct Preview: View {
                 tagID = NSOrderedSet()
             }
         }
+//        .contextMenu {
+//            Button {
+//                PersistenceController.shared.delete(trip: trip)
+//            } label: {
+//                Label("Delete Trip", systemImage: "trash")
+//            }
+
+//        }
     }
 }

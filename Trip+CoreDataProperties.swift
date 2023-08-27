@@ -38,7 +38,8 @@ extension Trip {
     @NSManaged public var graphedSpeedsX: [Date]
     @NSManaged public var graphedSpeedsY: [Double]
     @NSManaged public var isPinned: Bool
-    @NSManaged public var routeImage: Data?
+    @NSManaged public var lightImage: Data?
+    @NSManaged public var darkImage: Data?
 
     public var locationsArray: [Location] {
         let locations = locations as? Set<Location> ?? []

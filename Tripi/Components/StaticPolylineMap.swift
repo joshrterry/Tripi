@@ -8,14 +8,21 @@
 import SwiftUI
 import MapKit
 
+
 struct StaticPolylineMap: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @Binding var region: MKCoordinateRegion
     @Binding var routeCoordinates: [CLLocationCoordinate2D]
     @State private var snapshotImage: UIImage? = nil
     @State private var snapshotImageData: Data? = nil
+    @State private var snapshotImageL: UIImage? = nil
+    @State private var snapshotImageDataL: Data? = nil
+    @State private var snapshotImageD: UIImage? = nil
+    @State private var snapshotImageDataD: Data? = nil
     @State var trip: Trip
-
-        
+    @AppStorage("hasHomeButton") var hasHomeButton = false
+    
     func drawLineOnImage(snapshot: MKMapSnapshotter.Snapshot) -> UIImage {
         let image = snapshot.image
         
@@ -44,7 +51,7 @@ struct StaticPolylineMap: View {
                 context!.move(to: snapshot.point(for: routeCoordinates[i]))
             }
         }
-
+        
         
         // apply the stroke to the context
         context!.strokePath()
@@ -58,8 +65,9 @@ struct StaticPolylineMap: View {
         return resultImage!
     }
     
-    func generateSnapshot(width: CGFloat, height: CGFloat) {
-        if trip.routeImage == nil {
+    func generateSnapshot(width: CGFloat, height: CGFloat, condition: ColorScheme) {
+        if trip.lightImage == nil || trip.darkImage == nil {
+            
             // Map options
             let mapOptions = MKMapSnapshotter.Options()
             mapOptions.region.center = self.region.center
@@ -70,30 +78,57 @@ struct StaticPolylineMap: View {
             mapOptions.pointOfInterestFilter = .excludingAll
             mapOptions.mapType = .standard
             
+            mapOptions.traitCollection = UITraitCollection(userInterfaceStyle: .light)
             // Create the snapshotter and run it
-            let snapshotter = MKMapSnapshotter(options: mapOptions)
-            snapshotter.start(with: .global()) { (snapshotOrNil, errorOrNil) in
+            let snapshotterLight = MKMapSnapshotter(options: mapOptions)
+            snapshotterLight.start(with: .global()) { (snapshotOrNil, errorOrNil) in
                 if let error = errorOrNil {
                     print(error)
                     return
                 }
-                if let snapshot = snapshotOrNil {
-                    self.snapshotImage = self.drawLineOnImage(snapshot: snapshot)
-                    self.snapshotImageData = self.snapshotImage?.jpegData(compressionQuality: 1.0)
-    //                trip.routeImage = snapshotImageData
-                    if let data = self.snapshotImageData {
+                if let lightSnapshot = snapshotOrNil {
+                    self.snapshotImageL = self.drawLineOnImage(snapshot: lightSnapshot)
+                    if colorScheme == .light {
+                        self.snapshotImage = self.snapshotImageL
+                    }
+                    self.snapshotImageDataL = self.snapshotImageL?.jpegData(compressionQuality: 1.0)
+                    if let lightData = self.snapshotImageDataL {
                         DispatchQueue.main.async {
-                            PersistenceController.shared.addImageToTrip(trip: trip, image: data)
-
+                            trip.lightImage = lightData
+                            PersistenceController.shared.save()
                         }
-
+                        
                     }
                 }
             }
+            
+            mapOptions.traitCollection = UITraitCollection(userInterfaceStyle: .dark)
+            // Create the snapshotter and run it
+            let snapshotterDark = MKMapSnapshotter(options: mapOptions)
+            snapshotterDark.start(with: .global()) { (snapshotOrNil, errorOrNil) in
+                if let error = errorOrNil {
+                    print(error)
+                    return
+                }
+                if let darkSnapshot = snapshotOrNil {
+                    self.snapshotImageD = self.drawLineOnImage(snapshot: darkSnapshot)
+                    if colorScheme == .dark {
+                        self.snapshotImage = self.snapshotImageD
+                    }
+                    self.snapshotImageDataD = self.snapshotImageD?.jpegData(compressionQuality: 1.0)
+                    if let darkData = self.snapshotImageDataD {
+                        DispatchQueue.main.async {
+                            trip.darkImage = darkData
+                            PersistenceController.shared.save()
+                        }
+                        
+                    }
+                }
+            }
+            
         } else {
-            self.snapshotImage = UIImage(data: trip.routeImage!, scale: 3)
+            self.snapshotImage = UIImage(data: (colorScheme == condition ? trip.lightImage : trip.darkImage)!, scale: hasHomeButton ? 2.75 : 3)
         }
-
     }
     
     var body: some View {
@@ -107,10 +142,15 @@ struct StaticPolylineMap: View {
             }
         }
         .onAppear {
-            generateSnapshot(width: 150, height: 220)
+            generateSnapshot(width: 140, height: 162, condition: .light)
+        }
+        .onChange(of: colorScheme) { newValue in
+            generateSnapshot(width: 140, height: 162, condition: .dark)
         }
     }
 }
+
+
 
 //struct StaticPolylineMap_Previews: PreviewProvider {
 //    static var previews: some View {

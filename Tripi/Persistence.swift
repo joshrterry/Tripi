@@ -119,12 +119,7 @@ struct PersistenceController {
         save()
 
     }
-    
-    mutating func addImageToTrip(trip: Trip, image: Data) {
-        trip.routeImage = image
-        save()
-    }
-        
+
     // method for adding location waypoints
     func addLocation(location: (longitude: Double, latitude: Double, speed: Double, trip: Trip)) {
         let newLocation = Location(context: container.viewContext)

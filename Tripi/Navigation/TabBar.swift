@@ -14,6 +14,7 @@ struct TabBar: View {
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("liveMetrics") var liveMetrics = false
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
+    @AppStorage("hasHomeButton") var hasHomeButton = false
 
     @State var showLiveMetrics = false
     @State var showTabBar = true
@@ -29,7 +30,7 @@ struct TabBar: View {
                     Rectangle()
                         .frame(maxWidth: .infinity, maxHeight: 210)
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
-                        .cornerRadius(30)
+                        .cornerRadius(30, corners: [.topLeft, .topRight])
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     HStack() {
                         // distance travelled
@@ -59,7 +60,7 @@ struct TabBar: View {
                     Rectangle()
                         .frame(maxWidth: .infinity, maxHeight: 90)
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : .white)
-                        .cornerRadius(30)
+                        .cornerRadius(30, corners: [.topLeft, .topRight])
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
                     
                     // buttons for switching tabs
@@ -67,12 +68,12 @@ struct TabBar: View {
                         Group {
                             // HomeView
                             Button {
-                                withAnimation {
+//                                withAnimation {
                                     selectedTab = .home
-                                }
-                                withAnimation {
+//                                }
+//                                withAnimation {
                                     showLiveMetrics = false
-                                }
+//                                }
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
@@ -90,9 +91,9 @@ struct TabBar: View {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
                                     } else {
-                                        withAnimation {
+//                                        withAnimation {
                                             selectedTab = .route
-                                        }
+//                                        }
                                     }
                                     withAnimation {
                                         showLiveMetrics = true
@@ -132,9 +133,9 @@ struct TabBar: View {
                             // TripBrowser
                             Button {
                                 selectedTab = .trips
-                                withAnimation {
+//                                withAnimation {
                                     showLiveMetrics = false
-                                }
+//                                }
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)
