@@ -67,12 +67,12 @@ struct TabBar: View {
                         Group {
                             // HomeView
                             Button {
-                                withAnimation {
+//                                withAnimation {
                                     selectedTab = .home
-                                }
-                                withAnimation {
+//                                }
+//                                withAnimation {
                                     showLiveMetrics = false
-                                }
+//                                }
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
@@ -90,9 +90,9 @@ struct TabBar: View {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
                                     } else {
-                                        withAnimation {
+//                                        withAnimation {
                                             selectedTab = .route
-                                        }
+//                                        }
                                     }
                                     withAnimation {
                                         showLiveMetrics = true
@@ -132,9 +132,9 @@ struct TabBar: View {
                             // TripBrowser
                             Button {
                                 selectedTab = .trips
-                                withAnimation {
+//                                withAnimation {
                                     showLiveMetrics = false
-                                }
+//                                }
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)

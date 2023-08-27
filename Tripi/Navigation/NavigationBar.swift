@@ -70,8 +70,11 @@ struct NavigationBar: View {
             switch sheet {
             case .exportView:
                 ExportWindow()
+                    .presentationDetents([.fraction(0.99999)])
             case .settingsView:
                 SettingsView()
+                    .presentationDetents([.fraction(0.99999)])
+
             }
         })
         .frame(height: hasScrolled ? 70 : 80)

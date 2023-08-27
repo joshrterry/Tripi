@@ -14,7 +14,6 @@ struct ContentView: View {
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
     @AppStorage("hasOnboarded") var hasOnboarded: Bool = false
     
-    
     var body: some View {
         ZStack {
             VStack {
@@ -38,6 +37,10 @@ struct ContentView: View {
             if !hasOnboarded {
                 OnboardingView()
                     .background()
+                    .onAppear {
+                        PersistenceController.shared.addTag(name: "Business", colour: [163.0, 196.0, 243.0], reimbursementAmount: 0.50)
+                        PersistenceController.shared.addTag(name: "Personal", colour: [241.0, 192.0, 232.0], reimbursementAmount: 0.0)
+                    }
             }
 
         }

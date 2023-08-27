@@ -13,13 +13,14 @@ struct RouteView: View {
     @ObservedObject var model: Model
     @EnvironmentObject var routeManager: RouteManager
     @State private var showingPause = false
-    @State private var hasHomeButton = false
+    @AppStorage("hasHomeButton") var hasHomeButton = false
     @State private var activites = [""]
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Location.timestamp, ascending: true)], animation: .default)
     private var locations: FetchedResults<Location>
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+    @AppStorage("liveMetrics") var liveMetrics = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -80,16 +81,13 @@ struct RouteView: View {
                         .zIndex(1)
                         .padding(20)
                     }
-//                    Text("hello")
-                    Text("\(activites.joined())")
-                        .background(.red)
+//                    Text("\(activites.joined())")
+//                        .background(.red)
                 }
 
             }
             .onChange(of: routeManager.recentActivities, perform: { newValue in
                 activites = routeManager.recentActivities.map{String($0)}
-                print(routeManager.currentActivity)
-
             })
             .edgesIgnoringSafeArea(.all)
             .overlay(!model.fullScreen ? NavigationBar(showingButttons: false,  title: "New Trip", hasScrolled: .constant(false)) : nil)
@@ -99,6 +97,9 @@ struct RouteView: View {
                 } else {
                     hasHomeButton = false
                 }
+            }
+            .onDisappear {
+                liveMetrics = false
             }
         }
     }
