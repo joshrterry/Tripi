@@ -671,6 +671,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tripi;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
@@ -716,6 +718,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tripi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Tripi;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
