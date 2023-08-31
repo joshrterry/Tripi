@@ -8,6 +8,14 @@
 import SwiftUI
 
 struct UnitFormatter {
+    private let numberFormatter: NumberFormatter
+
+    init() {
+        numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 4
+    }
 
     // format distances as a double to one decimal place
     func formatDistance(distance: Double, selectedUnits: String) -> Double {
@@ -42,6 +50,15 @@ struct UnitFormatter {
         var formattedReimbursable = ""
         
         formattedReimbursable = "$"+String(format: "%.2f", amount)
+        
+        return formattedReimbursable
+    }
+    
+    // format dollar values to a string with a $ and two decimal places
+    func formatReimbursableLong(amount: Double) -> String {
+        var formattedReimbursable = ""
+        
+        formattedReimbursable = numberFormatter.string(from: amount as NSNumber)!
         
         return formattedReimbursable
     }

@@ -21,9 +21,10 @@ struct TagSort: View {
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     init() {
-      numberFormatter = NumberFormatter()
-      numberFormatter.numberStyle = .currency
-      numberFormatter.maximumFractionDigits = 2
+        numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 4
     }
     
     private let tagColours = [[251.0, 248.0, 204.0], [253.0, 228.0, 207.0], [255.0, 207.0, 210.0], [241.0, 192.0, 232.0], [207.0, 186.0, 240.0], [163.0, 196.0, 243.0], [144.0, 219.0, 244.0], [142.0, 236.0, 245.0], [152.0, 245.0, 225.0], [185.0, 251.0, 192.0]]
@@ -38,7 +39,7 @@ struct TagSort: View {
                         .padding(.trailing, 10)
                     Text(tag.name!)
                     Spacer()
-                    Text("$\(String(format: "%.2f", selectedUnits == "metric" ? tag.reimbursementAmount : tag.reimbursementAmount*1/0.62137119223733))")
+                    Text("\(selectedUnits == "metric" ? tag.reimbursementAmount as NSNumber : tag.reimbursementAmount*1/0.62137119223733 as NSNumber, formatter: numberFormatter)")
                     Text("/\(selectedUnits == "metric" ? "km" : "mi")")
                         .foregroundColor(.secondary)
                 }

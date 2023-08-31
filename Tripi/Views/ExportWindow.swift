@@ -37,7 +37,7 @@ struct ExportWindow: View {
         Field(id: "Distance", includeMetric: true),
         Field(id: "Duration"),
         Field(id: "Average Speed"),
-        Field(id: "Amount reimbursable"),
+        Field(id: "Amount Reimbursable"),
         Field(id: "Notes")
     ]
     
