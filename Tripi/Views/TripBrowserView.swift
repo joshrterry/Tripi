@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct TripBrowserView: View {
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
     @State var hasScrolled = false
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Trip.startTimestamp, ascending: false)], animation: .default)
     private var trips: FetchedResults<Trip>
@@ -31,7 +32,7 @@ struct TripBrowserView: View {
         NavigationView {
             ZStack {
                 Color("Background").ignoresSafeArea()
-               
+                
                 ScrollView() {
                     scrollDetection
                     
@@ -63,7 +64,7 @@ struct TripBrowserView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding(.leading, 30)
-                    
+                                        
                     if hasTrips == 1 {
                         // only show pinned trips if showingPinned is true
                         if showingPinned {
@@ -141,6 +142,7 @@ struct TripBrowserView: View {
                 .navigationBarHidden(true)
             }
         }.onAppear {
+            showingTabBar = true
             DispatchQueue.global(qos: .userInitiated).async {
                 if trips.count > 0 {
                     hasTrips = 1

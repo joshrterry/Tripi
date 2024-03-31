@@ -179,10 +179,16 @@ struct Header: View {
                 } label: {
                     Label(isPinned ? "Unpin Trip" : "Pin Trip", systemImage: "pin")
                 }
+//                Button {
+//                    let duplicateTrip = trip
+//                    
+//                } label: {
+//                    Label("Duplicate Trip", systemImage: "doc.on.doc")
+//                }
                 Button {
                     PersistenceController.shared.delete(trip: trip)
                 } label: {
-                    Label("Delete Trip", systemImage: "trash")
+                    Label("Remove Trip", systemImage: "trash")
                 }
             } label: {
                 Image(systemName: "ellipsis.circle.fill")
