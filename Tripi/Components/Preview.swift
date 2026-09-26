@@ -147,9 +147,14 @@ struct Preview: View {
                         
                         // summarized metrics
                         VStack(alignment: .leading) {
-                            HStack(spacing: 40) {
+                            // spacer keeps the chevron pinned to the card edge regardless of distance length
+                            HStack(spacing: 4) {
                                 Text(String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi"))
                                     .font(.custom("Gilroy", size: 22))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.6)
+                                Spacer(minLength: 0)
                                 Image(systemName: "chevron.right")
                                     .font(Font.system(size: 15, weight: .black))
                             }

@@ -35,17 +35,16 @@ struct TabBar: View {
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
                         .cornerRadius(30, corners: [.topLeft, .topRight])
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
-                    HStack() {
+                    // three equal-width columns so each metric keeps its position as values grow
+                    HStack(spacing: 12) {
                         // distance travelled
-                        Metric(data: "\(unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
-                            .frame(width: 100)
+                        Metric(data: String(format: "%.1f", unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits)), descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
                         // trip duration
                         Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
-                            .frame(width: 120)
                         // current speed
                         Metric(data: "\(Int(unitFormatter.formatSpeed(speed: routeManager.currentSpeed, selectedUnits: selectedUnits)))", descriptor: selectedUnits == "metric" ? "Current KPH" : "Current MPH", color: .primary)
-                            .frame(width: 100)
                     }
+                    .padding(.horizontal, 28)
                     .padding(.top, 22)
                 }
                 .offset(y: showLiveMetrics ? 0 : 120) // if routeview is not selected, offset elements beneath the screen safe area
