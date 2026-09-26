@@ -17,7 +17,7 @@ struct Preview: View {
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
-    var trip: Trip
+    @ObservedObject var trip: Trip // observed so the card (and the detail view it opens) reflect edits like tag changes
     var distance = 0.0 // always in km; converted for display
     var date = ""
     var color = Color.primary
@@ -68,7 +68,7 @@ struct Preview: View {
     
     var body: some View {
         // link to detail view when preview is pressed
-        NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags, amountReimbursable: amountReimbursable)) {
+        NavigationLink(destination: TripDetailView(trip: trip)) { // built from the trip itself so it opens with current saved values
             
             ZStack(alignment: .center) {
                 Rectangle()
