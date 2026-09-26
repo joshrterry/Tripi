@@ -23,6 +23,7 @@ class RouteManager: NSObject, ObservableObject {
     @Published var startTime = Date()
     @AppStorage("hasOnboarded") var hasOnboarded: Bool = false
     @Published var currentActivity: CMMotionActivity = CMMotionActivity()
+    @Published var locationAuthorization: CLAuthorizationStatus = CLLocationManager().authorizationStatus
 
     
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
@@ -269,6 +270,11 @@ class RouteManager: NSObject, ObservableObject {
 }
 
 extension RouteManager: CLLocationManagerDelegate {
+    // keep published authorization in sync so views like onboarding reflect the user's actual choice
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        locationAuthorization = manager.authorizationStatus
+    }
+    
     // delegate method called upon a device location update, calculates relevant metrics, and publishes to subscriber
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if trackingState != .active { return } // exit function if user is not currently logging a trip

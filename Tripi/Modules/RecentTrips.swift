@@ -22,8 +22,6 @@ struct RecentTrips: View {
     
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
-    @AppStorage("selectedUnits") var selectedUnits = "metric"
-    let unitFormatter = UnitFormatter()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -42,11 +40,11 @@ struct RecentTrips: View {
                             if trip.hasRoute {
                                 // creates the trip previews and formats and passes all required parameters
                                 Preview(trip: trip,
-                                        distance: unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits),
+                                        distance: trip.distance,
                                         date: formatTimestamp(date: trip.startTimestamp ?? Date()),
                                         color: .green,
                                         time: trip.time ?? "00:00",
-                                        avgSpeed: unitFormatter.formatSpeed(speed: trip.averageSpeed, selectedUnits: selectedUnits),
+                                        avgSpeed: trip.averageSpeed,
                                         starTime: trip.startTimestamp ?? Date(),
                                         endTime: trip.endTimestamp ?? Date(),
                                         tags: trip.tags ?? NSOrderedSet(),

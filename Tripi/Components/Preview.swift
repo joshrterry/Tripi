@@ -18,7 +18,7 @@ struct Preview: View {
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
     var trip: Trip
-    var distance = 0.0
+    var distance = 0.0 // always in km; converted for display
     var date = ""
     var color = Color.primary
     
@@ -99,7 +99,7 @@ struct Preview: View {
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(.primary)
 
-                            Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                            Text("\(String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(color)
                             // dipslay tags in expanded view
@@ -148,7 +148,7 @@ struct Preview: View {
                         // summarized metrics
                         VStack(alignment: .leading) {
                             HStack(spacing: 40) {
-                                Text(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi"))
+                                Text(String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi"))
                                     .font(.custom("Gilroy", size: 22))
                                 Image(systemName: "chevron.right")
                                     .font(Font.system(size: 15, weight: .black))
