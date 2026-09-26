@@ -18,6 +18,7 @@
 		F52C30D2286FB95C0026FAEE /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D1286FB95C0026FAEE /* Metrics.swift */; };
 		F52C30D5286FBE2A0026FAEE /* SummaryStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52C30D4286FBE2A0026FAEE /* SummaryStats.swift */; };
 		F52EC445286FA42800420410 /* gilroyextrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F52EC444286FA42800420410 /* gilroyextrabold.otf */; };
+		F5FACE0112345678ABCDEF01 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F5FACE0012345678ABCDEF01 /* PrivacyInfo.xcprivacy */; };
 		F53341222870E8B700E7E5C1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341212870E8B700E7E5C1 /* ContentView.swift */; };
 		F53341242870E9CA00E7E5C1 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53341232870E9CA00E7E5C1 /* Tab.swift */; };
 		F53ADA4F296DFF330079F91D /* CHCSVParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F53ADA4D296DFF330079F91D /* CHCSVParser.m */; };
@@ -97,6 +98,7 @@
 		F558FFD628EA5B8500FA00B0 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Location+CoreDataProperties.swift"; path = "Tripi/Model/Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F55FA73928C8E513000C0740 /* TripBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripBrowserView.swift; sourceTree = "<group>"; };
 		F56024EB286FA4A40002403D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F5FACE0012345678ABCDEF01 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		F56024EC286FA6C90002403D /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		F56024EE286FAB450002403D /* PreferenceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceKeys.swift; sourceTree = "<group>"; };
 		F56024F2286FABD80002403D /* AnimatableFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableFontModifier.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				F56024EB286FA4A40002403D /* Info.plist */,
+				F5FACE0012345678ABCDEF01 /* PrivacyInfo.xcprivacy */,
 				F56426CB2856B9B4005FD118 /* TripiApp.swift */,
 				F52C30CE286FB9010026FAEE /* Navigation */,
 				F52C30CF286FB9090026FAEE /* Views */,
@@ -440,6 +443,7 @@
 			files = (
 				F56426D32856B9B6005FD118 /* Preview Assets.xcassets in Resources */,
 				F56426D02856B9B6005FD118 /* Assets.xcassets in Resources */,
+				F5FACE0112345678ABCDEF01 /* PrivacyInfo.xcprivacy in Resources */,
 				F52EC445286FA42800420410 /* gilroyextrabold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -685,6 +689,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Tripi uses motion data from your device to automatically detect and log your trips";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -732,6 +737,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Tripi uses location data from your device to log the route of your trip and provide metrics such as speed and distance";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Tripi uses motion data from your device to automatically detect and log your trips";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
