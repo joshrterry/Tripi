@@ -31,6 +31,9 @@ class RouteManager: NSObject, ObservableObject {
     // trip currently being recorded, created in startRoute
     var newTrip: Trip?
     
+    // most recently finished trip, used to present its summary once tracking stops
+    @Published var completedTrip: Trip?
+    
     @Published var secondsElapsed = 0.0
     
     var timerStartTime: Date = Date()
@@ -127,6 +130,10 @@ class RouteManager: NSObject, ObservableObject {
     public func stopRoute() {
         if let newTrip {
             PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
+            // only show a summary for trips that recorded a route
+            if newTrip.hasRoute {
+                completedTrip = newTrip
+            }
         }
         newTrip = nil
         locationManager.allowsBackgroundLocationUpdates = false

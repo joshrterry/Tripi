@@ -147,6 +147,23 @@ struct TripDetailView: View {
 
 }
 
+extension TripDetailView {
+    // convenience initializer that reads every field from the trip itself
+    init(trip: Trip) {
+        self.init(trip: trip,
+                  distance: trip.distance,
+                  time: trip.time ?? "00:00",
+                  avgSpeed: trip.averageSpeed,
+                  startTime: trip.startTimestamp ?? Date(),
+                  endTime: trip.endTimestamp ?? Date(),
+                  notes: trip.notes ?? "",
+                  region: trip.mapRegion,
+                  routeCoords: trip.routeCoordinates,
+                  tags: trip.tags ?? NSOrderedSet(),
+                  amountReimbursable: trip.amountReimbursable)
+    }
+}
+
 struct Header: View {
     @State var trip: Trip
     @State var startTime: Date
@@ -166,6 +183,7 @@ struct Header: View {
     
     @State var isPinned = false
     @State private var showingDeleteConfirmation = false
+    @State private var pinFeedback = 0 // bumped only by the pin button so loading a pinned trip doesn't buzz
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -178,6 +196,7 @@ struct Header: View {
             Menu {
                 Button {
                     isPinned.toggle()
+                    pinFeedback += 1
                     trip.isPinned = isPinned
                     PersistenceController.shared.save()
                 } label: {
@@ -214,6 +233,7 @@ struct Header: View {
         }
         .padding(.horizontal, 30)
         .padding(.top, 40)
+        .sensoryFeedback(.success, trigger: pinFeedback)
         .onAppear {
             isPinned = trip.isPinned
         }
@@ -281,6 +301,18 @@ struct Notes: View {
                 .onChange(of: notes) { _, newValue in
                     notes = String(newValue.prefix(120))
                 }
+            // character count, shown while typing so the 120 limit isn't a surprise
+            if showingDone {
+                Text("\(notes.count)/120")
+                    .font(.custom("Gilroy", size: 13))
+                    .foregroundColor(notes.count >= 120 ? .red : .secondary)
+                    .contentTransition(.numericText())
+                    .animation(.snappy, value: notes.count)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 45)
+                    .padding(.bottom, 22)
+                    .transition(.opacity)
+            }
             if showingDone {
                 // done button for textfield
                 Button {
@@ -348,18 +380,23 @@ struct Reimbursement: View {
             Menu {
                 // display all available tags
                 ForEach(globalTags, id: \.self) { tag in
-                    // add tag button
+                    // toggle tag on or off for this trip
                     Button {
                         withAnimation {
                             let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
-                            mutableTags.add(tag)
+                            if tags.contains(tag) {
+                                mutableTags.remove(tag)
+                            } else {
+                                mutableTags.add(tag)
+                            }
                             tags = mutableTags.copy() as! NSOrderedSet
                             uploadChanges()
                         }
 
                     } label: {
-                        HStack {
-                            Image(systemName: "plus")
+                        if tags.contains(tag) {
+                            Label(tag.wrappedName, systemImage: "checkmark")
+                        } else {
                             Text(tag.wrappedName)
                         }
                     }
@@ -455,6 +492,7 @@ struct Reimbursement: View {
         }
         .padding(.leading, 30)
         .padding(.vertical, 15)
+        .sensoryFeedback(.selection, trigger: tags)
         // if tags change, update reimbursement amount and save changes
         .onChange(of: tags) { _, _ in
             if tags.count >= 1 {

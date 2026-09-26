@@ -18,8 +18,8 @@ struct Metric: View {
             Text(data)
                 .font(.custom("Gilroy", size: 40))
                 .foregroundColor(color)
-                .transition(AnyTransition.opacity.combined(with: .scale))
-                .id("tripi" + String(data))
+                .contentTransition(.numericText()) // digits roll when the value changes
+                .animation(.snappy, value: data)
             Text(descriptor.uppercased())
                 .font(.custom("Gilroy", size: 13))
                 .opacity(0.4)
