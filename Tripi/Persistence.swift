@@ -45,6 +45,14 @@ struct PersistenceController {
         save()
     }
     
+    // seed starter tags on first launch; skipped if any tags exist so reopening onboarding doesn't duplicate them
+    func addDefaultTagsIfNeeded() {
+        let existingTags = (try? container.viewContext.count(for: UserTag.fetchRequest())) ?? 0
+        guard existingTags == 0 else { return }
+        addTag(name: "Business", colour: [163.0, 196.0, 243.0], reimbursementAmount: 0.50)
+        addTag(name: "Personal", colour: [241.0, 192.0, 232.0], reimbursementAmount: 0.0)
+    }
+    
     // method for adding a new trip to database. returns a trip that can be edited later
     mutating func addTrip(startTime: Date) -> Trip {
         print("Trip Created")
@@ -90,12 +98,15 @@ struct PersistenceController {
     
         // average out values and store in region array
         trip.region = [0.0, 0.0, 0.0, 0.0]
-        trip.region[0] = (minLat + maxLat) / 2
-        trip.region[1] = (minLon + maxLon) / 2
-        
-        // determine an appropriate zoom level by finding the difference between max and min
-        trip.region[2] = abs(maxLat - minLat) * 1.4
-        trip.region[3] = abs(maxLon - minLon) * 1.4
+        // with no waypoints the min/max values are still at their sentinels, which would produce an invalid map region
+        if !trip.locationsArray.isEmpty {
+            trip.region[0] = (minLat + maxLat) / 2
+            trip.region[1] = (minLon + maxLon) / 2
+            
+            // determine an appropriate zoom level by finding the difference between max and min, clamped to MapKit's valid range
+            trip.region[2] = min(abs(maxLat - minLat) * 1.4, 180)
+            trip.region[3] = min(abs(maxLon - minLon) * 1.4, 360)
+        }
     
         // if more than 5 waypoints in array, we have enough to graph the speed of the trip
         if trip.locationsArray.count >= 5 {
@@ -153,7 +164,9 @@ struct PersistenceController {
             do {
                 try context.save()
             } catch {
-                fatalError("Unable to save data.")
+                // discard the failed changes rather than crashing so later saves can still succeed
+                print("Unable to save data: \(error)")
+                context.rollback()
             }
         }
     }

@@ -43,7 +43,7 @@ class FileManager {
             let idToData = [
                 "Start time": trip.startTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
                 "End time": trip.endTimestamp?.formatted(date: .abbreviated, time: .shortened) ?? Date(),
-                "Duration": trip.time ?? "00:00",
+                "Duration": trip.durationText,
                 "Distance": String(unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi"),
                 "Average Speed": String(unitFormatter.formatSpeed(speed: trip.averageSpeed, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " kph" : " mph"),
                 "Amount Reimbursable": unitFormatter.formatReimbursableLong(amount: trip.amountReimbursable),
@@ -67,8 +67,8 @@ class FileManager {
                 } else {
                     // if tag filter applied, only allow accepted tags
                     var tagNames: [String] = []
-                    for tag in trip.tags! {
-                        tagNames.append((tag as AnyObject).name)
+                    for tag in trip.tagsArray {
+                        if let name = tag.name { tagNames.append(name) }
                     }
                     for tagName in tagNames {
                         if tags.contains(tagName) {

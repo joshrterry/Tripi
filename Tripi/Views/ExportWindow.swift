@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 
 struct Field: Identifiable {
@@ -58,13 +59,13 @@ struct ExportWindow: View {
                     }
                 }
                 // if selected tags changes, determine new amount of available trips
-                .onChange(of: selectedTags) { newValue in
+                .onChange(of: selectedTags) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -79,13 +80,13 @@ struct ExportWindow: View {
                     }
                 }
                 // if selected start date changes, determine new amount of available trips
-                .onChange(of: startDate) { newValue in
+                .onChange(of: startDate) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -101,13 +102,13 @@ struct ExportWindow: View {
 
                 }
                 // if selected end date changes, determine new amount of available trips
-                .onChange(of: endDate) { newValue in
+                .onChange(of: endDate) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -128,8 +129,8 @@ struct ExportWindow: View {
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {

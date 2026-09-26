@@ -12,13 +12,16 @@ struct TabBar: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
-    @AppStorage("liveMetrics") var liveMetrics = false
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
     @AppStorage("hasHomeButton") var hasHomeButton = false
 
-    @State var showLiveMetrics = false
-    @State var showTabBar = true
     let unitFormatter = UnitFormatter()
+    @State private var showingEndTripConfirmation = false
+    
+    // live metrics are shown whenever routeview is the selected tab
+    private var showLiveMetrics: Bool {
+        selectedTab == .route
+    }
     
     var body: some View {
         VStack {
@@ -32,28 +35,20 @@ struct TabBar: View {
                         .foregroundColor(colorScheme == .dark ? Color("TripiDark") : Color(.systemGray6))
                         .cornerRadius(30, corners: [.topLeft, .topRight])
                         .shadow(color: .primary.opacity(0.05), radius: 7, x: -5, y: -5)
-                    HStack() {
+                    // three equal-width columns so each metric keeps its position as values grow
+                    HStack(spacing: 12) {
                         // distance travelled
-                        Metric(data: "\(unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
-                            .frame(width: 100)
+                        Metric(data: String(format: "%.1f", unitFormatter.formatDistance(distance: routeManager.distanceTotal, selectedUnits: selectedUnits)), descriptor: selectedUnits == "metric" ? "KM Travelled" : "MI Travelled", color: .primary)
                         // trip duration
                         Metric(data: routeManager.time, descriptor: "Time Elapsed", color: .primary)
-                            .frame(width: 120)
                         // current speed
                         Metric(data: "\(Int(unitFormatter.formatSpeed(speed: routeManager.currentSpeed, selectedUnits: selectedUnits)))", descriptor: selectedUnits == "metric" ? "Current KPH" : "Current MPH", color: .primary)
-                            .frame(width: 100)
                     }
+                    .padding(.horizontal, 28)
                     .padding(.top, 22)
                 }
-                .onAppear {
-                    if selectedTab == .route {
-                        showLiveMetrics = liveMetrics
-                    }
-                }
-                .onDisappear {
-                    liveMetrics = showLiveMetrics
-                }
                 .offset(y: showLiveMetrics ? 0 : 120) // if routeview is not selected, offset elements beneath the screen safe area
+                .animation(.spring(response: 0.4, dampingFraction: 0.85), value: showLiveMetrics)
                 
                 
                 ZStack(alignment: .top) {
@@ -68,12 +63,7 @@ struct TabBar: View {
                         Group {
                             // HomeView
                             Button {
-//                                withAnimation {
-                                    selectedTab = .home
-//                                }
-//                                withAnimation {
-                                    showLiveMetrics = false
-//                                }
+                                selectedTab = .home
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
@@ -89,43 +79,31 @@ struct TabBar: View {
                                 // RouteView
                                 Button {
                                     if selectedTab == .route {
-                                        routeManager.toggleTrip()
+                                        if routeManager.trackingState == .inactive {
+                                            routeManager.toggleTrip()
+                                        } else {
+                                            // confirm before ending so a stray tap while driving doesn't cut a trip short
+                                            showingEndTripConfirmation = true
+                                        }
                                     } else {
-//                                        withAnimation {
-                                            selectedTab = .route
-//                                        }
-                                    }
-                                    withAnimation {
-                                        showLiveMetrics = true
+                                        selectedTab = .route
                                     }
                                 } label: {
                                     // icon depends on whether trip is currently in progress
-                                    if selectedTab == .route {
-                                        if routeManager.trackingState == .inactive {
-                                            Image("go_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                        else {
-                                            Image("stop_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                    } else {
-                                        Image("tripimono")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 45, height: 45)
-                                            .foregroundColor(.black)
-                                            .font(.system(size: 50))
+                                    Image(centerIconName)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 45, height: 45)
+                                        .foregroundColor(.black)
+                                        .font(.system(size: 50))
+                                        .id(centerIconName)
+                                        .transition(.scale(scale: 0.6).combined(with: .opacity))
+                                }
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: centerIconName)
+                                .confirmationDialog("End this trip?", isPresented: $showingEndTripConfirmation, titleVisibility: .visible) {
+                                    Button("End Trip", role: .destructive) {
+                                        routeManager.toggleTrip()
                                     }
-                                    
                                 }
                             }
                             .offset(y: -10)
@@ -133,9 +111,6 @@ struct TabBar: View {
                             // TripBrowser
                             Button {
                                 selectedTab = .trips
-//                                withAnimation {
-                                    showLiveMetrics = false
-//                                }
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)
@@ -147,23 +122,23 @@ struct TabBar: View {
                     
                 }
             }
-            .onAppear {
-                withAnimation {
-                    showTabBar = showingTabBar
+            // haptic feedback whenever a trip starts, stops, pauses, or resumes
+            .sensoryFeedback(trigger: routeManager.trackingState) { oldState, newState in
+                switch (oldState, newState) {
+                case (.inactive, _): return .start
+                case (_, .inactive): return .stop
+                default: return .impact(weight: .medium)
                 }
             }
-            .onChange(of: showingTabBar, perform: { newValue in
-                withAnimation {
-                    showTabBar = newValue
-                }
-            })
-            .onDisappear {
-                withAnimation {
-                    showingTabBar = showTabBar
-                }
-            }
-            .offset(y: showTabBar ? 0 : 120)
+            .offset(y: showingTabBar ? 0 : 120)
+            .animation(.spring(response: 0.4, dampingFraction: 0.85), value: showingTabBar)
         }
         .edgesIgnoringSafeArea(.all)
+    }
+    
+    // image for the center button: tripi logo off the route tab, otherwise go/stop depending on trip state
+    private var centerIconName: String {
+        guard selectedTab == .route else { return "tripimono" }
+        return routeManager.trackingState == .inactive ? "go_icon" : "stop_icon"
     }
 }

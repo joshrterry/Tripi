@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import MapKit
 
 struct TripBrowserView: View {
@@ -22,10 +23,25 @@ struct TripBrowserView: View {
     @State var showingDateFilter = false
     @State var startDate = Date.now
     @State var endDate = Date.now
-    @State var hasTrips = 0
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
     @State var showingPinned = false
+    @State private var tripPendingDeletion: Trip?
+    
+    // completed trips matching the All/Pinned filter, grouped by the month they started in (newest first)
+    private var tripsByMonth: [(month: Date, trips: [Trip])] {
+        let visible = trips.filter { $0.hasRoute && (!showingPinned || $0.isPinned) }
+        let grouped = Dictionary(grouping: visible) { trip in
+            Calendar.current.dateInterval(of: .month, for: trip.startTimestamp ?? Date())?.start ?? Date()
+        }
+        return grouped.keys.sorted(by: >).map { (month: $0, trips: grouped[$0] ?? []) }
+    }
+    
+    func formatMonth(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        return dateFormatter.string(from: date)
+    }
     
     var body: some View {
         
@@ -65,69 +81,60 @@ struct TripBrowserView: View {
                     }
                     .padding(.leading, 30)
                                         
-                    if hasTrips == 1 {
-                        // only show pinned trips if showingPinned is true
-                        if showingPinned {
-                            ForEach(trips, id: \.self) { trip in
-                                if trip.isPinned {
-                                    // handle errors with index out of range
-                                    if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
-                                        Preview(previewStyle: .expanded,
-                                                trip: trip,
-                                                distance: trip.distance,
-                                                date: formatTimestamp(date: trip.startTimestamp ?? Date()),
-                                                color: .green, time: trip.time ?? "",
-                                                avgSpeed: trip.averageSpeed,
-                                                starTime: trip.startTimestamp ?? Date(),
-                                                endTime: trip.endTimestamp ?? Date(),
-                                                tags: trip.tags!,
-                                                amountReimbursable: trip.amountReimbursable,
-                                                region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
-                                                routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
-                                                notes: trip.notes ?? "")
+                    // trips grouped under month headings
+                    ForEach(tripsByMonth, id: \.month) { group in
+                        Text(formatMonth(date: group.month))
+                            .font(.custom("Gilroy", size: 18))
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 30)
+                            .padding(.top, 15)
+                        ForEach(group.trips, id: \.self) { trip in
+                            Preview(previewStyle: .expanded,
+                                    trip: trip,
+                                    distance: trip.distance,
+                                    date: formatTimestamp(date: trip.startTimestamp ?? Date()),
+                                    color: .green, time: trip.durationText,
+                                    avgSpeed: trip.averageSpeed,
+                                    starTime: trip.startTimestamp ?? Date(),
+                                    endTime: trip.endTimestamp ?? Date(),
+                                    tags: trip.tags ?? NSOrderedSet(),
+                                    amountReimbursable: trip.amountReimbursable,
+                                    region: trip.mapRegion,
+                                    routeCoords: trip.routeCoordinates,
+                                    notes: trip.notes ?? "")
+                            // long-press shortcuts for pinning and removing without opening the trip
+                            .contextMenu {
+                                Button {
+                                    withAnimation {
+                                        trip.isPinned.toggle()
+                                        PersistenceController.shared.save()
                                     }
+                                } label: {
+                                    Label(trip.isPinned ? "Unpin Trip" : "Pin Trip", systemImage: trip.isPinned ? "pin.slash" : "pin")
                                 }
-                            }
-                        } else {
-                            // show all trips if showingPinned is false
-                            ForEach(trips, id: \.self) { trip in
-                                // handle errors with index out of range
-                                if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
-                                    Preview(previewStyle: .expanded,
-                                            trip: trip,
-                                            distance: trip.distance,
-                                            date: formatTimestamp(date: trip.startTimestamp ?? Date()),
-                                            color: .green, time: trip.time ?? "",
-                                            avgSpeed: trip.averageSpeed,
-                                            starTime: trip.startTimestamp ?? Date(),
-                                            endTime: trip.endTimestamp ?? Date(),
-                                            tags: trip.tags!,
-                                            amountReimbursable: trip.amountReimbursable,
-                                            region: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: trip.region[0], longitude: trip.region[1]), span: MKCoordinateSpan(latitudeDelta: trip.region[2], longitudeDelta: trip.region[3])),
-                                            routeCoords: trip.routeWaypoints.map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) },
-                                            notes: trip.notes ?? "")
+                                Button(role: .destructive) {
+                                    tripPendingDeletion = trip
+                                } label: {
+                                    Label("Remove Trip", systemImage: "trash")
                                 }
                             }
                         }
                     }
-                    else if hasTrips == 2 {
+                    if tripsByMonth.isEmpty {
                         VStack {
                             Spacer()
                                 .frame(height: 120)
                             HStack(alignment: .center) {
                                 Spacer()
-                                Text("No trips to display")
+                                Text(showingPinned && trips.contains(where: { $0.hasRoute }) ? "No pinned trips" : "No trips to display")
                                     .opacity(0.4)
                                     .font(.custom("Gilroy", size: 18))
                                     .foregroundColor(.primary)
                                 Spacer()
                             }
                         }
-                    }
-                    
-                    else {
-                        ProgressView()
-                            .progressViewStyle(.circular)
+                        .transition(.opacity)
                     }
 
                 }
@@ -143,13 +150,15 @@ struct TripBrowserView: View {
             }
         }.onAppear {
             showingTabBar = true
-            DispatchQueue.global(qos: .userInitiated).async {
-                if trips.count > 0 {
-                    hasTrips = 1
-                } else if trips.count == 0 {
-                    hasTrips = 2
+        }
+        .confirmationDialog("Remove this trip?", isPresented: Binding(get: { tripPendingDeletion != nil }, set: { if !$0 { tripPendingDeletion = nil } }), titleVisibility: .visible, presenting: tripPendingDeletion) { trip in
+            Button("Remove Trip", role: .destructive) {
+                withAnimation {
+                    PersistenceController.shared.delete(trip: trip)
                 }
             }
+        } message: { _ in
+            Text("This can't be undone.")
         }
         
     }

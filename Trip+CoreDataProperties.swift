@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 extension Trip {
     
@@ -46,6 +47,30 @@ extension Trip {
         return locations.sorted {
             $0.wrappedTimestamp < $1.wrappedTimestamp
         }
+    }
+
+    // region stays all zeros until a trip with waypoints is finished, so this excludes in-progress and empty trips
+    public var hasRoute: Bool {
+        region.reduce(0, +) != 0
+    }
+
+    // duration derived from secondsElapsed so older trips saved with minutes-only strings display consistently
+    public var durationText: String {
+        secondsElapsed > 0 ? UnitFormatter().formatDuration(seconds: secondsElapsed) : (time ?? "00:00")
+    }
+
+    public var tagsArray: [UserTag] {
+        tags?.array as? [UserTag] ?? []
+    }
+
+    // map region stored as [centerLat, centerLon, latDelta, lonDelta]; falls back to an empty region if malformed
+    public var mapRegion: MKCoordinateRegion {
+        guard region.count == 4 else { return MKCoordinateRegion() }
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: region[0], longitude: region[1]), span: MKCoordinateSpan(latitudeDelta: region[2], longitudeDelta: region[3]))
+    }
+
+    public var routeCoordinates: [CLLocationCoordinate2D] {
+        routeWaypoints.compactMap { $0.count >= 2 ? CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) : nil }
     }
 }
 

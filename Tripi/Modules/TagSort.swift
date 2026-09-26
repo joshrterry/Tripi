@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct TagSort: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \UserTag.dateCreated, ascending: true)], animation: .default)
@@ -15,7 +16,7 @@ struct TagSort: View {
     @State private var tagAmount = 0.0
     private let numberFormatter: NumberFormatter
     @State private var isEditing = false
-    @State private var currentTag = UserTag()
+    @State private var currentTag: UserTag?
     @State private var doneText = "Add Tag"
     @State private var showError = false
     @AppStorage("selectedUnits") var selectedUnits = "metric"
@@ -35,9 +36,9 @@ struct TagSort: View {
             ForEach(tags, id: \.self) { tag in
                 HStack(spacing: 0) {
                     Image(systemName: "circle.fill")
-                        .foregroundColor(Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                        .foregroundColor(tag.displayColour)
                         .padding(.trailing, 10)
-                    Text(tag.name!)
+                    Text(tag.wrappedName)
                     Spacer()
                     Text("\(selectedUnits == "metric" ? tag.reimbursementAmount as NSNumber : tag.reimbursementAmount*1/0.62137119223733 as NSNumber, formatter: numberFormatter)")
                     Text("/\(selectedUnits == "metric" ? "km" : "mi")")
@@ -53,7 +54,7 @@ struct TagSort: View {
                     // swipe to edit
                     Button() {
                         tagName = tag.name ?? ""
-                        tagAmount = tag.reimbursementAmount
+                        tagAmount = selectedUnits == "metric" ? tag.reimbursementAmount : tag.reimbursementAmount*1/0.62137119223733
                         currentTag = tag
                         doneText = "Save Edits"
                         isEditing.toggle()
@@ -92,16 +93,16 @@ struct TagSort: View {
                     .alert(isPresented: $showError) {
                         Alert(title: Text("Unable to save tag"), message: Text("Please make sure the name field is not empty and has a unique name"))
                     }
-                    .onChange(of: showingAlert) { newValue in // monitor value of showingAlert
+                    .onChange(of: showingAlert) { _, newValue in // monitor value of showingAlert
                         if !showingAlert {
                             if tagName.isEmpty || (tags.contains(where: { $0.name?.trimmingCharacters(in: .whitespacesAndNewlines) == tagName.trimmingCharacters(in: .whitespacesAndNewlines)}) && !isEditing) {
                                 // present error message if tag added with no name
                                 showError.toggle()
                             } else {
-                                if isEditing {
+                                if isEditing, let currentTag {
                                     // update current tag attributes, then save changes by overwriting existing values
                                     currentTag.name = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
-                                    currentTag.reimbursementAmount = tagAmount
+                                    currentTag.reimbursementAmount = selectedUnits == "metric" ? tagAmount : tagAmount * 0.62137119223733
                                     PersistenceController.shared.save()
                                 }
                                 else {
@@ -114,6 +115,7 @@ struct TagSort: View {
                             tagName = ""
                             tagAmount = 0.0
                             isEditing = false
+                            currentTag = nil
                         }
                     }
                 }

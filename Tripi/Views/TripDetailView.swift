@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import MapKit
 import WrappingHStack
 
@@ -112,13 +113,6 @@ struct TripDetailView: View {
         }
     }
     
-    // save changes to database
-    func uploadChanges() {
-        trip.tags = tags
-        trip.notes = notes
-        PersistenceController.shared.save()
-    }
-    
     var scrollDetection: some View {
         GeometryReader { proxy in
             Color.clear.preference(key: ScrollPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
@@ -145,6 +139,23 @@ struct TripDetailView: View {
 
 }
 
+extension TripDetailView {
+    // convenience initializer that reads every field from the trip itself
+    init(trip: Trip) {
+        self.init(trip: trip,
+                  distance: trip.distance,
+                  time: trip.durationText,
+                  avgSpeed: trip.averageSpeed,
+                  startTime: trip.startTimestamp ?? Date(),
+                  endTime: trip.endTimestamp ?? Date(),
+                  notes: trip.notes ?? "",
+                  region: trip.mapRegion,
+                  routeCoords: trip.routeCoordinates,
+                  tags: trip.tags ?? NSOrderedSet(),
+                  amountReimbursable: trip.amountReimbursable)
+    }
+}
+
 struct Header: View {
     @State var trip: Trip
     @State var startTime: Date
@@ -163,6 +174,9 @@ struct Header: View {
     }
     
     @State var isPinned = false
+    @State private var showingDeleteConfirmation = false
+    @State private var pinFeedback = 0 // bumped only by the pin button so loading a pinned trip doesn't buzz
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         HStack {
@@ -174,6 +188,7 @@ struct Header: View {
             Menu {
                 Button {
                     isPinned.toggle()
+                    pinFeedback += 1
                     trip.isPinned = isPinned
                     PersistenceController.shared.save()
                 } label: {
@@ -185,8 +200,8 @@ struct Header: View {
 //                } label: {
 //                    Label("Duplicate Trip", systemImage: "doc.on.doc")
 //                }
-                Button {
-                    PersistenceController.shared.delete(trip: trip)
+                Button(role: .destructive) {
+                    showingDeleteConfirmation = true
                 } label: {
                     Label("Remove Trip", systemImage: "trash")
                 }
@@ -194,9 +209,23 @@ struct Header: View {
                 Image(systemName: "ellipsis.circle.fill")
                     .font(.system(size: 32))
             }
+            .confirmationDialog("Remove this trip?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+                Button("Remove Trip", role: .destructive) {
+                    dismiss()
+                    // delete after the pop animation so the list animates the trip out rather than the detail view going blank
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        withAnimation {
+                            PersistenceController.shared.delete(trip: trip)
+                        }
+                    }
+                }
+            } message: {
+                Text("This can't be undone.")
+            }
         }
         .padding(.horizontal, 30)
         .padding(.top, 40)
+        .sensoryFeedback(.success, trigger: pinFeedback)
         .onAppear {
             isPinned = trip.isPinned
         }
@@ -209,6 +238,7 @@ struct Header: View {
 }
 
 struct Metrics: View {
+    let unitFormatter = UnitFormatter()
     @State var selectedUnits: String
     @State var distance: Double
     @State var avgSpeed: Double
@@ -216,10 +246,11 @@ struct Metrics: View {
     
     var body: some View {
         // display recorded metrics
-        HStack(spacing: 32) {
-            Metric(data: String(format:"%.1f", distance), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
-            Metric(data: time, descriptor: "MINUTES")
-            Metric(data: String(format:"%.0f", avgSpeed), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
+        // equal-width columns so long values scale down instead of pushing others off screen
+        HStack(spacing: 16) {
+            Metric(data: String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
+            Metric(data: time, descriptor: "DURATION")
+            Metric(data: String(format:"%.0f", unitFormatter.formatSpeed(speed: avgSpeed, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
         }
         .padding(30)
     }
@@ -232,6 +263,7 @@ struct Notes: View {
     @State var trip: Trip
 
     func uploadChanges() {
+        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
         trip.notes = notes
         PersistenceController.shared.save()
     }
@@ -259,9 +291,21 @@ struct Notes: View {
                 .padding(.top, 20)
                 .frame(height: 150, alignment: .topLeading)
                 // only allow a max of 120 characters
-                .onChange(of: notes) { newValue in
+                .onChange(of: notes) { _, newValue in
                     notes = String(newValue.prefix(120))
                 }
+            // character count, shown while typing so the 120 limit isn't a surprise
+            if showingDone {
+                Text("\(notes.count)/120")
+                    .font(.custom("Gilroy", size: 13))
+                    .foregroundColor(notes.count >= 120 ? .red : .secondary)
+                    .contentTransition(.numericText())
+                    .animation(.snappy, value: notes.count)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 45)
+                    .padding(.bottom, 22)
+                    .transition(.opacity)
+            }
             if showingDone {
                 // done button for textfield
                 Button {
@@ -287,10 +331,14 @@ struct Notes: View {
         .onTapGesture {
             isTyping = true
         }
-        .onChange(of: isTyping) { value in
+        .onChange(of: isTyping) { _, value in
             withAnimation {
                 showingDone = value
             }
+        }
+        .onAppear {
+            // the initial value is a snapshot from the list, which can be stale; always start from what's saved
+            notes = trip.notes ?? ""
         }
         .onDisappear {
             uploadChanges()
@@ -309,6 +357,7 @@ struct Reimbursement: View {
     @State private var tagID = NSOrderedSet()
     
     func uploadChanges() {
+        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
         trip.tags = tags
         PersistenceController.shared.save()
     }
@@ -328,19 +377,24 @@ struct Reimbursement: View {
             Menu {
                 // display all available tags
                 ForEach(globalTags, id: \.self) { tag in
-                    // add tag button
+                    // toggle tag on or off for this trip
                     Button {
                         withAnimation {
                             let mutableTags = tags.mutableCopy() as! NSMutableOrderedSet
-                            mutableTags.add(tag)
+                            if tags.contains(tag) {
+                                mutableTags.remove(tag)
+                            } else {
+                                mutableTags.add(tag)
+                            }
                             tags = mutableTags.copy() as! NSOrderedSet
                             uploadChanges()
                         }
 
                     } label: {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text(tag.name!)
+                        if tags.contains(tag) {
+                            Label(tag.wrappedName, systemImage: "checkmark")
+                        } else {
+                            Text(tag.wrappedName)
                         }
                     }
                     
@@ -403,7 +457,7 @@ struct Reimbursement: View {
                         }
                     }
                     } label: {
-                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                        Tag(name: tag.wrappedName, colour: tag.displayColour)
                             .id(tagID)
                             .foregroundColor(.primary)
                             .zIndex(1)
@@ -422,7 +476,7 @@ struct Reimbursement: View {
 
                             }
                     }
-                    .onChange(of: tags) { newValue in
+                    .onChange(of: tags) { _, newValue in
                         tagID = newValue
                     }
                 }
@@ -435,23 +489,27 @@ struct Reimbursement: View {
         }
         .padding(.leading, 30)
         .padding(.vertical, 15)
+        .sensoryFeedback(.selection, trigger: tags)
         // if tags change, update reimbursement amount and save changes
-        .onChange(of: tags) { _ in
+        .onChange(of: tags) { _, _ in
             if tags.count >= 1 {
-                let tripsArray = trip.tags?.array as? [UserTag]
-                trip.amountReimbursable = (tripsArray?[0].reimbursementAmount ?? 0) * distance
+                trip.amountReimbursable = (trip.tagsArray.first?.reimbursementAmount ?? 0) * distance
                 PersistenceController.shared.save()
                 print(trip.amountReimbursable)
             } else {
                 trip.amountReimbursable = 0.0
+                PersistenceController.shared.save()
                 isEditing = false
             }
             withAnimation {
                 amountReimbursable = trip.amountReimbursable
             }
         }
-        .onDisappear {
-            uploadChanges()
+        .onAppear {
+            // the initial values are a snapshot from the list, which can be stale; always start from what's saved.
+            // tag edits save immediately, so there's no write-back on disappear that could overwrite them
+            tags = trip.tags ?? NSOrderedSet()
+            amountReimbursable = trip.amountReimbursable
         }
 
 

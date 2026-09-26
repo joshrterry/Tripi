@@ -38,11 +38,14 @@ struct ContentView: View {
                 OnboardingView()
                     .background()
                     .onAppear {
-                        PersistenceController.shared.addTag(name: "Business", colour: [163.0, 196.0, 243.0], reimbursementAmount: 0.50)
-                        PersistenceController.shared.addTag(name: "Personal", colour: [241.0, 192.0, 232.0], reimbursementAmount: 0.0)
+                        PersistenceController.shared.addDefaultTagsIfNeeded()
                     }
             }
 
+        }
+        .onAppear {
+            // showingTabBar is persisted, so reset it in case the app was closed while a detail view had it hidden
+            showingTabBar = true
         }
         // Inject routeManager instance into the various subviews
             .environmentObject(routeManager)

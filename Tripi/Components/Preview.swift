@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import MapKit
 import WrappingHStack
 
@@ -16,8 +17,8 @@ struct Preview: View {
     @EnvironmentObject var routeManager: RouteManager
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     
-    var trip: Trip
-    var distance = 0.0
+    @ObservedObject var trip: Trip // observed so the card (and the detail view it opens) reflect edits like tag changes
+    var distance = 0.0 // always in km; converted for display
     var date = ""
     var color = Color.primary
     
@@ -67,7 +68,7 @@ struct Preview: View {
     
     var body: some View {
         // link to detail view when preview is pressed
-        NavigationLink(destination: TripDetailView(trip: trip, distance: distance, time: time, avgSpeed: avgSpeed, startTime: starTime, endTime: endTime, notes: notes, region: region, routeCoords: routeCoords, tags: tags, amountReimbursable: amountReimbursable)) {
+        NavigationLink(destination: TripDetailView(trip: trip)) { // built from the trip itself so it opens with current saved values
             
             ZStack(alignment: .center) {
                 Rectangle()
@@ -98,12 +99,12 @@ struct Preview: View {
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(.primary)
 
-                            Text("\(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                            Text("\(String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi")) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(color)
                             // dipslay tags in expanded view
-                            WrappingHStack(trip.tags!.array as! [UserTag], id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
-                                Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255), isSmall: true)
+                            WrappingHStack(trip.tagsArray, id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
+                                Tag(name: tag.wrappedName, colour: tag.displayColour, isSmall: true)
                                     .foregroundColor(.primary)
                                     .fixedSize()
                             }
@@ -146,9 +147,14 @@ struct Preview: View {
                         
                         // summarized metrics
                         VStack(alignment: .leading) {
-                            HStack(spacing: 40) {
-                                Text(String(format:"%.1f", distance) + (selectedUnits == "metric" ? " km" : " mi"))
+                            // spacer keeps the chevron pinned to the card edge regardless of distance length
+                            HStack(spacing: 4) {
+                                Text(String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)) + (selectedUnits == "metric" ? " km" : " mi"))
                                     .font(.custom("Gilroy", size: 22))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.6)
+                                Spacer(minLength: 0)
                                 Image(systemName: "chevron.right")
                                     .font(Font.system(size: 15, weight: .black))
                             }
@@ -160,8 +166,8 @@ struct Preview: View {
                                 .foregroundColor(.primary)
                             
                             // display only primary tag (if one exists) and reimbursement amount
-                            if (trip.tags!.array as! [UserTag]).count >= 1 {
-                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                            if let firstTag = trip.tagsArray.first {
+                                Text("\(firstTag.wrappedName.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(color)
                             }
@@ -175,7 +181,7 @@ struct Preview: View {
                 }
             }
             .frame(width: previewStyle == .expanded ? screenWidth*0.87 : 154, height: previewStyle == .expanded ? 158 : 256)
-            .onChange(of: tags) { newValue in
+            .onChange(of: tags) { _, newValue in
                 tagID = newValue
             }
             .onAppear {

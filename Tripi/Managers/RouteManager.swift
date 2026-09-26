@@ -23,12 +23,16 @@ class RouteManager: NSObject, ObservableObject {
     @Published var startTime = Date()
     @AppStorage("hasOnboarded") var hasOnboarded: Bool = false
     @Published var currentActivity: CMMotionActivity = CMMotionActivity()
+    @Published var locationAuthorization: CLAuthorizationStatus = CLLocationManager().authorizationStatus
 
     
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
     
-    // creates new instance of Trip
-    var newTrip: Trip = Trip()
+    // trip currently being recorded, created in startRoute
+    var newTrip: Trip?
+    
+    // most recently finished trip, used to present its summary once tracking stops
+    @Published var completedTrip: Trip?
     
     @Published var secondsElapsed = 0.0
     
@@ -63,15 +67,9 @@ class RouteManager: NSObject, ObservableObject {
         time = "00:00"
     }
     
-    // format seconds to form MM:SS
+    // format seconds to form MM:SS, or H:MM:SS past an hour
     public func secondstoMinutesSeconds(seconds: Double) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior  = .pad
-        
-        // return formatted duration as string
-        return formatter.string(from: TimeInterval(seconds))!
+        UnitFormatter().formatDuration(seconds: seconds)
     }
     
     // convert seconds to hours
@@ -107,6 +105,9 @@ class RouteManager: NSObject, ObservableObject {
     
     // start route tracking, timer, and motion updates
     public func startRoute() {
+        if locationManager == nil {
+            locationManagerConfig()
+        }
         self.locationManager.startUpdatingLocation()
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()
@@ -121,7 +122,14 @@ class RouteManager: NSObject, ObservableObject {
     
     // end trip tracking, timer, and motion updates
     public func stopRoute() {
-        PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
+        if let newTrip {
+            PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
+            // only show a summary for trips that recorded a route
+            if newTrip.hasRoute {
+                completedTrip = newTrip
+            }
+        }
+        newTrip = nil
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
         trackingState = .inactive
@@ -173,12 +181,19 @@ class RouteManager: NSObject, ObservableObject {
     
     // gets average speed over the course of the trip
     private func getAvgSpeed() {
+        guard secondsElapsed > 0 else { return }
         averageSpeed = (distanceTotal)/(secondsElapsed/3600)
     }
     
     // gets current speed to display at bottom of screen in tab bar
     private func getCurrentSpeed() {
-        currentSpeed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)/3600)
+        // avoid dividing by zero when two updates share a timestamp, which would produce inf/NaN and crash Int() conversions in the UI
+        let interval = lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)
+        guard interval > 0 else { return }
+        let speed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(interval/3600)
+        if speed.isFinite {
+            currentSpeed = speed
+        }
     }
     
     // MARK: Activity Manager
@@ -249,13 +264,18 @@ class RouteManager: NSObject, ObservableObject {
     }
     
     func stopMotionUpdates() {
-        self.activityManager.stopActivityUpdates()
+        self.activityManager?.stopActivityUpdates()
         activityTimer.invalidate()
     }
     
 }
 
 extension RouteManager: CLLocationManagerDelegate {
+    // keep published authorization in sync so views like onboarding reflect the user's actual choice
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        locationAuthorization = manager.authorizationStatus
+    }
+    
     // delegate method called upon a device location update, calculates relevant metrics, and publishes to subscriber
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if trackingState != .active { return } // exit function if user is not currently logging a trip
@@ -269,7 +289,9 @@ extension RouteManager: CLLocationManagerDelegate {
         }
         
         // publishes coordinate and trip data to subscriber via dataPublisher instance
-        dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, speed: currentSpeed, trip: newTrip))
+        if let newTrip {
+            dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, speed: currentSpeed, trip: newTrip))
+        }
         
         // set lastLocation variable to the current location for this iteration
         lastLocation = location
