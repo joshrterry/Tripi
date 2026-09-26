@@ -67,15 +67,9 @@ class RouteManager: NSObject, ObservableObject {
         time = "00:00"
     }
     
-    // format seconds to form MM:SS
+    // format seconds to form MM:SS, or H:MM:SS past an hour
     public func secondstoMinutesSeconds(seconds: Double) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.minute, .second]
-        formatter.unitsStyle = .positional
-        formatter.zeroFormattingBehavior  = .pad
-        
-        // return formatted duration as string
-        return formatter.string(from: TimeInterval(seconds)) ?? "00:00"
+        UnitFormatter().formatDuration(seconds: seconds)
     }
     
     // convert seconds to hours
