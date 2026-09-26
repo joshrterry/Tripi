@@ -23,7 +23,6 @@ struct TripBrowserView: View {
     @State var showingDateFilter = false
     @State var startDate = Date.now
     @State var endDate = Date.now
-    @State var hasTrips = 0
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
     
     @State var showingPinned = false
@@ -66,13 +65,13 @@ struct TripBrowserView: View {
                     }
                     .padding(.leading, 30)
                                         
-                    if hasTrips == 1 {
+                    if trips.contains(where: { $0.hasRoute }) {
                         // only show pinned trips if showingPinned is true
                         if showingPinned {
                             ForEach(trips, id: \.self) { trip in
                                 if trip.isPinned {
                                     // handle errors with index out of range
-                                    if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                                    if trip.hasRoute {
                                         Preview(previewStyle: .expanded,
                                                 trip: trip,
                                                 distance: trip.distance,
@@ -93,7 +92,7 @@ struct TripBrowserView: View {
                             // show all trips if showingPinned is false
                             ForEach(trips, id: \.self) { trip in
                                 // handle errors with index out of range
-                                if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                                if trip.hasRoute {
                                     Preview(previewStyle: .expanded,
                                             trip: trip,
                                             distance: trip.distance,
@@ -111,24 +110,20 @@ struct TripBrowserView: View {
                             }
                         }
                     }
-                    else if hasTrips == 2 {
+                    if !trips.contains(where: { $0.hasRoute && (!showingPinned || $0.isPinned) }) {
                         VStack {
                             Spacer()
                                 .frame(height: 120)
                             HStack(alignment: .center) {
                                 Spacer()
-                                Text("No trips to display")
+                                Text(showingPinned && trips.contains(where: { $0.hasRoute }) ? "No pinned trips" : "No trips to display")
                                     .opacity(0.4)
                                     .font(.custom("Gilroy", size: 18))
                                     .foregroundColor(.primary)
                                 Spacer()
                             }
                         }
-                    }
-                    
-                    else {
-                        ProgressView()
-                            .progressViewStyle(.circular)
+                        .transition(.opacity)
                     }
 
                 }
@@ -144,13 +139,6 @@ struct TripBrowserView: View {
             }
         }.onAppear {
             showingTabBar = true
-            DispatchQueue.global(qos: .userInitiated).async {
-                if trips.count > 0 {
-                    hasTrips = 1
-                } else if trips.count == 0 {
-                    hasTrips = 2
-                }
-            }
         }
         
     }

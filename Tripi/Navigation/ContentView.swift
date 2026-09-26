@@ -44,6 +44,10 @@ struct ContentView: View {
             }
 
         }
+        .onAppear {
+            // showingTabBar is persisted, so reset it in case the app was closed while a detail view had it hidden
+            showingTabBar = true
+        }
         // Inject routeManager instance into the various subviews
             .environmentObject(routeManager)
     }

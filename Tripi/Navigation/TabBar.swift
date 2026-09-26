@@ -12,13 +12,15 @@ struct TabBar: View {
     @AppStorage("selectedTab") var selectedTab: Tab = .home
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     @EnvironmentObject var routeManager: RouteManager
-    @AppStorage("liveMetrics") var liveMetrics = false
     @AppStorage("showingTabBar") var showingTabBar: Bool = true
     @AppStorage("hasHomeButton") var hasHomeButton = false
 
-    @State var showLiveMetrics = false
-    @State var showTabBar = true
     let unitFormatter = UnitFormatter()
+    
+    // live metrics are shown whenever routeview is the selected tab
+    private var showLiveMetrics: Bool {
+        selectedTab == .route
+    }
     
     var body: some View {
         VStack {
@@ -45,15 +47,8 @@ struct TabBar: View {
                     }
                     .padding(.top, 22)
                 }
-                .onAppear {
-                    if selectedTab == .route {
-                        showLiveMetrics = liveMetrics
-                    }
-                }
-                .onDisappear {
-                    liveMetrics = showLiveMetrics
-                }
                 .offset(y: showLiveMetrics ? 0 : 120) // if routeview is not selected, offset elements beneath the screen safe area
+                .animation(.spring(response: 0.4, dampingFraction: 0.85), value: showLiveMetrics)
                 
                 
                 ZStack(alignment: .top) {
@@ -68,12 +63,7 @@ struct TabBar: View {
                         Group {
                             // HomeView
                             Button {
-//                                withAnimation {
-                                    selectedTab = .home
-//                                }
-//                                withAnimation {
-                                    showLiveMetrics = false
-//                                }
+                                selectedTab = .home
                             } label: {
                                 Image(systemName: "house.fill")
                                     .foregroundColor(selectedTab == .home ? .primary : .secondary)
@@ -91,51 +81,26 @@ struct TabBar: View {
                                     if selectedTab == .route {
                                         routeManager.toggleTrip()
                                     } else {
-//                                        withAnimation {
-                                            selectedTab = .route
-//                                        }
-                                    }
-                                    withAnimation {
-                                        showLiveMetrics = true
+                                        selectedTab = .route
                                     }
                                 } label: {
                                     // icon depends on whether trip is currently in progress
-                                    if selectedTab == .route {
-                                        if routeManager.trackingState == .inactive {
-                                            Image("go_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                        else {
-                                            Image("stop_icon")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: 45, height: 45)
-                                                .foregroundColor(.black)
-                                                .font(.system(size: 50))
-                                        }
-                                    } else {
-                                        Image("tripimono")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 45, height: 45)
-                                            .foregroundColor(.black)
-                                            .font(.system(size: 50))
-                                    }
-                                    
+                                    Image(centerIconName)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 45, height: 45)
+                                        .foregroundColor(.black)
+                                        .font(.system(size: 50))
+                                        .id(centerIconName)
+                                        .transition(.scale(scale: 0.6).combined(with: .opacity))
                                 }
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: centerIconName)
                             }
                             .offset(y: -10)
                             
                             // TripBrowser
                             Button {
                                 selectedTab = .trips
-//                                withAnimation {
-                                    showLiveMetrics = false
-//                                }
                             } label: {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundColor(selectedTab == .trips ? .primary : .secondary)
@@ -147,23 +112,15 @@ struct TabBar: View {
                     
                 }
             }
-            .onAppear {
-                withAnimation {
-                    showTabBar = showingTabBar
-                }
-            }
-            .onChange(of: showingTabBar) { _, newValue in
-                withAnimation {
-                    showTabBar = newValue
-                }
-            }
-            .onDisappear {
-                withAnimation {
-                    showingTabBar = showTabBar
-                }
-            }
-            .offset(y: showTabBar ? 0 : 120)
+            .offset(y: showingTabBar ? 0 : 120)
+            .animation(.spring(response: 0.4, dampingFraction: 0.85), value: showingTabBar)
         }
         .edgesIgnoringSafeArea(.all)
+    }
+    
+    // image for the center button: tripi logo off the route tab, otherwise go/stop depending on trip state
+    private var centerIconName: String {
+        guard selectedTab == .route else { return "tripimono" }
+        return routeManager.trackingState == .inactive ? "go_icon" : "stop_icon"
     }
 }

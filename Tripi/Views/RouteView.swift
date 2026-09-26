@@ -12,7 +12,6 @@ import CoreData
 struct RouteView: View {
     @ObservedObject var model: Model
     @EnvironmentObject var routeManager: RouteManager
-    @State private var showingPause = false
     @AppStorage("hasHomeButton") var hasHomeButton = false
     @State private var activites = [""]
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Location.timestamp, ascending: true)], animation: .default)
@@ -20,7 +19,6 @@ struct RouteView: View {
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-    @AppStorage("liveMetrics") var liveMetrics = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -33,35 +31,14 @@ struct RouteView: View {
                             .frame(height: hasHomeButton ? geometry.size.height * 0.58 : geometry.size.height * 0.68)
                             .cornerRadius(50, corners: [.topLeft, .topRight])
                             .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                            .onChange(of: routeManager.trackingState) { _, newValue in // if trip in progress, show pause/resume buttons
-                                if routeManager.trackingState != .inactive {
-                                    withAnimation {
-                                        showingPause = true
-                                    }
-                                } else {
-                                    withAnimation {
-                                        showingPause = false
-                                    }
-                                }
-                            }
-                            .onAppear {
-                                if routeManager.trackingState != .inactive {
-                                    withAnimation {
-                                        showingPause = true
-                                    }
-                                } else {
-                                    withAnimation {
-                                        showingPause = false
-                                    }
-                                }
-                            }
                         Spacer()
                             .frame(height: 150)
                     }
                     .edgesIgnoringSafeArea(.all)
 
                     
-                    if showingPause {
+                    // if trip in progress, show pause/resume buttons
+                    if routeManager.trackingState != .inactive {
                         // dynamic pause and resume buttons
                         ZStack {
                             Rectangle()
@@ -69,21 +46,22 @@ struct RouteView: View {
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(20)
                             Button {
-                                withAnimation {
-                                    routeManager.togglePause()
-                                }
+                                routeManager.togglePause()
                             } label: {
                                 Image(systemName: (routeManager.trackingState == .active ? "pause" : "play"))
                                     .font(.system(size: 28, weight: .heavy))
                                     .foregroundColor(.primary)
+                                    .contentTransition(.symbolEffect(.replace))
                             }
                         }
                         .zIndex(1)
                         .padding(20)
+                        .transition(.scale(scale: 0.5).combined(with: .opacity))
                     }
 //                    Text("\(activites.joined())")
 //                        .background(.red)
                 }
+                .animation(.spring(response: 0.35, dampingFraction: 0.75), value: routeManager.trackingState)
 
             }
             .onChange(of: routeManager.recentActivities) { _, newValue in
@@ -97,9 +75,6 @@ struct RouteView: View {
                 } else {
                     hasHomeButton = false
                 }
-            }
-            .onDisappear {
-                liveMetrics = false
             }
         }
     }
