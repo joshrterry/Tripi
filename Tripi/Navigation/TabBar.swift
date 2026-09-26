@@ -16,6 +16,7 @@ struct TabBar: View {
     @AppStorage("hasHomeButton") var hasHomeButton = false
 
     let unitFormatter = UnitFormatter()
+    @State private var showingEndTripConfirmation = false
     
     // live metrics are shown whenever routeview is the selected tab
     private var showLiveMetrics: Bool {
@@ -79,7 +80,12 @@ struct TabBar: View {
                                 // RouteView
                                 Button {
                                     if selectedTab == .route {
-                                        routeManager.toggleTrip()
+                                        if routeManager.trackingState == .inactive {
+                                            routeManager.toggleTrip()
+                                        } else {
+                                            // confirm before ending so a stray tap while driving doesn't cut a trip short
+                                            showingEndTripConfirmation = true
+                                        }
                                     } else {
                                         selectedTab = .route
                                     }
@@ -95,6 +101,11 @@ struct TabBar: View {
                                         .transition(.scale(scale: 0.6).combined(with: .opacity))
                                 }
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: centerIconName)
+                                .confirmationDialog("End this trip?", isPresented: $showingEndTripConfirmation, titleVisibility: .visible) {
+                                    Button("End Trip", role: .destructive) {
+                                        routeManager.toggleTrip()
+                                    }
+                                }
                             }
                             .offset(y: -10)
                             
@@ -110,6 +121,14 @@ struct TabBar: View {
                         .font(.system(size: 24, weight: .bold))
                     }
                     
+                }
+            }
+            // haptic feedback whenever a trip starts, stops, pauses, or resumes
+            .sensoryFeedback(trigger: routeManager.trackingState) { oldState, newState in
+                switch (oldState, newState) {
+                case (.inactive, _): return .start
+                case (_, .inactive): return .stop
+                default: return .impact(weight: .medium)
                 }
             }
             .offset(y: showingTabBar ? 0 : 120)

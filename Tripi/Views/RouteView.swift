@@ -64,6 +64,12 @@ struct RouteView: View {
                 .animation(.spring(response: 0.35, dampingFraction: 0.75), value: routeManager.trackingState)
 
             }
+            // show the summary of a trip as soon as it ends
+            .fullScreenCover(item: $routeManager.completedTrip) { trip in
+                NavigationStack {
+                    TripDetailView(trip: trip)
+                }
+            }
             .onChange(of: routeManager.recentActivities) { _, newValue in
                 activites = routeManager.recentActivities.map{String($0)}
             }
