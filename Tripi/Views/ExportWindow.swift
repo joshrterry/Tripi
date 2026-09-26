@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 
 struct Field: Identifiable {
@@ -58,7 +59,7 @@ struct ExportWindow: View {
                     }
                 }
                 // if selected tags changes, determine new amount of available trips
-                .onChange(of: selectedTags) { newValue in
+                .onChange(of: selectedTags) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
@@ -79,7 +80,7 @@ struct ExportWindow: View {
                     }
                 }
                 // if selected start date changes, determine new amount of available trips
-                .onChange(of: startDate) { newValue in
+                .onChange(of: startDate) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
@@ -101,7 +102,7 @@ struct ExportWindow: View {
 
                 }
                 // if selected end date changes, determine new amount of available trips
-                .onChange(of: endDate) { newValue in
+                .onChange(of: endDate) { _, newValue in
                     tripCount = 0
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {

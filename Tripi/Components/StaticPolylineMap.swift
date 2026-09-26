@@ -144,7 +144,7 @@ struct StaticPolylineMap: View {
         .onAppear {
             generateSnapshot(width: 140, height: 162, condition: .light)
         }
-        .onChange(of: colorScheme) { newValue in
+        .onChange(of: colorScheme) { _, newValue in
             generateSnapshot(width: 140, height: 162, condition: .dark)
         }
     }

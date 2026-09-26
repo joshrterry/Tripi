@@ -33,7 +33,7 @@ struct RouteView: View {
                             .frame(height: hasHomeButton ? geometry.size.height * 0.58 : geometry.size.height * 0.68)
                             .cornerRadius(50, corners: [.topLeft, .topRight])
                             .shadow(color: .primary.opacity(0.15), radius: 20, x: -5, y: -5)
-                            .onChange(of: routeManager.trackingState) { newValue in // if trip in progress, show pause/resume buttons
+                            .onChange(of: routeManager.trackingState) { _, newValue in // if trip in progress, show pause/resume buttons
                                 if routeManager.trackingState != .inactive {
                                     withAnimation {
                                         showingPause = true
@@ -86,9 +86,9 @@ struct RouteView: View {
                 }
 
             }
-            .onChange(of: routeManager.recentActivities, perform: { newValue in
+            .onChange(of: routeManager.recentActivities) { _, newValue in
                 activites = routeManager.recentActivities.map{String($0)}
-            })
+            }
             .edgesIgnoringSafeArea(.all)
             .overlay(!model.fullScreen ? NavigationBar(showingButttons: false,  title: "New Trip", hasScrolled: .constant(false)) : nil)
             .onAppear {

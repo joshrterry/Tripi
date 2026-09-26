@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct TagSort: View {
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \UserTag.dateCreated, ascending: true)], animation: .default)
@@ -92,7 +93,7 @@ struct TagSort: View {
                     .alert(isPresented: $showError) {
                         Alert(title: Text("Unable to save tag"), message: Text("Please make sure the name field is not empty and has a unique name"))
                     }
-                    .onChange(of: showingAlert) { newValue in // monitor value of showingAlert
+                    .onChange(of: showingAlert) { _, newValue in // monitor value of showingAlert
                         if !showingAlert {
                             if tagName.isEmpty || (tags.contains(where: { $0.name?.trimmingCharacters(in: .whitespacesAndNewlines) == tagName.trimmingCharacters(in: .whitespacesAndNewlines)}) && !isEditing) {
                                 // present error message if tag added with no name
