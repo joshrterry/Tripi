@@ -341,7 +341,7 @@ struct Reimbursement: View {
                     } label: {
                         HStack {
                             Image(systemName: "plus")
-                            Text(tag.name!)
+                            Text(tag.wrappedName)
                         }
                     }
                     
@@ -404,7 +404,7 @@ struct Reimbursement: View {
                         }
                     }
                     } label: {
-                        Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                        Tag(name: tag.wrappedName, colour: tag.displayColour)
                             .id(tagID)
                             .foregroundColor(.primary)
                             .zIndex(1)
@@ -439,8 +439,7 @@ struct Reimbursement: View {
         // if tags change, update reimbursement amount and save changes
         .onChange(of: tags) { _, _ in
             if tags.count >= 1 {
-                let tripsArray = trip.tags?.array as? [UserTag]
-                trip.amountReimbursable = (tripsArray?[0].reimbursementAmount ?? 0) * distance
+                trip.amountReimbursable = (trip.tagsArray.first?.reimbursementAmount ?? 0) * distance
                 PersistenceController.shared.save()
                 print(trip.amountReimbursable)
             } else {

@@ -27,8 +27,8 @@ class RouteManager: NSObject, ObservableObject {
     
     var lastTwoLocations = (last: CLLocation(latitude: 0, longitude: 0), current: CLLocation(latitude: 0, longitude: 0))
     
-    // creates new instance of Trip
-    var newTrip: Trip = Trip()
+    // trip currently being recorded, created in startRoute
+    var newTrip: Trip?
     
     @Published var secondsElapsed = 0.0
     
@@ -71,7 +71,7 @@ class RouteManager: NSObject, ObservableObject {
         formatter.zeroFormattingBehavior  = .pad
         
         // return formatted duration as string
-        return formatter.string(from: TimeInterval(seconds))!
+        return formatter.string(from: TimeInterval(seconds)) ?? "00:00"
     }
     
     // convert seconds to hours
@@ -107,6 +107,9 @@ class RouteManager: NSObject, ObservableObject {
     
     // start route tracking, timer, and motion updates
     public func startRoute() {
+        if locationManager == nil {
+            locationManagerConfig()
+        }
         self.locationManager.startUpdatingLocation()
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.requestAlwaysAuthorization()
@@ -121,7 +124,10 @@ class RouteManager: NSObject, ObservableObject {
     
     // end trip tracking, timer, and motion updates
     public func stopRoute() {
-        PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
+        if let newTrip {
+            PersistenceController.shared.editTrip(trip: newTrip, distance: distanceTotal, time: time, speed: averageSpeed, startTime: startTime, endTime: Date(), seconds: secondsElapsed) // edit the previously created Trip object to add remaining fields
+        }
+        newTrip = nil
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
         trackingState = .inactive
@@ -173,12 +179,19 @@ class RouteManager: NSObject, ObservableObject {
     
     // gets average speed over the course of the trip
     private func getAvgSpeed() {
+        guard secondsElapsed > 0 else { return }
         averageSpeed = (distanceTotal)/(secondsElapsed/3600)
     }
     
     // gets current speed to display at bottom of screen in tab bar
     private func getCurrentSpeed() {
-        currentSpeed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)/3600)
+        // avoid dividing by zero when two updates share a timestamp, which would produce inf/NaN and crash Int() conversions in the UI
+        let interval = lastTwoLocations.current.timestamp.timeIntervalSince(lastTwoLocations.last.timestamp)
+        guard interval > 0 else { return }
+        let speed = (lastTwoLocations.current.distance(from: lastTwoLocations.last)/1000)/(interval/3600)
+        if speed.isFinite {
+            currentSpeed = speed
+        }
     }
     
     // MARK: Activity Manager
@@ -249,7 +262,7 @@ class RouteManager: NSObject, ObservableObject {
     }
     
     func stopMotionUpdates() {
-        self.activityManager.stopActivityUpdates()
+        self.activityManager?.stopActivityUpdates()
         activityTimer.invalidate()
     }
     
@@ -269,7 +282,9 @@ extension RouteManager: CLLocationManagerDelegate {
         }
         
         // publishes coordinate and trip data to subscriber via dataPublisher instance
-        dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, speed: currentSpeed, trip: newTrip))
+        if let newTrip {
+            dataPublisher.send((longitude: location.coordinate.longitude, latitude: location.coordinate.latitude, speed: currentSpeed, trip: newTrip))
+        }
         
         // set lastLocation variable to the current location for this iteration
         lastLocation = location

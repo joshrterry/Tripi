@@ -36,9 +36,9 @@ struct TagSort: View {
             ForEach(tags, id: \.self) { tag in
                 HStack(spacing: 0) {
                     Image(systemName: "circle.fill")
-                        .foregroundColor(Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255))
+                        .foregroundColor(tag.displayColour)
                         .padding(.trailing, 10)
-                    Text(tag.name!)
+                    Text(tag.wrappedName)
                     Spacer()
                     Text("\(selectedUnits == "metric" ? tag.reimbursementAmount as NSNumber : tag.reimbursementAmount*1/0.62137119223733 as NSNumber, formatter: numberFormatter)")
                     Text("/\(selectedUnits == "metric" ? "km" : "mi")")

@@ -67,8 +67,8 @@ class FileManager {
                 } else {
                     // if tag filter applied, only allow accepted tags
                     var tagNames: [String] = []
-                    for tag in trip.tags! {
-                        tagNames.append((tag as AnyObject).name)
+                    for tag in trip.tagsArray {
+                        if let name = tag.name { tagNames.append(name) }
                     }
                     for tagName in tagNames {
                         if tags.contains(tagName) {
