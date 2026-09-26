@@ -113,14 +113,6 @@ struct TripDetailView: View {
         }
     }
     
-    // save changes to database
-    func uploadChanges() {
-        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
-        trip.tags = tags
-        trip.notes = notes
-        PersistenceController.shared.save()
-    }
-    
     var scrollDetection: some View {
         GeometryReader { proxy in
             Color.clear.preference(key: ScrollPreferenceKey.self, value: proxy.frame(in: .named("scroll")).minY)
@@ -344,6 +336,10 @@ struct Notes: View {
                 showingDone = value
             }
         }
+        .onAppear {
+            // the initial value is a snapshot from the list, which can be stale; always start from what's saved
+            notes = trip.notes ?? ""
+        }
         .onDisappear {
             uploadChanges()
         }
@@ -502,14 +498,18 @@ struct Reimbursement: View {
                 print(trip.amountReimbursable)
             } else {
                 trip.amountReimbursable = 0.0
+                PersistenceController.shared.save()
                 isEditing = false
             }
             withAnimation {
                 amountReimbursable = trip.amountReimbursable
             }
         }
-        .onDisappear {
-            uploadChanges()
+        .onAppear {
+            // the initial values are a snapshot from the list, which can be stale; always start from what's saved.
+            // tag edits save immediately, so there's no write-back on disappear that could overwrite them
+            tags = trip.tags ?? NSOrderedSet()
+            amountReimbursable = trip.amountReimbursable
         }
 
 
