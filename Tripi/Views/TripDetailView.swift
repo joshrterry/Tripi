@@ -254,7 +254,8 @@ struct Metrics: View {
     
     var body: some View {
         // display recorded metrics
-        HStack(spacing: 32) {
+        // equal-width columns so long values scale down instead of pushing others off screen
+        HStack(spacing: 16) {
             Metric(data: String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
             Metric(data: time, descriptor: "MINUTES")
             Metric(data: String(format:"%.0f", unitFormatter.formatSpeed(speed: avgSpeed, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
