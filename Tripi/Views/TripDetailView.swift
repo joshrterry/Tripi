@@ -115,6 +115,7 @@ struct TripDetailView: View {
     
     // save changes to database
     func uploadChanges() {
+        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
         trip.tags = tags
         trip.notes = notes
         PersistenceController.shared.save()
@@ -164,6 +165,8 @@ struct Header: View {
     }
     
     @State var isPinned = false
+    @State private var showingDeleteConfirmation = false
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         HStack {
@@ -186,14 +189,27 @@ struct Header: View {
 //                } label: {
 //                    Label("Duplicate Trip", systemImage: "doc.on.doc")
 //                }
-                Button {
-                    PersistenceController.shared.delete(trip: trip)
+                Button(role: .destructive) {
+                    showingDeleteConfirmation = true
                 } label: {
                     Label("Remove Trip", systemImage: "trash")
                 }
             } label: {
                 Image(systemName: "ellipsis.circle.fill")
                     .font(.system(size: 32))
+            }
+            .confirmationDialog("Remove this trip?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+                Button("Remove Trip", role: .destructive) {
+                    dismiss()
+                    // delete after the pop animation so the list animates the trip out rather than the detail view going blank
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        withAnimation {
+                            PersistenceController.shared.delete(trip: trip)
+                        }
+                    }
+                }
+            } message: {
+                Text("This can't be undone.")
             }
         }
         .padding(.horizontal, 30)
@@ -210,6 +226,7 @@ struct Header: View {
 }
 
 struct Metrics: View {
+    let unitFormatter = UnitFormatter()
     @State var selectedUnits: String
     @State var distance: Double
     @State var avgSpeed: Double
@@ -218,9 +235,9 @@ struct Metrics: View {
     var body: some View {
         // display recorded metrics
         HStack(spacing: 32) {
-            Metric(data: String(format:"%.1f", distance), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
+            Metric(data: String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
             Metric(data: time, descriptor: "MINUTES")
-            Metric(data: String(format:"%.0f", avgSpeed), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
+            Metric(data: String(format:"%.0f", unitFormatter.formatSpeed(speed: avgSpeed, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
         }
         .padding(30)
     }
@@ -233,6 +250,7 @@ struct Notes: View {
     @State var trip: Trip
 
     func uploadChanges() {
+        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
         trip.notes = notes
         PersistenceController.shared.save()
     }
@@ -310,6 +328,7 @@ struct Reimbursement: View {
     @State private var tagID = NSOrderedSet()
     
     func uploadChanges() {
+        guard !trip.isDeleted, trip.managedObjectContext != nil else { return }
         trip.tags = tags
         PersistenceController.shared.save()
     }

@@ -45,6 +45,14 @@ struct PersistenceController {
         save()
     }
     
+    // seed starter tags on first launch; skipped if any tags exist so reopening onboarding doesn't duplicate them
+    func addDefaultTagsIfNeeded() {
+        let existingTags = (try? container.viewContext.count(for: UserTag.fetchRequest())) ?? 0
+        guard existingTags == 0 else { return }
+        addTag(name: "Business", colour: [163.0, 196.0, 243.0], reimbursementAmount: 0.50)
+        addTag(name: "Personal", colour: [241.0, 192.0, 232.0], reimbursementAmount: 0.0)
+    }
+    
     // method for adding a new trip to database. returns a trip that can be edited later
     mutating func addTrip(startTime: Date) -> Trip {
         print("Trip Created")
