@@ -33,28 +33,31 @@ struct StaticPolylineMap: View {
         image.draw(at: CGPoint.zero)
         
         // get the context for CoreGraphics
-        let context = UIGraphicsGetCurrentContext()
+        guard let context = UIGraphicsGetCurrentContext() else {
+            UIGraphicsEndImageContext()
+            return image
+        }
         
         // set stroking width and color of the context
-        context!.setLineWidth(7.0)
-        context!.setLineCap(.round)
-        context!.setStrokeColor(UIColor.systemBlue.cgColor)
+        context.setLineWidth(7.0)
+        context.setLineCap(.round)
+        context.setStrokeColor(UIColor.systemBlue.cgColor)
         
         // Here is the trick :
         // We use addLine() and move() to draw the line, this should be easy to understand.
         // The diificult part is that they both take CGPoint as parameters, and it would be way too complex for us to calculate by ourselves
         // Thus we use snapshot.point() to save the pain.
         if !routeCoordinates.isEmpty {
-            context!.move(to: snapshot.point(for: routeCoordinates[0]))
+            context.move(to: snapshot.point(for: routeCoordinates[0]))
             for i in 0...routeCoordinates.count-1 {
-                context!.addLine(to: snapshot.point(for: routeCoordinates[i]))
-                context!.move(to: snapshot.point(for: routeCoordinates[i]))
+                context.addLine(to: snapshot.point(for: routeCoordinates[i]))
+                context.move(to: snapshot.point(for: routeCoordinates[i]))
             }
         }
         
         
         // apply the stroke to the context
-        context!.strokePath()
+        context.strokePath()
         
         // get the image from the graphics context
         let resultImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -62,7 +65,7 @@ struct StaticPolylineMap: View {
         // end the graphics context
         UIGraphicsEndImageContext()
         
-        return resultImage!
+        return resultImage ?? image
     }
     
     func generateSnapshot(width: CGFloat, height: CGFloat, condition: ColorScheme) {

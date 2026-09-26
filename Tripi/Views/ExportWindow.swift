@@ -64,8 +64,8 @@ struct ExportWindow: View {
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -85,8 +85,8 @@ struct ExportWindow: View {
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -107,8 +107,8 @@ struct ExportWindow: View {
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {
@@ -129,8 +129,8 @@ struct ExportWindow: View {
                     for trip in trips {
                         if trip.startTimestamp ?? Date() >= Calendar.current.startOfDay(for: startDate) && trip.endTimestamp ?? Date() <= Calendar.current.startOfDay(for: endDate + 86400) {
                             var tagNames: [String] = []
-                            for tag in trip.tags! {
-                                tagNames.append((tag as AnyObject).name)
+                            for tag in trip.tagsArray {
+                                if let name = tag.name { tagNames.append(name) }
                             }
                             for tagName in tagNames {
                                 if selectedTags.contains(tagName) {

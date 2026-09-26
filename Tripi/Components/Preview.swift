@@ -103,8 +103,8 @@ struct Preview: View {
                                 .font(.custom("Gilroy", size: 12))
                                 .foregroundColor(color)
                             // dipslay tags in expanded view
-                            WrappingHStack(trip.tags!.array as! [UserTag], id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
-                                Tag(name: tag.name!, colour: Color(red: tag.colour![0] / 255, green: tag.colour![1] / 255, blue: tag.colour![2] / 255), isSmall: true)
+                            WrappingHStack(trip.tagsArray, id: \.self, spacing: .constant(5), lineSpacing: 5) { tag in
+                                Tag(name: tag.wrappedName, colour: tag.displayColour, isSmall: true)
                                     .foregroundColor(.primary)
                                     .fixedSize()
                             }
@@ -161,8 +161,8 @@ struct Preview: View {
                                 .foregroundColor(.primary)
                             
                             // display only primary tag (if one exists) and reimbursement amount
-                            if (trip.tags!.array as! [UserTag]).count >= 1 {
-                                Text("\((trip.tags!.array as! [UserTag])[0].name!.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
+                            if let firstTag = trip.tagsArray.first {
+                                Text("\(firstTag.wrappedName.uppercased()) · \(unitFormatter.formatReimbursable(amount: trip.amountReimbursable))")
                                     .font(.custom("Gilroy", size: 15))
                                     .foregroundColor(color)
                             }
