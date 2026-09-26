@@ -21,7 +21,6 @@ struct RecentTrips: View {
     }
     
     @State private var span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-    @State private var hasTrips = 0
     
     @AppStorage("selectedUnits") var selectedUnits = "metric"
     let unitFormatter = UnitFormatter()
@@ -32,7 +31,7 @@ struct RecentTrips: View {
                 .font(.custom("Gilroy", size: 24))
                 .padding(.leading, 30)
             
-            if hasTrips == 1 {
+            if trips.contains(where: { $0.hasRoute }) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 18) {
                         
@@ -40,7 +39,7 @@ struct RecentTrips: View {
                             // only display trips that occurred within the past 7 days
                             //                            if trip.startTimestamp ?? Date() > Date.now.addingTimeInterval(-604800) {
                             // handle errors with index out of range
-                            if trip.region.reduce(0, +) != 0 { // take the sum of all values in array. If 0, trip is stil in progress
+                            if trip.hasRoute {
                                 // creates the trip previews and formats and passes all required parameters
                                 Preview(trip: trip,
                                         distance: unitFormatter.formatDistance(distance: trip.distance, selectedUnits: selectedUnits),
@@ -64,19 +63,6 @@ struct RecentTrips: View {
                     .padding(.vertical, 22)
                 }
                 
-            } else if hasTrips == 0 {
-                VStack {
-                    Spacer()
-                        .frame(height: 120)
-                    HStack(alignment: .center) {
-                        Spacer()
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                        Spacer()
-                    }
-                }
-                
-                
             } else {
                 VStack {
                     Spacer()
@@ -93,14 +79,5 @@ struct RecentTrips: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onAppear {
-            DispatchQueue.global(qos: .userInitiated).async {
-                if trips.count > 0 {
-                    hasTrips = 1
-                } else if trips.count == 0 {
-                    hasTrips = 2
-                }
-            }
-        }
     }
 }

@@ -49,6 +49,11 @@ extension Trip {
         }
     }
 
+    // region stays all zeros until a trip with waypoints is finished, so this excludes in-progress and empty trips
+    public var hasRoute: Bool {
+        region.reduce(0, +) != 0
+    }
+
     public var tagsArray: [UserTag] {
         tags?.array as? [UserTag] ?? []
     }

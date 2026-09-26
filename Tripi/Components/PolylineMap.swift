@@ -20,7 +20,12 @@ struct PolylineMap: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-        mapView.region = region
+        // start on the last known location when tracking so the map doesn't open on 0,0 before the first fix
+        if isTracking, let coordinate = routeManager.locationManager?.location?.coordinate {
+            mapView.region = MKCoordinateRegion(center: coordinate, span: region.span)
+        } else {
+            mapView.region = region
+        }
         mapView.showsCompass = false
         // center map on user location
         if isTracking {
@@ -40,15 +45,18 @@ struct PolylineMap: UIViewRepresentable {
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         mapView.removeOverlays(mapView.overlays)
         mapView.addOverlay(polyline)
+        context.coordinator.drawnCoordinateCount = routeCoordinates.count
         return mapView
     }
     
     func updateUIView(_ view: MKMapView, context: Context) {
         view.tintColor = routeManager.trackingState == .active ? UIColor.systemBlue : UIColor.systemGray
-        // update polyline
+        // update polyline only when the route has changed, since this runs on every published update
+        guard routeCoordinates.count != context.coordinator.drawnCoordinateCount else { return }
         let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         view.removeOverlays(view.overlays)
-        view.addOverlay(polyline)        
+        view.addOverlay(polyline)
+        context.coordinator.drawnCoordinateCount = routeCoordinates.count
     }
 
     func makeCoordinator() -> Coordinator {
@@ -57,6 +65,7 @@ struct PolylineMap: UIViewRepresentable {
     
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: PolylineMap
+        var drawnCoordinateCount = 0
         
         init(_ parent: PolylineMap) {
             self.parent = parent
