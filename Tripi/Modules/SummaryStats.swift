@@ -77,20 +77,15 @@ struct SummaryStats: View {
 
             }
             // display metrics in a 2x2 arrangement
-            HStack() {
-                Metric(data: "\(unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "total km" : "total mi")
-                    .frame(width: 150, alignment: .leading)
-                Metric(data: "\(unitFormatter.formatDistance(distance: selectedBusinessKM, selectedUnits: selectedUnits))", descriptor: selectedUnits == "metric" ? "business km" : "business mi")
-                    .frame(width: 150, alignment: .leading)
+            // two equal-width columns; Metric fills and leading-aligns within each
+            HStack(spacing: 16) {
+                Metric(data: String(format: "%.1f", unitFormatter.formatDistance(distance: selectedDistance, selectedUnits: selectedUnits)), descriptor: selectedUnits == "metric" ? "total km" : "total mi")
+                Metric(data: String(format: "%.1f", unitFormatter.formatDistance(distance: selectedBusinessKM, selectedUnits: selectedUnits)), descriptor: selectedUnits == "metric" ? "business km" : "business mi")
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            HStack() {
+            HStack(spacing: 16) {
                 Metric(data: String(format:"%.1f", routeManager.secondstoHours(seconds: selectedHours)), descriptor: "hours driven")
-                    .frame(width: 150, alignment: .leading)
                 Metric(data: unitFormatter.formatReimbursable(amount: selectedReimbursable), descriptor: "reimbursable", color: Color.green)
-                    .frame(width: 150, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(30)

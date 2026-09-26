@@ -94,7 +94,7 @@ struct TripBrowserView: View {
                                     trip: trip,
                                     distance: trip.distance,
                                     date: formatTimestamp(date: trip.startTimestamp ?? Date()),
-                                    color: .green, time: trip.time ?? "",
+                                    color: .green, time: trip.durationText,
                                     avgSpeed: trip.averageSpeed,
                                     starTime: trip.startTimestamp ?? Date(),
                                     endTime: trip.endTimestamp ?? Date(),

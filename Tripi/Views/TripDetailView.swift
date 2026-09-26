@@ -152,7 +152,7 @@ extension TripDetailView {
     init(trip: Trip) {
         self.init(trip: trip,
                   distance: trip.distance,
-                  time: trip.time ?? "00:00",
+                  time: trip.durationText,
                   avgSpeed: trip.averageSpeed,
                   startTime: trip.startTimestamp ?? Date(),
                   endTime: trip.endTimestamp ?? Date(),
@@ -254,9 +254,10 @@ struct Metrics: View {
     
     var body: some View {
         // display recorded metrics
-        HStack(spacing: 32) {
+        // equal-width columns so long values scale down instead of pushing others off screen
+        HStack(spacing: 16) {
             Metric(data: String(format:"%.1f", unitFormatter.formatDistance(distance: distance, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "TOTAL KM" : "TOTAL MI"))
-            Metric(data: time, descriptor: "MINUTES")
+            Metric(data: time, descriptor: "DURATION")
             Metric(data: String(format:"%.0f", unitFormatter.formatSpeed(speed: avgSpeed, selectedUnits: selectedUnits)), descriptor: (selectedUnits == "metric" ? "AVG KPH" : "AVG MPH"))
         }
         .padding(30)
