@@ -43,7 +43,7 @@ struct RecentTrips: View {
                                         distance: trip.distance,
                                         date: formatTimestamp(date: trip.startTimestamp ?? Date()),
                                         color: .green,
-                                        time: trip.time ?? "00:00",
+                                        time: trip.durationText,
                                         avgSpeed: trip.averageSpeed,
                                         starTime: trip.startTimestamp ?? Date(),
                                         endTime: trip.endTimestamp ?? Date(),

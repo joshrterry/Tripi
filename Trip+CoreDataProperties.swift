@@ -54,6 +54,11 @@ extension Trip {
         region.reduce(0, +) != 0
     }
 
+    // duration derived from secondsElapsed so older trips saved with minutes-only strings display consistently
+    public var durationText: String {
+        secondsElapsed > 0 ? UnitFormatter().formatDuration(seconds: secondsElapsed) : (time ?? "00:00")
+    }
+
     public var tagsArray: [UserTag] {
         tags?.array as? [UserTag] ?? []
     }
