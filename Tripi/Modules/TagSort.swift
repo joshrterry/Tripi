@@ -16,7 +16,7 @@ struct TagSort: View {
     @State private var tagAmount = 0.0
     private let numberFormatter: NumberFormatter
     @State private var isEditing = false
-    @State private var currentTag = UserTag()
+    @State private var currentTag: UserTag?
     @State private var doneText = "Add Tag"
     @State private var showError = false
     @AppStorage("selectedUnits") var selectedUnits = "metric"
@@ -54,7 +54,7 @@ struct TagSort: View {
                     // swipe to edit
                     Button() {
                         tagName = tag.name ?? ""
-                        tagAmount = tag.reimbursementAmount
+                        tagAmount = selectedUnits == "metric" ? tag.reimbursementAmount : tag.reimbursementAmount*1/0.62137119223733
                         currentTag = tag
                         doneText = "Save Edits"
                         isEditing.toggle()
@@ -99,10 +99,10 @@ struct TagSort: View {
                                 // present error message if tag added with no name
                                 showError.toggle()
                             } else {
-                                if isEditing {
+                                if isEditing, let currentTag {
                                     // update current tag attributes, then save changes by overwriting existing values
                                     currentTag.name = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
-                                    currentTag.reimbursementAmount = tagAmount
+                                    currentTag.reimbursementAmount = selectedUnits == "metric" ? tagAmount : tagAmount * 0.62137119223733
                                     PersistenceController.shared.save()
                                 }
                                 else {
@@ -115,6 +115,7 @@ struct TagSort: View {
                             tagName = ""
                             tagAmount = 0.0
                             isEditing = false
+                            currentTag = nil
                         }
                     }
                 }
