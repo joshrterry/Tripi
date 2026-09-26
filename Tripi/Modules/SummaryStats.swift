@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SummaryStats: View {
     @State var selectedDistance = 0.0
@@ -111,10 +112,10 @@ struct SummaryStats: View {
         .onAppear {
             loadData()
         }
-        .onChange(of: reimbursementAmount, perform: { _ in
+        .onChange(of: reimbursementAmount) {
             loadData()
-        })
-        .onChange(of: selectedUnits) { newValue in
+        }
+        .onChange(of: selectedUnits) { _, newValue in
             loadData()
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import MapKit
 import WrappingHStack
 
@@ -259,7 +260,7 @@ struct Notes: View {
                 .padding(.top, 20)
                 .frame(height: 150, alignment: .topLeading)
                 // only allow a max of 120 characters
-                .onChange(of: notes) { newValue in
+                .onChange(of: notes) { _, newValue in
                     notes = String(newValue.prefix(120))
                 }
             if showingDone {
@@ -287,7 +288,7 @@ struct Notes: View {
         .onTapGesture {
             isTyping = true
         }
-        .onChange(of: isTyping) { value in
+        .onChange(of: isTyping) { _, value in
             withAnimation {
                 showingDone = value
             }
@@ -422,7 +423,7 @@ struct Reimbursement: View {
 
                             }
                     }
-                    .onChange(of: tags) { newValue in
+                    .onChange(of: tags) { _, newValue in
                         tagID = newValue
                     }
                 }
@@ -436,7 +437,7 @@ struct Reimbursement: View {
         .padding(.leading, 30)
         .padding(.vertical, 15)
         // if tags change, update reimbursement amount and save changes
-        .onChange(of: tags) { _ in
+        .onChange(of: tags) { _, _ in
             if tags.count >= 1 {
                 let tripsArray = trip.tags?.array as? [UserTag]
                 trip.amountReimbursable = (tripsArray?[0].reimbursementAmount ?? 0) * distance

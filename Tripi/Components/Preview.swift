@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import MapKit
 import WrappingHStack
 
@@ -175,7 +176,7 @@ struct Preview: View {
                 }
             }
             .frame(width: previewStyle == .expanded ? screenWidth*0.87 : 154, height: previewStyle == .expanded ? 158 : 256)
-            .onChange(of: tags) { newValue in
+            .onChange(of: tags) { _, newValue in
                 tagID = newValue
             }
             .onAppear {

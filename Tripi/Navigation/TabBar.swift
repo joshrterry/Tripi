@@ -152,11 +152,11 @@ struct TabBar: View {
                     showTabBar = showingTabBar
                 }
             }
-            .onChange(of: showingTabBar, perform: { newValue in
+            .onChange(of: showingTabBar) { _, newValue in
                 withAnimation {
                     showTabBar = newValue
                 }
-            })
+            }
             .onDisappear {
                 withAnimation {
                     showingTabBar = showTabBar
