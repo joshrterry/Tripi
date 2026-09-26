@@ -11,7 +11,8 @@ import MapKit
 
 struct HomeView: View {
     @EnvironmentObject var routeManager: RouteManager
-    
+    @AppStorage("showingTabBar") var showingTabBar: Bool = true
+
     @State var hasScrolled = false
     @State var currentDate = Date()
     
@@ -49,6 +50,9 @@ struct HomeView: View {
                 })
                 .overlay(NavigationBar(title: "Dashboard", hasScrolled: $hasScrolled))
                 .navigationBarHidden(true)
+            }
+            .onAppear {
+                showingTabBar = true
             }
         }
     }
